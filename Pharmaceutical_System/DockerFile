@@ -1,0 +1,5 @@
+# Usa a imagem estável do WildFly
+FROM quay.io/wildfly/wildfly:latest
+
+# Copia o arquivo gerado pelo Maven para o WildFly
+COPY target/erp.war /opt/jboss/wildfly/standalone/deployments/ROOT.war
