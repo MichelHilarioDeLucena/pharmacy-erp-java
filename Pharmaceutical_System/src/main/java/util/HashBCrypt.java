@@ -1,4 +1,4 @@
-package br.com.uerj.erp;
+package util;
 
 import org.mindrot.jbcrypt.BCrypt;
 
