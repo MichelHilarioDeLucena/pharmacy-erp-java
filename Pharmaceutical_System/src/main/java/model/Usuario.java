@@ -1,19 +1,29 @@
 package model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-@Entity // Diz que esta classe é uma tabela no banco
-@Table(name = "usuarios") // Nome exato da tabela no MySQL
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
 
-	@Id // Diz que este é o Primary Key
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // Diz que é AUTO_INCREMENT
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+
+	@Column(nullable = false)
+	private String nome;
+
+	@Column(unique = true, nullable = false)
+	private String email;
 
 	@Column(unique = true, nullable = false)
 	private String login;
@@ -22,14 +32,41 @@ public class Usuario {
 	private String senhaHash;
 
 	@Column(nullable = false)
-	private String perfil; // ADMIN, FUNCIONARIO, etc.
+	private String perfil;
 
+	@Column(nullable = false)
+	private boolean ativo = true; // Usuário começa ativo por padrão
+
+	@Column(name = "token_recuperacao")
+	private String tokenRecuperacao;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "token_expiracao")
+	private Date tokenExpiracao;
+
+	// Getters e Setters (Importante para o Hibernate funcionar)
 	public Integer getId() {
 		return id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getLogin() {
@@ -56,5 +93,27 @@ public class Usuario {
 		this.perfil = perfil;
 	}
 
-	// Aqui entram os Getters e Setters vazios (para o Java conseguir ler e gravar)
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	public String getTokenRecuperacao() {
+		return tokenRecuperacao;
+	}
+
+	public void setTokenRecuperacao(String token) {
+		this.tokenRecuperacao = token;
+	}
+
+	public Date getTokenExpiracao() {
+		return tokenExpiracao;
+	}
+
+	public void setTokenExpiracao(Date data) {
+		this.tokenExpiracao = data;
+	}
 }
