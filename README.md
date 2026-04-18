@@ -1,28 +1,55 @@
-# poo3_project
+💊 ERP Farmácia - Guia Rápido de Execução
+Este guia contém o passo a passo exato para rodar o projeto localmente na sua máquina. O sistema utiliza Java (Servlets), Apache Tomcat e MySQL.
 
-Para você encarregado de configurar o mysql-workbench, você deve focar em criar a tabela no banco de dados e conectar com o código Java utilizando a tecnologia descrita. Acabei não o fazendo por desconhecimento da IDE e quis passar alguém mais familiarizado com o ambiente
+⚙️ Passo 1: Pré-requisitos
+Certifique-se de ter instalado:
 
-Para você não precisar entender todo o código sozinho, envie para uma IA generativa um zip do branch atual do poo3_project e siga o passo-a-passo de como conectar o MySQL com o Eclipse. Uma vez feita a conexão mínima, poderemos refiná-la.
+Eclipse IDE (versão para Enterprise Java/Web).
 
+Apache Tomcat (versão 9.0 ou superior) configurado no Eclipse.
 
-Aqui embaixo é o READ.ME criado por IA
-# 📦 Módulo de Conexão (JPA/MySQL) e Segurança (BCrypt)
+MySQL Server e MySQL Workbench.
 
-Este commit estabelece a base de infraestrutura para a persistência de dados e segurança do sistema. 
+🗄️ Passo 2: Preparar o Banco de Dados
+Abra o MySQL Workbench.
 
-## 🛠️ O que foi implementado
+Copie o script SQL localizado em [caminho_se_houver, ex: /sql/init.sql] ou peça o "Script Apocalíptico" para a equipe.
 
-* **Mapeamento Objeto-Relacional (JPA):** * Criação da entidade `Usuario` mapeada para a tabela `usuarios` no MySQL.
-  * O projeto agora utiliza Container-Managed Persistence (padrão Java EE), delegando o controle do `EntityManager` ao servidor de aplicação via `@PersistenceContext`.
-* **Criptografia de Senhas:** * Inclusão da biblioteca `jBCrypt`.
-  * Criação do utilitário `HashBCrypt` para gerar e validar o hash das senhas dos usuários, garantindo que não sejam salvas em texto puro no banco.
-* **Segurança de Credenciais:** * Inclusão do `dotenv-java`. As credenciais de banco de dados e URL são lidas via variáveis de ambiente, impedindo o vazamento de senhas no repositório.
-* **EJB de Inicialização:** * Adicionado o Singleton `TesteConexao` que roda no startup do servidor para injetar um usuário admin de testes no banco de dados e validar a estabilidade da conexão.
+Execute o script. Ele criará o banco erp, as tabelas necessárias e um usuário de teste automático:
 
-## 🧹 Limpeza de Código
-Foram removidas classes de conexão JDBC manuais (`ConnectionFactory`) e fábricas de Entity Manager em modo Java SE (`JPAUtil`), alinhando o projeto estritamente à arquitetura Jakarta EE.
+Login: admin
 
-## ⚙️ Como testar localmente
-1. Certifique-se de ter um banco MySQL rodando.
-2. Crie um arquivo `.env` na raiz do projeto (não commitar!) com as variáveis: `DB_URL`, `DB_USER` e `DB_PASSWORD`.
-3. Suba a aplicação no servidor. O console deverá exibir as mensagens do `TesteConexao`.
+Senha: 123
+
+🔐 Passo 3: Variáveis de Ambiente (.env)
+Para não vazar senhas, o projeto usa o dotenv. Você precisa criar o seu próprio arquivo de configuração:
+
+Crie um arquivo chamado exatamente .env na pasta raiz do projeto (Pharmaceutical_System).
+
+Cole o código abaixo e ajuste com a sua senha do MySQL local:
+
+Snippet de código
+DB_URL=jdbc:mysql://localhost:3306/erp
+DB_USER=root
+DB_PASSWORD=sua_senha_do_mysql_aqui
+🚨 Passo 4: Configuração Crítica no Eclipse
+O Eclipse costuma "esquecer" de enviar o driver do MySQL para o Tomcat. Faça isso para evitar o erro No suitable driver found:
+
+No Eclipse, clique com o botão direito no projeto > Properties.
+
+No menu lateral, clique em Deployment Assembly.
+
+Clique no botão Add... (à direita).
+
+Escolha Java Build Path Entries > Next.
+
+Selecione Maven Dependencies > Finish.
+
+Clique em Apply and Close.
+
+🚀 Passo 5: Rodar a Aplicação
+Na aba Servers do Eclipse, clique com o botão direito no Tomcat e selecione Clean....
+
+Dê Start no servidor Tomcat.
+
+Abra o navegador e acesse: http://localhost:8080/Pharmaceutical_System/index.html
