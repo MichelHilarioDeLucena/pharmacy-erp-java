@@ -20,31 +20,33 @@ public class UsuarioServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// Dizemos ao navegador que vamos enviar um HTML
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 
-		// Começamos a "desenhar" a página HTML antiga que você tinha
 		out.println("<!DOCTYPE html>");
-		out.println("<html>");
-		out.println("<head><title>Lista de Usuários</title></head>");
-		out.println("<body>");
-		out.println("<h2>Usuários Cadastrados no Banco (Tomcat)</h2>");
-		out.println("<table border='1'>");
-		out.println("<tr><th>ID</th><th>Login</th><th>Perfil</th></tr>");
+		out.println("<html lang='pt-BR'>");
+		out.println("<head><title>Lista de Funcionários</title>");
+		out.println(
+				"<style>table { width: 100%; border-collapse: collapse; } th, td { padding: 10px; border: 1px solid #ddd; text-align: left; } th { background-color: #f4f4f4; }</style>");
+		out.println("</head><body>");
+
+		out.println("<h2>Lista de Funcionários (Usuários do Sistema)</h2>");
+		out.println("<table>");
+		out.println("<tr><th>ID</th><th>Nome</th><th>E-mail</th><th>Login</th><th>Perfil</th></tr>");
 
 		try {
-			// Puxa a conexão da ConnectionFactory (agora com o driver do MySQL arrumado)
 			Connection conn = ConnectionFactory.getConnection();
 
-			// Faz a busca na tabela usuários que criamos no MySQL Workbench
+			// Busca na nova tabela de usuários
 			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM usuarios");
 			ResultSet rs = stmt.executeQuery();
 
-			// Enquanto houver usuários no banco, cria uma linha na tabela HTML
 			while (rs.next()) {
 				out.println("<tr>");
 				out.println("<td>" + rs.getInt("id") + "</td>");
+				// Agora puxamos as colunas novas que você criou no script apocalíptico!
+				out.println("<td>" + rs.getString("nome") + "</td>");
+				out.println("<td>" + rs.getString("email") + "</td>");
 				out.println("<td>" + rs.getString("login") + "</td>");
 				out.println("<td>" + rs.getString("perfil") + "</td>");
 				out.println("</tr>");
@@ -53,13 +55,13 @@ public class UsuarioServlet extends HttpServlet {
 			conn.close();
 
 		} catch (Exception e) {
-			// Se der erro de senha ou de driver, ele mostra aqui na tela
-			out.println("<tr><td colspan='3'>Erro de conexão: " + e.getMessage() + "</td></tr>");
+			out.println("<tr><td colspan='5' style='color:red;'>Erro de conexão: " + e.getMessage() + "</td></tr>");
 			e.printStackTrace();
 		}
 
 		out.println("</table>");
-		out.println("<br><a href='index.html'>Voltar</a>");
+		out.println(
+				"<br><br><a href='index.html' style='padding: 10px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;'>⬅ Voltar ao Dashboard</a>");
 		out.println("</body>");
 		out.println("</html>");
 	}

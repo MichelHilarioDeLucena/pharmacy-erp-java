@@ -2,14 +2,22 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>ERP Farmácia</title>
+    <title>ERP Farmácia - Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .menu { margin-top: 20px; }
+        .menu a { padding: 10px 15px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px; }
+        .menu a:hover { background-color: #0056b3; }
+    </style>
 </head>
 <body>
-    <h1>Bem-vindo ao ERP Farmácia</h1>
-    <p>O que você deseja fazer?</p>
+    <h1>💊 Painel de Controle - ERP Farmácia</h1>
+    <p>Selecione o módulo que deseja acessar:</p>
     
-    <a href="UsuarioServlet">
-        <button>Ver Lista de Usuários</button>
-    </a>
+    <div class="menu">
+        <a href="UsuarioServlet">👥 Gerenciar Funcionários</a>
+        <a href="#" style="background-color: #6c757d;">🛒 Gerenciar Clientes (Em breve)</a>
+        <a href="#" style="background-color: #6c757d;">📦 Fornecedores (Em breve)</a>
+    </div>
 </body>
 </html>
