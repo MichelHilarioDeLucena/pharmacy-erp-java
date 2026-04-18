@@ -2,17 +2,12 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import db.ConnectionFactory;
 
 @WebServlet("/UsuarioServlet")
 public class UsuarioServlet extends HttpServlet {
@@ -23,46 +18,31 @@ public class UsuarioServlet extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 
-		out.println("<!DOCTYPE html>");
-		out.println("<html lang='pt-BR'>");
-		out.println("<head><title>Lista de Funcionários</title>");
-		out.println(
-				"<style>table { width: 100%; border-collapse: collapse; } th, td { padding: 10px; border: 1px solid #ddd; text-align: left; } th { background-color: #f4f4f4; }</style>");
-		out.println("</head><body>");
+		// 1. Inicia o EntityManager (O "gerente" do Hibernate)
+		javax.persistence.EntityManager em = config.JPAUtil.getEntityManager();
 
-		out.println("<h2>Lista de Funcionários (Usuários do Sistema)</h2>");
-		out.println("<table>");
-		out.println("<tr><th>ID</th><th>Nome</th><th>E-mail</th><th>Login</th><th>Perfil</th></tr>");
+		out.println("<html><body><h2>Lista via Hibernate (JPA)</h2><table border='1'>");
+		out.println("<tr><th>ID</th><th>Nome</th><th>Status</th></tr>");
 
 		try {
-			Connection conn = ConnectionFactory.getConnection();
+			// 2. Consulta usando JPQL (A linguagem do Hibernate - foca no Objeto, não na
+			// tabela)
+			java.util.List<model.Usuario> lista = em.createQuery("from Usuario", model.Usuario.class).getResultList();
 
-			// Busca na nova tabela de usuários
-			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM usuarios");
-			ResultSet rs = stmt.executeQuery();
-
-			while (rs.next()) {
+			for (model.Usuario u : lista) {
+				String status = u.isAtivo() ? "Ativo" : "Inativo";
 				out.println("<tr>");
-				out.println("<td>" + rs.getInt("id") + "</td>");
-				// Agora puxamos as colunas novas que você criou no script apocalíptico!
-				out.println("<td>" + rs.getString("nome") + "</td>");
-				out.println("<td>" + rs.getString("email") + "</td>");
-				out.println("<td>" + rs.getString("login") + "</td>");
-				out.println("<td>" + rs.getString("perfil") + "</td>");
+				out.println("<td>" + u.getId() + "</td>");
+				out.println("<td>" + u.getNome() + "</td>");
+				out.println("<td>" + status + "</td>");
 				out.println("</tr>");
 			}
-
-			conn.close();
-
 		} catch (Exception e) {
-			out.println("<tr><td colspan='5' style='color:red;'>Erro de conexão: " + e.getMessage() + "</td></tr>");
-			e.printStackTrace();
+			out.println("Erro: " + e.getMessage());
+		} finally {
+			em.close();
 		}
 
-		out.println("</table>");
-		out.println(
-				"<br><br><a href='index.html' style='padding: 10px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;'>⬅ Voltar ao Dashboard</a>");
-		out.println("</body>");
-		out.println("</html>");
+		out.println("</table><br><a href='index.html'>Voltar</a></body></html>");
 	}
 }
