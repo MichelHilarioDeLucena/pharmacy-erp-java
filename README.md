@@ -1,55 +1,38 @@
-💊 ERP Farmácia - Guia Rápido de Execução
-Este guia contém o passo a passo exato para rodar o projeto localmente na sua máquina. O sistema utiliza Java (Servlets), Apache Tomcat e MySQL.
+# 💊 ERP Farmácia (Pharmaceutical System)
 
-⚙️ Passo 1: Pré-requisitos
-Certifique-se de ter instalado:
+Um sistema de gestão (ERP) voltado para o controle operacional e administrativo de farmácias. Desenvolvido em Java para a Web, o projeto foca em segurança, persistência de dados eficiente e envio de comunicações automatizadas.
 
-Eclipse IDE (versão para Enterprise Java/Web).
+## 🛠️ Tecnologias Utilizadas
 
-Apache Tomcat (versão 9.0 ou superior) configurado no Eclipse.
+Este projeto foi construído utilizando o ecossistema Java EE e gerenciado via Maven. As principais dependências incluem:
 
-MySQL Server e MySQL Workbench.
+* **Java 13** - Linguagem base do projeto.
+* **Java EE 8 (Servlets/JSP)** - Estrutura principal da aplicação Web.
+* **Hibernate Core (5.6.15)** - Mapeamento Objeto-Relacional (JPA) para interação com o banco de dados.
+* **MySQL Connector/J (8.3.0)** - Driver de conexão com o banco de dados MySQL.
+* **jBCrypt (0.4)** - Criptografia de senhas para garantir a segurança dos usuários.
+* **JavaMail (1.6.2)** - Serviço de mensageria para envio de e-mails (ex: recuperação de senhas).
+* **Dotenv-Java (3.0.0)** - Gerenciamento de variáveis de ambiente para proteção de credenciais sensíveis.
 
-🗄️ Passo 2: Preparar o Banco de Dados
-Abra o MySQL Workbench.
+## ⚙️ Pré-requisitos
 
-Copie o script SQL localizado em [caminho_se_houver, ex: /sql/init.sql] ou peça o "Script Apocalíptico" para a equipe.
+Antes de começar, você precisará ter instalado em sua máquina:
+* [JDK 13](https://jdk.java.net/13/) ou superior.
+* [Apache Maven](https://maven.apache.org/) para o build e gerenciamento de dependências.
+* Servidor de Aplicação Web (recomendado: [Apache Tomcat 9+](https://tomcat.apache.org/)).
+* Banco de Dados [MySQL](https://www.mysql.com/).
 
-Execute o script. Ele criará o banco erp, as tabelas necessárias e um usuário de teste automático:
+## 🚀 Instalação e Execução
 
-Login: admin
+### 1. Banco de Dados
+Crie um banco de dados no MySQL para a aplicação. As tabelas serão geradas automaticamente pelo Hibernate (dependendo da sua configuração no `persistence.xml`), ou você pode rodar os scripts SQL fornecidos no projeto.
 
-Senha: 123
-
-🔐 Passo 3: Variáveis de Ambiente (.env)
-Para não vazar senhas, o projeto usa o dotenv. Você precisa criar o seu próprio arquivo de configuração:
-
-Crie um arquivo chamado exatamente .env na pasta raiz do projeto (Pharmaceutical_System).
-
-Cole o código abaixo e ajuste com a sua senha do MySQL local:
-
-Snippet de código
+### 2. Variáveis de Ambiente
+Na raiz do projeto, crie um arquivo chamado `.env` para armazenar as senhas e credenciais (como a senha de aplicativo do e-mail). **Atenção: Não comite este arquivo!**
+Exemplo de conteúdo do `.env`:
+```env
 DB_URL=jdbc:mysql://localhost:3306/erp
 DB_USER=root
-DB_PASSWORD=sua_senha_do_mysql_aqui
-🚨 Passo 4: Configuração Crítica no Eclipse
-O Eclipse costuma "esquecer" de enviar o driver do MySQL para o Tomcat. Faça isso para evitar o erro No suitable driver found:
-
-No Eclipse, clique com o botão direito no projeto > Properties.
-
-No menu lateral, clique em Deployment Assembly.
-
-Clique no botão Add... (à direita).
-
-Escolha Java Build Path Entries > Next.
-
-Selecione Maven Dependencies > Finish.
-
-Clique em Apply and Close.
-
-🚀 Passo 5: Rodar a Aplicação
-Na aba Servers do Eclipse, clique com o botão direito no Tomcat e selecione Clean....
-
-Dê Start no servidor Tomcat.
-
-Abra o navegador e acesse: http://localhost:8080/Pharmaceutical_System/index.html
+DB_PASSWORD=SUA_SENHA
+EMAIL_USER=seu_email@gmail.com
+EMAIL_PASS=sua_senha_de_app_16_digitos

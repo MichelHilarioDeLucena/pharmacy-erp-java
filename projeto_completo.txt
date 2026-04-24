@@ -1,188 +1,68 @@
-\n===== ./Pharmaceutical_System/src/main/java/config/EnvConfig.java =====\n
-package config;
 
-import io.github.cdimascio.dotenv.Dotenv;
+--- ARQUIVO: ./Pharmaceutical_System/pom.xml ---
 
-public class EnvConfig {
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-	private static final Dotenv dotenv = Dotenv.load();
+	<groupId>br.com.uerj.erp</groupId>
+	<artifactId>Pharmaceutical_System</artifactId>
+	<version>1.0</version>
+	<packaging>war</packaging>
 
-	public static String get(String key) {
-		return dotenv.get(key);
-	}
-}\n===== ./Pharmaceutical_System/src/main/java/test/TestConnection.java =====\n
-package test;
+	<properties>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+	<dependencies>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.cdimascio</groupId>
+			<artifactId>dotenv-java</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<version>8.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.6.15.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mindrot</groupId>
+			<artifactId>jbcrypt</artifactId>
+			<version>0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>8.0</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 
-import io.github.cdimascio.dotenv.Dotenv;
-
-public class TestConnection {
-	public static void main(String[] args) {
-		try {
-			Dotenv dotenv = Dotenv.load();
-
-			String url = dotenv.get("DB_URL");
-			String user = dotenv.get("DB_USER");
-			String password = dotenv.get("DB_PASSWORD");
-
-			System.out.println("Tentando conectar...");
-
-			Connection conn = DriverManager.getConnection(url, user, password);
-
-			System.out.println("✅ Conectado com sucesso!");
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-}\n===== ./Pharmaceutical_System/src/main/java/db/ConnectionFactory.java =====\n
-package db;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-
-import config.EnvConfig;
-
-public class ConnectionFactory {
-
-	public static Connection getConnection() throws Exception {
-		return DriverManager.getConnection(EnvConfig.get("DB_URL"), EnvConfig.get("DB_USER"),
-				EnvConfig.get("DB_PASSWORD"));
-	}
-}\n===== ./Pharmaceutical_System/src/main/java/util/HashBCrypt.java =====\n
-package util;
-
-import org.mindrot.jbcrypt.BCrypt;
-
-public class HashBCrypt {
-
-	// Transforma "senha123" em algo como "$2a$10$vI8Z..."
-	public String criptografarSenha(String senhaPura) {
-		return BCrypt.hashpw(senhaPura, BCrypt.gensalt());
-	}
-
-	// Verifica se a senha que o usuário digitou bate com a do banco
-	public boolean verificarSenha(String senhaDigitada, String senhaDoBanco) {
-		return BCrypt.checkpw(senhaDigitada, senhaDoBanco);
-	}
-}\n===== ./Pharmaceutical_System/src/main/java/controller/UsuarioServlet.java =====\n
-package controller;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import io.github.cdimascio.dotenv.Dotenv;
-
-@WebServlet("/usuarios")
-public class UsuarioServlet extends HttpServlet {
-
-	private static final long serialVersionUID = 1L;
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-
-		try {
-			Dotenv dotenv = Dotenv.configure().directory("/home/joaovictorxg/git/poo3_project/Pharmaceutical_System")
-					.load();
-			System.out.println("USER: " + dotenv.get("DB_USER"));
-			Connection conn = java.sql.DriverManager.getConnection(dotenv.get("DB_URL"), dotenv.get("DB_USER"),
-					dotenv.get("DB_PASSWORD"));
-
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM usuarios");
-
-			out.println("<h1>Lista de Usuários</h1>");
-			out.println("<table border='1'>");
-
-			while (rs.next()) {
-				out.println("<tr>");
-				out.println("<td>" + rs.getInt("id") + "</td>");
-				out.println("<td>" + rs.getString("nome") + "</td>");
-				out.println("<td>" + rs.getString("email") + "</td>");
-				out.println("</tr>");
-			}
-
-			out.println("</table>");
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace(out);
-		}
-	}
-}\n===== ./Pharmaceutical_System/src/main/java/model/Usuario.java =====\n
-package model;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity // Diz que esta classe é uma tabela no banco
-@Table(name = "usuarios") // Nome exato da tabela no MySQL
-public class Usuario {
-
-	@Id // Diz que este é o Primary Key
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // Diz que é AUTO_INCREMENT
-	private Integer id;
-
-	@Column(unique = true, nullable = false)
-	private String login;
-
-	@Column(name = "senha_hash", nullable = false)
-	private String senhaHash;
-
-	@Column(nullable = false)
-	private String perfil; // ADMIN, FUNCIONARIO, etc.
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	public String getSenhaHash() {
-		return senhaHash;
-	}
-
-	public void setSenhaHash(String senhaHash) {
-		this.senhaHash = senhaHash;
-	}
-
-	public String getPerfil() {
-		return perfil;
-	}
-
-	public void setPerfil(String perfil) {
-		this.perfil = perfil;
-	}
-
-	// Aqui entram os Getters e Setters vazios (para o Java conseguir ler e gravar)
-}
+	<build>
+		<finalName>erp</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.4.0</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
