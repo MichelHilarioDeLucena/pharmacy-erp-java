@@ -1,15 +1,11 @@
 package model;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "usuarios")
@@ -37,12 +33,13 @@ public class Usuario {
 	@Column(nullable = false)
 	private boolean ativo = true; // Usuário começa ativo por padrão
 
+	// Campo para o código único de recuperação (UUID)
 	@Column(name = "token_recuperacao")
 	private String tokenRecuperacao;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	// Usando LocalDateTime (mais moderno e não precisa da anotação @Temporal)
 	@Column(name = "token_expiracao")
-	private Date tokenExpiracao;
+	private java.time.LocalDateTime tokenExpiracao;
 
 	// Getters e Setters (Importante para o Hibernate funcionar)
 	public Integer getId() {
@@ -109,11 +106,11 @@ public class Usuario {
 		this.tokenRecuperacao = token;
 	}
 
-	public Date getTokenExpiracao() {
+	public java.time.LocalDateTime getTokenExpiracao() {
 		return tokenExpiracao;
 	}
 
-	public void setTokenExpiracao(Date data) {
+	public void setTokenExpiracao(java.time.LocalDateTime data) {
 		this.tokenExpiracao = data;
 	}
 }

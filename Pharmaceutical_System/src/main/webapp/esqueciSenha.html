@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperar Senha</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <h2>Esqueci minha senha</h2>
+    
+    <form action="EsqueciSenhaServlet" method="POST">
+        <label for="email">Digite o E-mail cadastrado:</label><br><br>
+        <input type="email" id="email" name="email" required style="padding: 8px; width: 300px;"><br><br>
+        
+        <button type="submit" class="btn btn-ativar">Enviar Link de Recuperação</button>
+    </form>
+    
+    <br>
+    <a href="index.html" class="btn">Voltar</a>
+</body>
+</html>

@@ -2,22 +2,41 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ERP Farmácia - Dashboard</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .menu { margin-top: 20px; }
-        .menu a { padding: 10px 15px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px; }
-        .menu a:hover { background-color: #0056b3; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
-    <h1>💊 Painel de Controle - ERP Farmácia</h1>
-    <p>Selecione o módulo que deseja acessar:</p>
-    
-    <div class="menu">
-        <a href="UsuarioServlet">👥 Gerenciar Funcionários</a>
-        <a href="#" style="background-color: #6c757d;">🛒 Gerenciar Clientes (Em breve)</a>
-        <a href="#" style="background-color: #6c757d;">📦 Fornecedores (Em breve)</a>
+
+    <div class="dashboard-container">
+        <h1>💊 Painel de Controle - ERP Farmácia</h1>
+        <p>Bem-vindo ao sistema. Selecione o módulo que deseja acessar:</p>
+
+        <div class="secao-menu">
+            <h3>👥 Gestão Administrativa</h3>
+            <div class="menu-grid">
+                <a href="UsuarioServlet" class="btn btn-original">Gerenciar Funcionários</a>
+                <a href="esqueciSenha.html" class="btn btn-ativar">🔑 Recuperar Senha</a>
+            </div>
+        </div>
+
+        <div class="secao-menu">
+            <h3>📦 Operacional</h3>
+            <div class="menu-grid">
+                <a href="#" class="btn em-breve">🛒 Gerenciar Clientes</a>
+                <a href="#" class="btn em-breve">📦 Fornecedores</a>
+                <a href="#" class="btn em-breve">💊 Estoque</a>
+            </div>
+        </div>
+
+        <div class="secao-menu" style="border-bottom: none;">
+            <h3>🔐 Segurança</h3>
+            <div class="menu-grid">
+                <a href="#" class="btn btn-desativar">🚪 Sair / Login</a>
+            </div>
+        </div>
     </div>
+
+    <script src="js/script.js"></script>
 </body>
 </html>
