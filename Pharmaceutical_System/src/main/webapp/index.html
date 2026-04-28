@@ -1,14 +1,42 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-<h:head>
-    <title>ERP Farmacêutico</title>
-</h:head>
-<h:body>
-    <h1 style="color: green;">Sistema Farmacêutico - UERJ</h1>
-    <p>Status do Servidor:</p>
-    <h2>
-        <h:outputText value="#{helloBean.mensagem}" />
-    </h2>
-</h:body>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Farmácia - Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h1>💊 Painel de Controle - ERP Farmácia</h1>
+        <p>Bem-vindo ao sistema. Selecione o módulo que deseja acessar:</p>
+
+        <div class="secao-menu">
+            <h3>👥 Gestão Administrativa</h3>
+            <div class="menu-grid">
+                <a href="UsuarioServlet" class="btn btn-original">Gerenciar Funcionários</a>
+                <a href="esqueciSenha.html" class="btn btn-ativar">🔑 Recuperar Senha</a>
+            </div>
+        </div>
+
+        <div class="secao-menu">
+            <h3>📦 Operacional</h3>
+            <div class="menu-grid">
+                <a href="#" class="btn em-breve">🛒 Gerenciar Clientes</a>
+                <a href="#" class="btn em-breve">📦 Fornecedores</a>
+                <a href="#" class="btn em-breve">💊 Estoque</a>
+            </div>
+        </div>
+
+        <div class="secao-menu" style="border-bottom: none;">
+            <h3>🔐 Segurança</h3>
+            <div class="menu-grid">
+                <a href="#" class="btn btn-desativar">🚪 Sair / Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
 </html>
