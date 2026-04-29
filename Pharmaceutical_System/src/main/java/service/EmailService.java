@@ -14,48 +14,45 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class EmailService {
 
-	private String usuario;
-	private String senha;
+	// Carregado em memória apenas uma vez
+	private static final String USUARIO;
+	private static final String SENHA;
+	private static final Properties PROPS;
 
-	public EmailService() {
-		// Carrega as credenciais do seu .env
+	static {
 		Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-		this.usuario = dotenv.get("EMAIL_USER");
-		this.senha = dotenv.get("EMAIL_PASS");
+		USUARIO = dotenv.get("EMAIL_USER");
+		SENHA = dotenv.get("EMAIL_PASS");
+
+		PROPS = new Properties();
+		PROPS.put("mail.smtp.auth", "true");
+		PROPS.put("mail.smtp.starttls.enable", "true");
+		PROPS.put("mail.smtp.host", "smtp.gmail.com");
+		PROPS.put("mail.smtp.port", "587");
+		PROPS.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 	}
 
 	public void enviarEmail(String destinatario, String assunto, String mensagemTexto) {
-		// Configurações do Servidor SMTP do Google
-		Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
-		props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-
-		// Cria a sessão de login no Gmail
-		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+		Session session = Session.getInstance(PROPS, new javax.mail.Authenticator() {
+			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(usuario, senha);
+				return new PasswordAuthentication(USUARIO, SENHA);
 			}
 		});
 
 		try {
-			// Cria a mensagem de e-mail
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(usuario)); // Seu e-mail
+			message.setFrom(new InternetAddress(USUARIO));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
 			message.setSubject(assunto);
 			message.setText(mensagemTexto);
 
-			// Envia de fato!
 			Transport.send(message);
-
 			System.out.println("=== [EmailService] E-mail enviado com sucesso para: " + destinatario + " ===");
 
 		} catch (MessagingException e) {
 			System.err.println("=== [EmailService] ERRO ao enviar e-mail: " + e.getMessage());
-			throw new RuntimeException(e);
+			throw new RuntimeException("Falha ao enviar e-mail de recuperação", e);
 		}
 	}
 }

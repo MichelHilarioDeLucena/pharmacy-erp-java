@@ -1,42 +1,37 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERP Farmácia - Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - ERP Farmácia</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<body style="background-color: #f4f7f6;">
 
-    <div class="dashboard-container">
-        <h1>💊 Painel de Controle - ERP Farmácia</h1>
-        <p>Bem-vindo ao sistema. Selecione o módulo que deseja acessar:</p>
+	<div class="login-container">
+		<h2>💊 ERP Farmácia</h2>
+		<p>Acesse sua conta</p>
+		<hr>
+		<br>
 
-        <div class="secao-menu">
-            <h3>👥 Gestão Administrativa</h3>
-            <div class="menu-grid">
-                <a href="UsuarioServlet" class="btn btn-original">Gerenciar Funcionários</a>
-                <a href="esqueciSenha.html" class="btn btn-ativar">🔑 Recuperar Senha</a>
-            </div>
-        </div>
+		<form action="LoginServlet" method="POST">
+			<div class="form-group">
+				<label for="login">Usuário:</label> <input type="text" id="login"
+					name="login" required placeholder="ex: carlos.admin">
+			</div>
 
-        <div class="secao-menu">
-            <h3>📦 Operacional</h3>
-            <div class="menu-grid">
-                <a href="#" class="btn em-breve">🛒 Gerenciar Clientes</a>
-                <a href="#" class="btn em-breve">📦 Fornecedores</a>
-                <a href="#" class="btn em-breve">💊 Estoque</a>
-            </div>
-        </div>
+			<div class="form-group">
+				<label for="senha">Senha:</label> <input type="password" id="senha"
+					name="senha" required>
+			</div>
 
-        <div class="secao-menu" style="border-bottom: none;">
-            <h3>🔐 Segurança</h3>
-            <div class="menu-grid">
-                <a href="#" class="btn btn-desativar">🚪 Sair / Login</a>
-            </div>
-        </div>
-    </div>
+			<button type="submit" class="btn btn-ativar"
+				style="width: 100%; padding: 10px;">Entrar</button>
+		</form>
 
-    <script src="js/script.js"></script>
+		<div class="links-uteis">
+			<a href="esqueciSenha.html">Esqueci minha senha</a>
+		</div>
+	</div>
+
 </body>
 </html>

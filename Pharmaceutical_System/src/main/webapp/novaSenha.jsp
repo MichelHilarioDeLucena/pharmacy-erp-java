@@ -6,28 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Definir Nova Senha - ERP Farmácia</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <style>
-        .card-senha {
-            max-width: 400px;
-            margin: 80px auto;
-            padding: 25px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .form-group {
-            text-align: left;
-            margin-bottom: 15px;
-        }
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box; /* Garante que o padding não estoure a largura */
-        }
-    </style>
 </head>
 <body>
 
