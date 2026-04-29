@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import config.JPAUtil;
+import dao.UsuarioDAO;
+import model.Perfil;
 import model.Usuario;
+import util.HashBCrypt;
 
 @WebServlet("/UsuarioServlet")
 public class UsuarioServlet extends HttpServlet {
@@ -31,69 +34,82 @@ public class UsuarioServlet extends HttpServlet {
 	private void processarRequisicao(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		// [CORREÇÃO 1] Verificação de sessão ANTES de qualquer operação.
+		// Antes, um visitante sem sessão chegava até a listagem de usuários.
+		HttpSession session = request.getSession(false);
+		Usuario logado = (session != null) ? (Usuario) session.getAttribute("usuarioLogado") : null;
+
+		if (logado == null) {
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			return;
+		}
+
+		// [CORREÇÃO 2] Verificação de perfil protegida contra NullPointerException.
+		// getPerfil() poderia ser null e .toString() derrubava o servidor com 500.
+		Perfil perfil = logado.getPerfil();
+		boolean ehMaster = (perfil == Perfil.ADMIN || perfil == Perfil.GERENTE);
+
 		EntityManager em = JPAUtil.getEntityManager();
+		UsuarioDAO usuarioDAO = new UsuarioDAO(em);
 		String acao = request.getParameter("acao");
 		String idParam = request.getParameter("id");
 
-		// Verificação de Segurança em nível de Servidor
-		HttpSession session = request.getSession();
-		Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
-		boolean ehMaster = logado != null
-				&& (logado.getPerfil().toString().equals("ADMIN") || logado.getPerfil().toString().equals("GERENTE"));
-
 		try {
-			// AÇÕES QUE ALTERAM O BANCO OU REQUISITAM PÁGINAS ESPECÍFICAS
 			if (ehMaster && acao != null) {
 				switch (acao) {
 
 				case "alternar":
 					em.getTransaction().begin();
-					Usuario uAlt = em.find(Usuario.class, Integer.parseInt(idParam));
+					Usuario uAlt = usuarioDAO.buscarPorId(Integer.parseInt(idParam));
 					if (uAlt != null) {
 						uAlt.setAtivo(!uAlt.isAtivo());
+						usuarioDAO.salvar(uAlt);
 					}
 					em.getTransaction().commit();
 					response.sendRedirect("UsuarioServlet?acao=listar");
-					return; // Impede que continue para o forward no fim do método
+					return;
 
 				case "carregar":
-					Usuario uEdit = em.find(Usuario.class, Integer.parseInt(idParam));
+					Usuario uEdit = usuarioDAO.buscarPorId(Integer.parseInt(idParam));
 					request.setAttribute("usuario", uEdit);
 					request.getRequestDispatcher("/editar_usuario.jsp").forward(request, response);
-					return; // Para aqui, pois já despachou para a JSP de edição
+					return;
 
 				case "atualizar":
 					em.getTransaction().begin();
-					Usuario uAtualizar = em.find(Usuario.class, Integer.parseInt(request.getParameter("id")));
+					Usuario uAtualizar = usuarioDAO.buscarPorId(Integer.parseInt(idParam));
 					if (uAtualizar != null) {
 						uAtualizar.setNome(request.getParameter("nome"));
 						uAtualizar.setEmail(request.getParameter("email"));
-						// Converte a String do HTML para o seu novo Enum Perfil
-						uAtualizar.setPerfil(model.Perfil.valueOf(request.getParameter("perfil")));
+						uAtualizar.setPerfil(Perfil.valueOf(request.getParameter("perfil")));
+						usuarioDAO.salvar(uAtualizar);
 					}
 					em.getTransaction().commit();
 					response.sendRedirect("UsuarioServlet?acao=listar");
 					return;
 
 				case "salvar":
+					String loginNovo = request.getParameter("login");
+
+					// [CORREÇÃO 3] Verifica login duplicado antes de persistir.
+					// Sem isso, se o banco não tiver UNIQUE, cria dois usuários com
+					// o mesmo login. Se tiver, lança exceção crua do Hibernate.
+					if (usuarioDAO.buscarPorLogin(loginNovo) != null) {
+						request.setAttribute("mensagem", "Este login já está em uso.");
+						request.getRequestDispatcher("/cadastro_usuario.jsp").forward(request, response);
+						return;
+					}
+
 					em.getTransaction().begin();
-					model.Usuario novoU = new model.Usuario();
+					Usuario novoU = new Usuario();
 					novoU.setNome(request.getParameter("nome"));
 					novoU.setEmail(request.getParameter("email"));
-					novoU.setLogin(request.getParameter("login"));
+					novoU.setLogin(loginNovo);
+					novoU.setPerfil(Perfil.valueOf(request.getParameter("perfil")));
+					novoU.setSenhaHash(HashBCrypt.criptografarSenha(request.getParameter("senha")));
 					novoU.setAtivo(true);
-
-					// Define o Perfil usando o Enum
-					novoU.setPerfil(model.Perfil.valueOf(request.getParameter("perfil")));
-
-					// Criptografa a senha
-					String senhaPlana = request.getParameter("senha");
-					String senhaHash = util.HashBCrypt.criptografarSenha(senhaPlana);
-					novoU.setSenhaHash(senhaHash);
-
-					em.persist(novoU);
+					usuarioDAO.salvar(novoU);
 					em.getTransaction().commit();
-
 					response.sendRedirect("UsuarioServlet?acao=listar");
 					return;
 
@@ -103,20 +119,22 @@ public class UsuarioServlet extends HttpServlet {
 				}
 			}
 
-			// LISTAGEM PADRÃO (Executa se a acao for 'listar' ou se não entrar em nenhum
-			// case acima)
-			List<Usuario> lista = em.createQuery("from Usuario", Usuario.class).getResultList();
+			// Listagem padrão — só chega aqui quem já passou pela verificação de sessão
+			// acima
+			List<Usuario> lista = usuarioDAO.listarTodos();
 			request.setAttribute("listaUsuarios", lista);
 			request.getRequestDispatcher("/listaUsuarios.jsp").forward(request, response);
 
 		} catch (Exception e) {
-			// Se houver erro e a transação estiver aberta, desfaz a alteração para não
-			// "sujar" o banco
 			if (em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
 			}
 			e.printStackTrace();
 			throw new ServletException("Erro ao processar operação de usuário", e);
+		} finally {
+			if (em != null && em.isOpen()) {
+				em.close();
+			}
 		}
 	}
 }

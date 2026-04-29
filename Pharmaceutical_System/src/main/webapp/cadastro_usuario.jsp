@@ -1,4 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="model.Usuario, model.Perfil"%>
+<%
+    // [CORREÇÃO] Proteção de sessão — antes qualquer pessoa com a URL acessava esta tela.
+    Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
+    Perfil perfil  = (logado != null) ? logado.getPerfil() : null;
+    boolean ehMaster = (perfil == Perfil.ADMIN || perfil == Perfil.GERENTE);
+
+    if (!ehMaster) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +21,12 @@
 <body>
     <div class="container">
         <h2>Cadastrar Novo Usuário</h2>
+
+        <% String mensagem = (String) request.getAttribute("mensagem");
+           if (mensagem != null) { %>
+            <p class="erro"><%= mensagem %></p>
+        <% } %>
+
         <form action="UsuarioServlet?acao=salvar" method="post">
             <label>Nome Completo:</label>
             <input type="text" name="nome" placeholder="Ex: João Silva" required>
@@ -28,7 +46,6 @@
                 <option value="GERENTE">Gerente</option>
                 <option value="ADMIN">Administrador</option>
                 <option value="CAIXA">Caixa</option>
-                
             </select>
 
             <div style="margin-top: 20px;">

@@ -8,7 +8,7 @@ Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
 
 // Proteção básica: se não estiver logado, volta para o login
 if (logado == null) {
-	response.sendRedirect("index.html");
+	response.sendRedirect("login.jsp");
 	return;
 }
 

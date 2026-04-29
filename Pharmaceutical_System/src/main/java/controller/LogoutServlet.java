@@ -24,6 +24,6 @@ public class LogoutServlet extends HttpServlet {
 		}
 
 		// 3. Redireciona para a tela de login com uma mensagem opcional
-		response.sendRedirect("index.html");
+		response.sendRedirect("login.jsp");
 	}
 }

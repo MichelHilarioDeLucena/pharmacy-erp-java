@@ -6,6 +6,12 @@ function confirmarAcao(acao, nomeUsuario) {
     return confirm(mensagem);
 }
 
+function exibirAlerta(msg) {
+    // Por enquanto usamos o alert nativo, que é um pop-up que trava a tela até o OK
+    // Mas agora ele só aparece se o Servlet enviar uma mensagem
+    alert("⚠️ Ops! " + msg);
+}
+
 // --- Funções do Dashboard ---
 
 // Seleciona todos os botões com a classe 'em-breve'

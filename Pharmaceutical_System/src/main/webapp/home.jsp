@@ -1,12 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="model.Usuario" %>
+<%@ page import="model.Usuario, model.Perfil"%>
 <%
-    // Proteção: Se não tiver usuário na sessão, volta para o login
     Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
     if (logado == null) {
-        response.sendRedirect("index.html");
+        response.sendRedirect("login.jsp");
         return;
     }
+
+    // [CORREÇÃO] Perfil resolvido uma única vez, com guard contra null.
+    // Antes, logado.getPerfil().name() e .toString() eram chamados diretamente
+    // no HTML — NPE garantido se o perfil não estivesse preenchido.
+    Perfil perfil = logado.getPerfil();
+    boolean ehAdmin   = (perfil == Perfil.ADMIN);
+    boolean ehGerente = (perfil == Perfil.GERENTE);
+    boolean ehCaixa   = (perfil == Perfil.CAIXA);
+    String  nomePerfil = (perfil != null) ? perfil.name() : "SEM PERFIL";
 %>
 <!DOCTYPE html>
 <html>
@@ -18,7 +26,7 @@
 <body>
     <header>
         <div class="user-info">
-            Olá, <strong><%= logado.getNome() %></strong> [<%= logado.getPerfil().name() %>] | 
+            Olá, <strong><%= logado.getNome() %></strong> [<%= nomePerfil %>] |
             <a href="LogoutServlet">Sair</a>
         </div>
     </header>
@@ -26,8 +34,8 @@
     <div class="container-dashboard">
         <h1>Menu Principal</h1>
         <div class="grid-opcoes">
-            
-            <% if (logado.getPerfil().toString().equals("ADMIN") || logado.getPerfil().toString().equals("GERENTE")) { %>
+
+            <% if (ehAdmin || ehGerente) { %>
                 <a href="UsuarioServlet?acao=listar" class="card-opcao">
                     <h3>👥 Gestão de Pessoas</h3>
                     <p>Visualizar equipe e contatos.</p>
@@ -39,7 +47,7 @@
                 <p>Realizar vendas e consultas.</p>
             </a>
 
-            <% if (!logado.getPerfil().toString().equals("CAIXA")) { %>
+            <% if (!ehCaixa) { %>
                 <a href="estoque.jsp" class="card-opcao">
                     <h3>📦 Estoque</h3>
                     <p>Entrada de mercadorias e validade.</p>
