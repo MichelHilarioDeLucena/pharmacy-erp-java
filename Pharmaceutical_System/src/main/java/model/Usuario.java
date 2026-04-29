@@ -2,6 +2,8 @@ package model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,8 +29,9 @@ public class Usuario {
 	@Column(name = "senha_hash", nullable = false)
 	private String senhaHash;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String perfil;
+	private Perfil perfil;
 
 	@Column(nullable = false)
 	private boolean ativo = true; // Usuário começa ativo por padrão
@@ -40,6 +43,16 @@ public class Usuario {
 	// Usando LocalDateTime (mais moderno e não precisa da anotação @Temporal)
 	@Column(name = "token_expiracao")
 	private java.time.LocalDateTime tokenExpiracao;
+	// Dentro da classe Usuario.java
+	private int tentativasFalhas;
+
+	public int getTentativasFalhas() {
+		return tentativasFalhas;
+	}
+
+	public void setTentativasFalhas(int tentativasFalhas) {
+		this.tentativasFalhas = tentativasFalhas;
+	}
 
 	// Getters e Setters (Importante para o Hibernate funcionar)
 	public Integer getId() {
@@ -82,11 +95,11 @@ public class Usuario {
 		this.senhaHash = senhaHash;
 	}
 
-	public String getPerfil() {
+	public Perfil getPerfil() {
 		return perfil;
 	}
 
-	public void setPerfil(String perfil) {
+	public void setPerfil(Perfil perfil) {
 		this.perfil = perfil;
 	}
 
