@@ -45,4 +45,23 @@ public class UsuarioDAO {
 	public List<Usuario> listarTodos() {
 		return em.createQuery("SELECT u FROM Usuario u ORDER BY u.login", Usuario.class).getResultList();
 	}
+
+	public Usuario buscarPorToken(String token) {
+		try {
+			return em.createQuery("SELECT u FROM Usuario u WHERE u.tokenRecuperacao = :token", Usuario.class)
+					.setParameter("token", token).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public Usuario buscarPorEmail(String email) {
+		try {
+			TypedQuery<Usuario> query = em.createQuery("SELECT u FROM Usuario u WHERE u.email = :email", Usuario.class);
+			query.setParameter("email", email);
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			return null; // Usuário não encontrado
+		}
+	}
 }
