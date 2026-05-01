@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/LogoutServlet")
 public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private String login_directory = "/views/login.jsp";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -24,6 +25,6 @@ public class LogoutServlet extends HttpServlet {
 		}
 
 		// 3. Redireciona para a tela de login com uma mensagem opcional
-		response.sendRedirect("login.jsp");
+		response.sendRedirect(login_directory);
 	}
 }

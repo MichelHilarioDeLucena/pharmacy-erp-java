@@ -19,6 +19,7 @@ import service.EmailService;
 @WebServlet("/EsqueciSenhaServlet")
 public class EsqueciSenhaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private String login_directory = "/views/login.jsp";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -67,7 +68,7 @@ public class EsqueciSenhaServlet extends HttpServlet {
 					"Se o e-mail informado estiver cadastrado, você receberá um link de recuperação em instantes.");
 
 			// Pop-up
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.getRequestDispatcher(login_directory).forward(request, response);
 
 		} catch (Exception e) {
 			if (em.getTransaction().isActive()) {
@@ -75,7 +76,7 @@ public class EsqueciSenhaServlet extends HttpServlet {
 			}
 			e.printStackTrace();
 			request.setAttribute("mensagem", "Erro interno ao processar a recuperação.");
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.getRequestDispatcher(login_directory).forward(request, response);
 		} finally {
 			if (em.isOpen()) {
 				em.close();

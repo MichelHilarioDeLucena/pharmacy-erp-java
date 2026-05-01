@@ -20,6 +20,10 @@ import util.HashBCrypt;
 @WebServlet("/UsuarioServlet")
 public class UsuarioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private String login_directory = "/views/login.jsp";
+	private String edit_directory = "/views/user/editar_usuario.jsp";
+	private String list_directory = "/views/user/listaUsuarios.jsp";
+	private String form_directory = "/views/user/form.jsp";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -40,7 +44,7 @@ public class UsuarioServlet extends HttpServlet {
 		Usuario logado = (session != null) ? (Usuario) session.getAttribute("usuarioLogado") : null;
 
 		if (logado == null) {
-			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			response.sendRedirect(request.getContextPath() + login_directory);
 			return;
 		}
 
@@ -72,7 +76,7 @@ public class UsuarioServlet extends HttpServlet {
 				case "carregar":
 					Usuario uEdit = usuarioDAO.buscarPorId(Integer.parseInt(idParam));
 					request.setAttribute("usuario", uEdit);
-					request.getRequestDispatcher("/editar_usuario.jsp").forward(request, response);
+					request.getRequestDispatcher(form_directory).forward(request, response);
 					return;
 
 				case "atualizar":
@@ -95,14 +99,14 @@ public class UsuarioServlet extends HttpServlet {
 					// 1. Verifica login duplicado
 					if (usuarioDAO.buscarPorLogin(loginNovo) != null) {
 						request.setAttribute("mensagem", "Erro: Este login já está em uso.");
-						request.getRequestDispatcher("/cadastro_usuario.jsp").forward(request, response);
+						request.getRequestDispatcher(form_directory).forward(request, response);
 						return;
 					}
 
 					// 2. Verifica e-mail duplicado (O elo perdido!)
 					if (usuarioDAO.buscarPorEmail(emailNovo) != null) {
 						request.setAttribute("mensagem", "Erro: Este e-mail já está cadastrado em outra conta.");
-						request.getRequestDispatcher("/cadastro_usuario.jsp").forward(request, response);
+						request.getRequestDispatcher(form_directory).forward(request, response);
 						return;
 					}
 
@@ -120,7 +124,7 @@ public class UsuarioServlet extends HttpServlet {
 					return;
 
 				case "abrirCadastro":
-					request.getRequestDispatcher("/cadastro_usuario.jsp").forward(request, response);
+					request.getRequestDispatcher(form_directory).forward(request, response);
 					return;
 				}
 			}
@@ -129,7 +133,7 @@ public class UsuarioServlet extends HttpServlet {
 			// acima
 			List<Usuario> lista = usuarioDAO.listarTodos();
 			request.setAttribute("listaUsuarios", lista);
-			request.getRequestDispatcher("/listaUsuarios.jsp").forward(request, response);
+			request.getRequestDispatcher(list_directory).forward(request, response);
 
 		} catch (Exception e) {
 			if (em.getTransaction().isActive()) {

@@ -8,7 +8,7 @@ Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
 
 // Proteção básica: se não estiver logado, volta para o login
 if (logado == null) {
-	response.sendRedirect("login.jsp");
+	response.sendRedirect("${pageContext.request.contextPath}/login.jsp");
 	return;
 }
 
@@ -100,7 +100,8 @@ boolean temAcessoMaster = logado.getPerfil() == model.Perfil.ADMIN || logado.get
 			<%
 			if (temAcessoMaster) {
 			%>
-			<a href="UsuarioServlet?acao=abrirCadastro" class="btn btn-novo">➕ Novo Usuário</a>
+			<a href="UsuarioServlet?acao=abrirCadastro" class="btn btn-novo">➕
+				Novo Usuário</a>
 			<%
 			}
 			%>
