@@ -7,7 +7,7 @@
     boolean ehMaster = (perfil == Perfil.ADMIN || perfil == Perfil.GERENTE);
 
     if (!ehMaster) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("${pageContext.request.contextPath}/login.jsp");
         return;
     }
 %>

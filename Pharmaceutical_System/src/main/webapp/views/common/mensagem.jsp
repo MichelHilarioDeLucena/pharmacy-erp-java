@@ -13,7 +13,7 @@
         <p style="font-size: 16px; color: #555;"><strong><%= request.getAttribute("mensagem") %></strong></p>
         
         <br><br>
-        <a href="login.jsp" class="btn">Voltar para o Início</a>
+        <a href="${pageContext.request.contextPath}/login.jsp" class="btn">Voltar para o Início</a>
     </div>
 </body>
 </html>

@@ -30,7 +30,7 @@
         </form>
 
         <div class="links-uteis">
-            <a href="esqueciSenha.html">Esqueci minha senha</a>
+            <a href=${pageContext.request.contextPath}/views/auth/esqueciSenha.jsp>Esqueci minha senha</a>
         </div>
     </div>
 

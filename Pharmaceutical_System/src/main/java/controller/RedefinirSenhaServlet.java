@@ -17,6 +17,7 @@ import util.HashBCrypt;
 
 @WebServlet("/RedefinirSenhaServlet")
 public class RedefinirSenhaServlet extends HttpServlet {
+	private String login_directory = "/views/common/mensagem.jsp";
 
 	// GET — usuário clica no link do e-mail
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -31,7 +32,7 @@ public class RedefinirSenhaServlet extends HttpServlet {
 
 			if (u.getTokenExpiracao().isBefore(LocalDateTime.now())) {
 				request.setAttribute("mensagem", "Este link de recuperação expirou.");
-				request.getRequestDispatcher("/mensagem.jsp").forward(request, response);
+				request.getRequestDispatcher(login_directory).forward(request, response);
 				return;
 			}
 
@@ -71,7 +72,7 @@ public class RedefinirSenhaServlet extends HttpServlet {
 				return;
 			}
 
-			u.setSenhaHash(HashBCrypt.criptografarSenha(novaSenha));
+			u.setSenhaHash(HashBCrypt.hash(novaSenha));
 			u.setTokenRecuperacao(null);
 			u.setTokenExpiracao(null);
 			em.getTransaction().commit();

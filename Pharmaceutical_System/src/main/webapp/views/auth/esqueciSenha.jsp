@@ -15,7 +15,7 @@
 
             <div style="margin-top: 20px;">
                 <button type="submit" class="btn btn-ativar">Enviar Link de Recuperação</button>
-                <a href="login.jsp" class="btn">Voltar</a>
+                <a href="${pageContext.request.contextPath}/login.jsp" class="btn">Voltar</a>
             </div>
         </form>
     </div>

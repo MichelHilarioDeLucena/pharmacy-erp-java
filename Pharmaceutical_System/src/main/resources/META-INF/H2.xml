@@ -13,31 +13,30 @@
         <properties>
 
             <!-- ========================= -->
-            <!-- 🔴 BANCO MYSQL -->
+            <!-- 🟢 BANCO H2 -->
             <!-- ========================= -->
 
             <property name="javax.persistence.jdbc.driver"
-                value="com.mysql.cj.jdbc.Driver" />
+                value="org.h2.Driver" />
 
             <property name="javax.persistence.jdbc.url"
-                value="jdbc:mysql://localhost:3306/erp?useTimezone=true&amp;serverTimezone=UTC" />
+                value="jdbc:h2:mem:farmaciaDB;DB_CLOSE_DELAY=-1" />
 
-            <property name="javax.persistence.jdbc.user" value="${DB_USER}" />
-            <property name="javax.persistence.jdbc.password" value="${DB_PASSWORD}" />
+            <property name="javax.persistence.jdbc.user" value="sa" />
+            <property name="javax.persistence.jdbc.password" value="" />
 
             <property name="hibernate.dialect"
-                value="org.hibernate.dialect.MySQL8Dialect" />
+                value="org.hibernate.dialect.H2Dialect" />
 
             <!-- ========================= -->
             <!-- ⚙️ CONFIGURAÇÕES -->
             <!-- ========================= -->
 
-            <!-- em produção normalmente desligado -->
-            <property name="hibernate.show_sql" value="false" />
-            <property name="hibernate.format_sql" value="false" />
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
 
-            <!-- mantém estrutura sem apagar dados -->
-            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <!-- recria o banco sempre (ótimo pra testes) -->
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
 
         </properties>
     </persistence-unit>

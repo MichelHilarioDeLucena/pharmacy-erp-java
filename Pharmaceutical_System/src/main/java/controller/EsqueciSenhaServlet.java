@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,68 +12,75 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import config.JPAUtil;
+import dao.UsuarioDAO;
 import model.Usuario;
 import service.EmailService;
 
 @WebServlet("/EsqueciSenhaServlet")
 public class EsqueciSenhaServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private String login_directory = "/views/login.jsp";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		String email = request.getParameter("email");
 		EntityManager em = JPAUtil.getEntityManager();
+		UsuarioDAO usuarioDAO = new UsuarioDAO(em);
+		EmailService emailService = new EmailService();
 
 		try {
-			em.getTransaction().begin();
+			Usuario u = usuarioDAO.buscarPorEmail(email);
 
-			Usuario u = null;
-			try {
-				u = em.createQuery("SELECT u FROM Usuario u WHERE u.email = :email", Usuario.class)
-						.setParameter("email", email).getSingleResult();
-			} catch (NoResultException e) {
-				// Usuário não encontrado — u permanece null
-			}
-
+			// Criação de Token mediante existência de usuário ativo
 			if (u != null && u.isAtivo()) {
+				em.getTransaction().begin();
+
+				// 1. Geração do Token UUID
 				String token = UUID.randomUUID().toString();
 				u.setTokenRecuperacao(token);
 				u.setTokenExpiracao(LocalDateTime.now().plusMinutes(30));
 
+				// 2. Persistência do token no banco
+				usuarioDAO.salvar(u);
+				em.getTransaction().commit();
+
+				// URL Dinâmica
 				String urlBase = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 						+ request.getContextPath();
-				String linkRecuperacao = urlBase + "/RedefinirSenhaServlet?token=" + token;
+				String linkRecuperacao = urlBase + "/redefinirSenha.jsp?token=" + token;
 
-				String corpoEmail = "Olá " + u.getNome() + ",\n\n"
-						+ "Você solicitou a recuperação de senha no ERP Farmácia.\n"
-						+ "Clique no link abaixo para criar uma nova senha. Este link expira em 30 minutos:\n\n"
-						+ linkRecuperacao + "\n\n" + "Se você não solicitou isso, apenas ignore este e-mail.";
+				String corpoEmail = "<html><body>" + "<h2>Recuperação de Senha - ERP Farmácia</h2>" + "<p>Olá, <b>"
+						+ u.getNome() + "</b>.</p>"
+						+ "<p>Você solicitou a redefinição de sua senha. Clique no botão abaixo para prosseguir:</p>"
+						+ "<div style='margin: 20px 0;'>" + "<a href='" + linkRecuperacao
+						+ "' style='background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Redefinir Minha Senha</a>"
+						+ "</div>" + "<p>Este link é válido por <b>30 minutos</b>.</p>"
+						+ "<p>Se você não solicitou esta alteração, por favor ignore este e-mail.</p>"
+						+ "<hr><small>Este é um e-mail automático, não responda.</small>" + "</body></html>";
 
-				// [CORREÇÃO] E-mail enviado ANTES do commit.
-				// Antes, o commit ocorria antes do envio: se o EmailService falhasse,
-				// o token era salvo no banco mas o e-mail nunca chegava.
-				// Agora, se o envio falhar, o catch faz rollback e o banco fica limpo.
-				EmailService carteiro = new EmailService();
-				carteiro.enviarEmail(u.getEmail(), "Recuperação de Senha - ERP", corpoEmail);
-
-				em.getTransaction().commit();
-			} else {
-				em.getTransaction().rollback();
+				// Envio de E-mail
+				emailService.enviarEmail(u.getEmail(), "Recuperação de Senha - ERP", corpoEmail);
 			}
 
-			// Mensagem genérica em ambos os casos — não revela se o e-mail existe
+			// Mensagem genérica para evitar "Pesca de E-mails"
 			request.setAttribute("mensagem",
-					"Se o e-mail existir em nossa base, você receberá as instruções em instantes.");
-			request.getRequestDispatcher("/mensagem.jsp").forward(request, response);
+					"Se o e-mail informado estiver cadastrado, você receberá um link de recuperação em instantes.");
+
+			// Pop-up
+			request.getRequestDispatcher(login_directory).forward(request, response);
 
 		} catch (Exception e) {
 			if (em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
 			}
 			e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao processar recuperação.");
+			request.setAttribute("mensagem", "Erro interno ao processar a recuperação.");
+			request.getRequestDispatcher(login_directory).forward(request, response);
 		} finally {
-			em.close();
+			if (em.isOpen()) {
+				em.close();
+			}
 		}
 	}
 }
