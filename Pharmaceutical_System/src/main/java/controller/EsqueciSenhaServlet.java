@@ -29,10 +29,9 @@ public class EsqueciSenhaServlet extends HttpServlet {
 		EmailService emailService = new EmailService();
 
 		try {
-			// Buscamos o usuário usando o DAO (Mantenha seu buscarPorEmail no DAO)
 			Usuario u = usuarioDAO.buscarPorEmail(email);
 
-			// Iniciamos a transação apenas se precisarmos gravar o token
+			// Criação de Token mediante existência de usuário ativo
 			if (u != null && u.isAtivo()) {
 				em.getTransaction().begin();
 
@@ -45,12 +44,11 @@ public class EsqueciSenhaServlet extends HttpServlet {
 				usuarioDAO.salvar(u);
 				em.getTransaction().commit();
 
-				// 3. Construção da URL de recuperação
+				// URL Dinâmica
 				String urlBase = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 						+ request.getContextPath();
 				String linkRecuperacao = urlBase + "/redefinirSenha.jsp?token=" + token;
 
-				// 4. Montagem do corpo em HTML (Muito mais profissional)
 				String corpoEmail = "<html><body>" + "<h2>Recuperação de Senha - ERP Farmácia</h2>" + "<p>Olá, <b>"
 						+ u.getNome() + "</b>.</p>"
 						+ "<p>Você solicitou a redefinição de sua senha. Clique no botão abaixo para prosseguir:</p>"
@@ -60,16 +58,15 @@ public class EsqueciSenhaServlet extends HttpServlet {
 						+ "<p>Se você não solicitou esta alteração, por favor ignore este e-mail.</p>"
 						+ "<hr><small>Este é um e-mail automático, não responda.</small>" + "</body></html>";
 
-				// 5. Envio do e-mail
+				// Envio de E-mail
 				emailService.enviarEmail(u.getEmail(), "Recuperação de Senha - ERP", corpoEmail);
 			}
 
-			// SEGURANÇA: Independente de o usuário existir ou estar ativo,
-			// a resposta para o navegador é sempre a mesma para evitar "pesca de e-mails".
+			// Mensagem genérica para evitar "Pesca de E-mails"
 			request.setAttribute("mensagem",
 					"Se o e-mail informado estiver cadastrado, você receberá um link de recuperação em instantes.");
 
-			// Usamos o login.jsp para que o pop-up JavaScript que criamos apareça lá
+			// Pop-up
 			request.getRequestDispatcher("/login.jsp").forward(request, response);
 
 		} catch (Exception e) {

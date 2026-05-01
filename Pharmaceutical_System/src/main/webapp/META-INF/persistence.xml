@@ -7,18 +7,38 @@
     <persistence-unit name="erp" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         
+        <!-- ENTIDADES -->
         <class>model.Usuario</class>
 
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/erp?useTimezone=true&amp;serverTimezone=UTC" />
-            <property name="javax.persistence.jdbc.user" value="" />
-            <property name="javax.persistence.jdbc.password" value="" />
 
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.format_sql" value="true" />
+            <!-- ========================= -->
+            <!-- 🔴 BANCO MYSQL -->
+            <!-- ========================= -->
+
+            <property name="javax.persistence.jdbc.driver"
+                value="com.mysql.cj.jdbc.Driver" />
+
+            <property name="javax.persistence.jdbc.url"
+                value="jdbc:mysql://localhost:3306/erp?useTimezone=true&amp;serverTimezone=UTC" />
+
+            <property name="javax.persistence.jdbc.user" value="${DB_USER}" />
+            <property name="javax.persistence.jdbc.password" value="${DB_PASSWORD}" />
+
+            <property name="hibernate.dialect"
+                value="org.hibernate.dialect.MySQL8Dialect" />
+
+            <!-- ========================= -->
+            <!-- ⚙️ CONFIGURAÇÕES -->
+            <!-- ========================= -->
+
+            <!-- em produção normalmente desligado -->
+            <property name="hibernate.show_sql" value="false" />
+            <property name="hibernate.format_sql" value="false" />
+
+            <!-- mantém estrutura sem apagar dados -->
             <property name="hibernate.hbm2ddl.auto" value="update" />
+
         </properties>
     </persistence-unit>
 </persistence>

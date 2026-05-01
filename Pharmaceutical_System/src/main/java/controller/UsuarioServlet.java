@@ -23,15 +23,15 @@ public class UsuarioServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processarRequisicao(request, response);
+		processRequest(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processarRequisicao(request, response);
+		processRequest(request, response);
 	}
 
-	private void processarRequisicao(HttpServletRequest request, HttpServletResponse response)
+	private void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		// [CORREÇÃO 1] Verificação de sessão ANTES de qualquer operação.
@@ -90,12 +90,18 @@ public class UsuarioServlet extends HttpServlet {
 
 				case "salvar":
 					String loginNovo = request.getParameter("login");
+					String emailNovo = request.getParameter("email"); // Pegando o parâmetro e-mail
 
-					// [CORREÇÃO 3] Verifica login duplicado antes de persistir.
-					// Sem isso, se o banco não tiver UNIQUE, cria dois usuários com
-					// o mesmo login. Se tiver, lança exceção crua do Hibernate.
+					// 1. Verifica login duplicado
 					if (usuarioDAO.buscarPorLogin(loginNovo) != null) {
-						request.setAttribute("mensagem", "Este login já está em uso.");
+						request.setAttribute("mensagem", "Erro: Este login já está em uso.");
+						request.getRequestDispatcher("/cadastro_usuario.jsp").forward(request, response);
+						return;
+					}
+
+					// 2. Verifica e-mail duplicado (O elo perdido!)
+					if (usuarioDAO.buscarPorEmail(emailNovo) != null) {
+						request.setAttribute("mensagem", "Erro: Este e-mail já está cadastrado em outra conta.");
 						request.getRequestDispatcher("/cadastro_usuario.jsp").forward(request, response);
 						return;
 					}
@@ -106,7 +112,7 @@ public class UsuarioServlet extends HttpServlet {
 					novoU.setEmail(request.getParameter("email"));
 					novoU.setLogin(loginNovo);
 					novoU.setPerfil(Perfil.valueOf(request.getParameter("perfil")));
-					novoU.setSenhaHash(HashBCrypt.criptografarSenha(request.getParameter("senha")));
+					novoU.setSenhaHash(HashBCrypt.hash(request.getParameter("senha")));
 					novoU.setAtivo(true);
 					usuarioDAO.salvar(novoU);
 					em.getTransaction().commit();

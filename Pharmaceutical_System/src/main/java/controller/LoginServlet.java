@@ -65,7 +65,7 @@ public class LoginServlet extends HttpServlet {
 			}
 
 			// 5. VALIDAÇÃO DE SENHA
-			boolean senhaBate = HashBCrypt.verificarSenha(senhaPura, u.getSenhaHash());
+			boolean senhaBate = HashBCrypt.check(senhaPura, u.getSenhaHash());
 
 			if (senhaBate) {
 				// SUCESSO

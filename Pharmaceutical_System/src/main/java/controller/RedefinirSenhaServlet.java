@@ -71,7 +71,7 @@ public class RedefinirSenhaServlet extends HttpServlet {
 				return;
 			}
 
-			u.setSenhaHash(HashBCrypt.criptografarSenha(novaSenha));
+			u.setSenhaHash(HashBCrypt.hash(novaSenha));
 			u.setTokenRecuperacao(null);
 			u.setTokenExpiracao(null);
 			em.getTransaction().commit();
