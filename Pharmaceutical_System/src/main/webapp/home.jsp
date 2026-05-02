@@ -42,7 +42,7 @@
                 </a>
             <% } %>
 
-            <a href="vendas.jsp" class="card-opcao">
+            <a href="${pageContext.request.contextPath}/CheckoutServlet" class="card-opcao">
                 <h3>💰 Frente de Caixa</h3>
                 <p>Realizar vendas e consultas.</p>
             </a>
