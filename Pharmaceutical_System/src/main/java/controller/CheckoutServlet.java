@@ -107,11 +107,16 @@ public class CheckoutServlet extends HttpServlet {
 					em.merge(p);
 				}
 
+				// ... dentro do commit ...
 				em.persist(newSale);
 				em.getTransaction().commit();
 
+				// Pega o ID gerado pelo banco
+				Integer generatedId = newSale.getId();
+
 				session.removeAttribute("cart");
-				response.sendRedirect(request.getContextPath() + "/CheckoutServlet?success=true");
+				// Redireciona passando o ID da venda
+				response.sendRedirect(request.getContextPath() + "/CheckoutServlet?success=true&saleId=" + generatedId);
 			}
 		} catch (Exception e) {
 			if (em.getTransaction().isActive()) {

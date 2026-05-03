@@ -59,16 +59,22 @@
 
 	<h2>Point of Sale 🛒</h2>
 
-	<%
+<%
 	if ("true".equals(request.getParameter("success"))) {
+	    // Pega o ID da venda que o Servlet mandou na URL
+	    String saleId = request.getParameter("saleId"); 
 	%>
-	<p style="color: green;">
-		<b>Venda finalizada e estoque atualizado!</b>
-	</p>
+	<div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+	    <b>✅ Venda finalizada com sucesso e estoque atualizado!</b><br>
+	    
+	    <a href="${pageContext.request.contextPath}/ReceiptServlet?saleId=<%=saleId%>" 
+	       style="display: inline-block; margin-top: 10px; padding: 8px 15px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
+	       📄 Baixar Cupom Fiscal (PDF)
+	    </a>
+	</div>
 	<%
 	}
 	%>
-
 	<h3>Produtos Disponíveis (Clique para "Bipar")</h3>
 	<div class="product-grid">
 		<%
