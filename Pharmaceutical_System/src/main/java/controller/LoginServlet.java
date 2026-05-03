@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import config.AppPaths;
 import config.JPAUtil;
 import dao.UsuarioDAO;
 import model.Usuario;
@@ -19,7 +20,6 @@ import util.HashBCrypt;
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String login_directory = "/views/login.jsp";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
 			// Se o IP já errou muito, barramos aqui antes de qualquer consulta de usuário
 			if (LogService.ipBloqueado(ip, em)) {
 				request.setAttribute("mensagem", "IP bloqueado temporariamente por excesso de tentativas.");
-				request.getRequestDispatcher(login_directory).forward(request, response);
+				request.getRequestDispatcher(AppPaths.LOGIN_PAGE).forward(request, response);
 				return;
 			}
 
@@ -101,7 +101,7 @@ public class LoginServlet extends HttpServlet {
 				em.getTransaction().rollback();
 			e.printStackTrace();
 			request.setAttribute("mensagem", "Erro técnico ao tentar logar. Tente mais tarde.");
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.getRequestDispatcher(AppPaths.LOGIN_PAGE).forward(request, response);
 		} finally {
 			if (em.isOpen())
 				em.close();

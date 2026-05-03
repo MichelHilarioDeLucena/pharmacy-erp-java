@@ -1,15 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="model.Usuario, model.Perfil"%>
+<%@ page import="model.Usuario, model.Perfil,config.AppPaths"%>
 <%
     Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
     if (logado == null) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
 
-    // [CORREÇÃO] Perfil resolvido uma única vez, com guard contra null.
-    // Antes, logado.getPerfil().name() e .toString() eram chamados diretamente
-    // no HTML — NPE garantido se o perfil não estivesse preenchido.
     Perfil perfil = logado.getPerfil();
     boolean ehAdmin   = (perfil == Perfil.ADMIN);
     boolean ehGerente = (perfil == Perfil.GERENTE);
@@ -20,7 +17,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - ERP Farmácia</title>
+    <title>Home - ERP Farmácia</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
@@ -35,24 +32,44 @@
         <h1>Menu Principal</h1>
         <div class="grid-opcoes">
 
-            <% if (ehAdmin || ehGerente) { %>
-                <a href="UsuarioServlet?acao=listar" class="card-opcao">
-                    <h3>👥 Gestão de Pessoas</h3>
-                    <p>Visualizar equipe e contatos.</p>
-                </a>
-            <% } %>
+<div class="grid-opcoes">
 
-            <a href="vendas.jsp" class="card-opcao">
-                <h3>💰 Frente de Caixa</h3>
-                <p>Realizar vendas e consultas.</p>
-            </a>
+    <%-- DASHBOARD: Apenas Admin e Gerente --%>
+    <% if (ehAdmin || ehGerente) { %>
+        <a href="<%= request.getContextPath() + AppPaths.DASHBOARD_SERVLET %>" class="card-opcao">
+            <div class="icon">📊</div>
+            <h3>Dashboard de Vendas</h3>
+            <p>Análise de faturamento e produtos top.</p>
+        </a>
+    <% } %>
 
-            <% if (!ehCaixa) { %>
-                <a href="estoque.jsp" class="card-opcao">
-                    <h3>📦 Estoque</h3>
-                    <p>Entrada de mercadorias e validade.</p>
-                </a>
-            <% } %>
+    <%-- GESTÃO DE PESSOAS: Apenas Admin e Gerente --%>
+    <% if (ehAdmin || ehGerente) { %>
+        <a href="<%= request.getContextPath() + AppPaths.USUARIO_LISTAR_ACAO %>" class="card-opcao">
+            <div class="icon">👥</div>
+            <h3>Gestão de Pessoas</h3>
+            <p>Visualizar equipe e contatos.</p>
+        </a>
+    <% } %>
+
+    <%-- FRENTE DE CAIXA: Acesso Geral --%>
+    <a href="<%= request.getContextPath() + AppPaths.CHECKOUT_SERVLET %>" class="card-opcao">
+        <div class="icon">💰</div>
+        <h3>Frente de Caixa</h3>
+        <p>Realizar vendas e consultas.</p>
+    </a>
+
+    <%-- ESTOQUE: Apenas se NÃO for Caixa --%>
+    <% if (!ehCaixa) { %>
+        <a href="<%= request.getContextPath() + "/EstoqueServlet" %>" class="card-opcao"> 
+            <%-- Nota: Quando criarmos o EstoqueServlet, ele deve ir para o AppPaths também! --%>
+            <div class="icon">📦</div>
+            <h3>Estoque</h3>
+            <p>Entrada de mercadorias e validade.</p>
+        </a>
+    <% } %>
+
+</div>
 
         </div>
     </div>
