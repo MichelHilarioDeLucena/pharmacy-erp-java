@@ -37,4 +37,5 @@ public class AppPaths {
 
 	// --- ATALHOS DE AÇÕES ---
 	public static final String USUARIO_LISTAR_ACAO = "/UsuarioServlet?acao=listar";
+	public static final String ENTRADA_ESTOQUE = "/entrada_estoque.jsp";
 }
