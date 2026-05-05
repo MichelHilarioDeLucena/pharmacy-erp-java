@@ -15,10 +15,12 @@ import config.JPAUtil;
 import model.Product;
 import service.ProductService;
 
+
 @WebServlet("/ProductServlet")
 public class ProductServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,6 +41,7 @@ public class ProductServlet extends HttpServlet {
 
             } else if ("desativar".equals(action)) {
             	Long id = Long.parseLong(request.getParameter("id"));
+
                 em.getTransaction().begin();
                 service.desativar(id);
                 em.getTransaction().commit();
@@ -57,6 +60,7 @@ public class ProductServlet extends HttpServlet {
             } else {
                 request.setAttribute("produtos", service.listarTodos());
                 request.getRequestDispatcher(AppPaths.PRODUTO_LISTA)
+
                        .forward(request, response);
             }
 
@@ -66,6 +70,7 @@ public class ProductServlet extends HttpServlet {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro ao carregar produtos.");
             request.getRequestDispatcher(AppPaths.PRODUTO_LISTA)
+
                    .forward(request, response);
         } finally {
             if (em.isOpen()) em.close();
@@ -91,12 +96,12 @@ public class ProductServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/ProductServlet");
                 return;
             }
-
             Product product = new Product();
 
             String idParam = request.getParameter("id");
             if (idParam != null && !idParam.isEmpty()) {
                 product = service.buscarPorId(Long.parseLong(idParam));
+
             }
 
             product.setName(request.getParameter("nome"));

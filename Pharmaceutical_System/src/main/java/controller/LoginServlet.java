@@ -41,7 +41,6 @@ public class LoginServlet extends HttpServlet {
 			}
 
 			em.getTransaction().begin();
-
 			// 2. BUSCA DO USUÁRIO
 			Usuario u = usuarioDAO.buscarPorLogin(login);
 
@@ -54,7 +53,6 @@ public class LoginServlet extends HttpServlet {
 				request.getRequestDispatcher("/login.jsp").forward(request, response);
 				return;
 			}
-
 			// 4. VERIFICAÇÃO DE STATUS (CONTA BLOQUEADA)
 			if (!u.isAtivo()) {
 				LogService.registrar(u, "LOGIN", ip, "FALHA - CONTA BLOQUEADA", em);
@@ -67,7 +65,7 @@ public class LoginServlet extends HttpServlet {
 
 			// 5. VALIDAÇÃO DE SENHA
 			boolean senhaBate = HashBCrypt.check(senhaPura, u.getSenhaHash());
-
+			
 			if (senhaBate) {
 				// SUCESSO
 				u.setTentativasFalhas(0);
@@ -80,9 +78,9 @@ public class LoginServlet extends HttpServlet {
 
 			} else {
 				// FALHA DE SENHA
+				
 				int falhas = u.getTentativasFalhas() + 1;
 				u.setTentativasFalhas(falhas);
-
 				String resultado = "FALHA - TENTATIVA " + falhas;
 				if (falhas >= 3) {
 					u.setAtivo(false); // Bloqueio lógico do usuário

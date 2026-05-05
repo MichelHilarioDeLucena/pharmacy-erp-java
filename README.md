@@ -23,7 +23,7 @@ O projeto foi desenvolvido em Java com foco em **segurança, organização modul
 
 # 🔐 Requisitos do Sistema
 
-## I. Segurança e Controle de Acesso
+## I. Segurança e Controle de Acesso (1-6)
 
 * [PARCIAL] Registro de acessos (**log_acessos**: usuário, data/hora, ação, IP, resultado)
 * [ ] Proteção contra CSRF
@@ -34,7 +34,7 @@ O projeto foi desenvolvido em Java com foco em **segurança, organização modul
 
 ---
 
-## II. Gestão de Usuários e Perfis
+## II. Gestão de Usuários e Perfis (7-12)
 
 * [X] Cadastro de usuários
 * [X] Edição de usuários
@@ -45,7 +45,7 @@ O projeto foi desenvolvido em Java com foco em **segurança, organização modul
 
 ---
 
-## III. Gestão de Produtos e Estoque
+## III. Gestão de Produtos e Estoque (13-20)
 
 * [ ] Cadastro de produtos
 * [ ] Edição de produtos
@@ -58,7 +58,7 @@ O projeto foi desenvolvido em Java com foco em **segurança, organização modul
 
 ---
 
-## IV. Gestão de Fornecedores e Compras
+## IV. Gestão de Fornecedores e Compras (21-24)
 
 * [ ] Cadastro de fornecedores (CNPJ, contato, produtos)
 * [ ] Histórico de compras
@@ -66,7 +66,7 @@ O projeto foi desenvolvido em Java com foco em **segurança, organização modul
 
 ---
 
-## V. Gestão de Vendas e Pagamentos
+## V. Gestão de Vendas e Pagamentos (25-34)
 
 * [ ] Carrinho de compras (checkout)
 * [ ] Pagamento via boleto (simulado)
@@ -82,7 +82,7 @@ O projeto foi desenvolvido em Java com foco em **segurança, organização modul
 
 ---
 
-## VI. Relatórios
+## VI. Relatórios (35-37)
 
 * [ ] Relatório de vendas (PDF/CSV)
 * [ ] Relatório de estoque baixo
