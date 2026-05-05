@@ -25,7 +25,7 @@ public class ProductDAO {
         em.remove(em.contains(product) ? product : em.merge(product));
     }
 
-    public Product buscarPorId(Integer id) {
+    public Product buscarPorId(Long id) {
         return em.find(Product.class, id);
     }
 

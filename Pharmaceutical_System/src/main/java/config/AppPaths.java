@@ -24,9 +24,9 @@ public class AppPaths {
 	public static final String USUARIO_LISTA = USER_BASE + "/listaUsuarios.jsp";
 
 	// --- PRODUTO / ESTOQUE ---
-	public static final String PRODUTO_FORM = VIEW_BASE + "/produto/form.jsp";
-	public static final String PRODUTO_LISTA = VIEW_BASE + "/produto/lista.jsp";
-
+	public static final String PRODUTO_FORM = VIEW_BASE + "/product/form.jsp";
+	public static final String PRODUTO_LISTA = VIEW_BASE + "/product/lista.jsp";
+	public static final String PRODUTO_SERVLET = "/ProductServlet";
 	// --- DASHBOARD ---
 	public static final String DASHBOARD_JSP = DASHBOARD_BASE + "/dashboard.jsp";
 	public static final String DASHBOARD_SERVLET = "/DashboardServlet";
@@ -37,4 +37,8 @@ public class AppPaths {
 
 	// --- ATALHOS DE AÇÕES ---
 	public static final String USUARIO_LISTAR_ACAO = "/UsuarioServlet?acao=listar";
+	public static final String ENTRADA_ESTOQUE = "/entrada_estoque.jsp";
+	
+	
+	
 }

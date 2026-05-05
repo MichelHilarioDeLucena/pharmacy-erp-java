@@ -9,16 +9,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import config.AppPaths;
 import config.JPAUtil;
 import model.Product;
 import service.ProductService;
+
 
 @WebServlet("/ProductServlet")
 public class ProductServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // Lista todos os produtos
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -30,14 +33,15 @@ public class ProductServlet extends HttpServlet {
             String action = request.getParameter("action");
 
             if ("editar".equals(action)) {
-                Integer id = Integer.parseInt(request.getParameter("id"));
+                Long id = Long.parseLong(request.getParameter("id"));
                 Product product = service.buscarPorId(id);
                 request.setAttribute("produto", product);
-                request.getRequestDispatcher("/views/inventory/formProduto.jsp")
+                request.getRequestDispatcher(AppPaths.PRODUTO_FORM)
                        .forward(request, response);
 
             } else if ("desativar".equals(action)) {
-                Integer id = Integer.parseInt(request.getParameter("id"));
+            	Long id = Long.parseLong(request.getParameter("id"));
+
                 em.getTransaction().begin();
                 service.desativar(id);
                 em.getTransaction().commit();
@@ -46,14 +50,17 @@ public class ProductServlet extends HttpServlet {
             } else if ("estoqueBaixo".equals(action)) {
                 request.setAttribute("produtos", service.listarEstoqueBaixo());
                 request.setAttribute("alertaEstoque", true);
-                request.getRequestDispatcher("/views/inventory/listaProdutos.jsp")
+                request.getRequestDispatcher(AppPaths.PRODUTO_LISTA)
                        .forward(request, response);
+
             } else if ("novo".equals(action)) {
-                request.getRequestDispatcher("/views/inventory/formProduto.jsp")
-                       .forward(request, response);            
+                request.getRequestDispatcher(AppPaths.PRODUTO_FORM)
+                       .forward(request, response);
+
             } else {
                 request.setAttribute("produtos", service.listarTodos());
-                request.getRequestDispatcher("/views/inventory/listaProdutos.jsp")
+                request.getRequestDispatcher(AppPaths.PRODUTO_LISTA)
+
                        .forward(request, response);
             }
 
@@ -62,14 +69,14 @@ public class ProductServlet extends HttpServlet {
                 em.getTransaction().rollback();
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro ao carregar produtos.");
-            request.getRequestDispatcher("/views/inventory/listaProdutos.jsp")
+            request.getRequestDispatcher(AppPaths.PRODUTO_LISTA)
+
                    .forward(request, response);
         } finally {
             if (em.isOpen()) em.close();
         }
     }
 
-    // Cadastra ou atualiza produto
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -81,8 +88,7 @@ public class ProductServlet extends HttpServlet {
             String action = request.getParameter("action");
 
             if ("entrada".equals(action)) {
-                // Entrada de inventory
-                Integer id = Integer.parseInt(request.getParameter("id"));
+            	Long id = Long.parseLong(request.getParameter("id"));
                 Integer quantidade = Integer.parseInt(request.getParameter("quantidade"));
                 em.getTransaction().begin();
                 service.entradaEstoque(id, quantidade);
@@ -90,13 +96,12 @@ public class ProductServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/ProductServlet");
                 return;
             }
-
-            // Cadastro ou edição
             Product product = new Product();
 
             String idParam = request.getParameter("id");
             if (idParam != null && !idParam.isEmpty()) {
-                product = service.buscarPorId(Integer.parseInt(idParam));
+                product = service.buscarPorId(Long.parseLong(idParam));
+
             }
 
             product.setName(request.getParameter("nome"));
@@ -132,7 +137,7 @@ public class ProductServlet extends HttpServlet {
                 em.getTransaction().rollback();
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro: " + e.getMessage());
-            request.getRequestDispatcher("/views/inventory/formProduto.jsp")
+            request.getRequestDispatcher(AppPaths.PRODUTO_FORM)
                    .forward(request, response);
         } finally {
             if (em.isOpen()) em.close();

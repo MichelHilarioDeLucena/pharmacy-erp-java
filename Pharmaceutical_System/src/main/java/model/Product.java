@@ -11,39 +11,44 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "produtos")
 @NamedQueries({
-		@NamedQuery(name = "Product.findActiveWithStock", query = "SELECT p FROM Product p WHERE p.active = true AND p.currentStock > 0") })
+		@NamedQuery(name = "Product.findActiveWithStock", query = "SELECT p FROM Product p WHERE p.active = true AND p.currentStock > 0"),
+		@NamedQuery(name = "Product.findLowStock", query = "SELECT p FROM Product p WHERE p.active = true AND p.currentStock <= p.minStock") })
 public class Product {
 	@Column(name = "data_validade")
 	private LocalDate expirationDate;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 
-	@Column(name = "codigo_barras", unique = true)
+	// Colunas novas mapeadas exatamente com o nome do BD
+	@Column(name = "codigo_barras", unique = true, length = 50)
 	private String barcode;
 
-	@Column(name = "nome", nullable = false)
+	@Column(name = "nome", nullable = false, length = 150)
 	private String name;
 
 	@Column(name = "descricao", columnDefinition = "TEXT")
 	private String description;
 
-	@Column(name = "preco_custo", nullable = false)
+	@Column(name = "preco_custo", nullable = false, precision = 10, scale = 2)
 	private BigDecimal costPrice;
 
-	@Column(name = "preco_venda", nullable = false)
+	@Column(name = "preco_venda", nullable = false, precision = 10, scale = 2)
 	private BigDecimal salePrice;
 
 	@Column(name = "qtd_atual", nullable = false)
 	private Integer currentStock;
 
 	@Column(name = "qtd_minima", nullable = false)
-	private Integer minStock;
+	private Integer minStock = 5;
 
+	// Trocamos de String para Integer para bater com o banco (categoria_id e
+	// fornecedor_id)
 	@Column(name = "categoria_id")
 	private Integer categoryId;
 
@@ -53,21 +58,15 @@ public class Product {
 	@Column(name = "ativo")
 	private Boolean active = true;
 
-	// --- GETTERS & SETTERS ---
-	
-	public LocalDate getExpirationDate() {
-	    return expirationDate;
-	}
+	// ==========================================
+	// GETTERS E SETTERS
+	// ==========================================
 
-	public void setExpirationDate(LocalDate expirationDate) {
-	    this.expirationDate = expirationDate;
-	}
-
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -149,5 +148,12 @@ public class Product {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public LocalDate getExpirationDate() {
+	    return expirationDate;
+	}
+	public void setExpirationDate(LocalDate expirationDate) {
+	    this.expirationDate = expirationDate;
 	}
 }
