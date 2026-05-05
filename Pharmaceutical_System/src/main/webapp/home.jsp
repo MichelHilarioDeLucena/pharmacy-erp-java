@@ -61,7 +61,7 @@
 
     <%-- ESTOQUE: Apenas se NÃO for Caixa --%>
     <% if (!ehCaixa) { %>
-        <a href="<%= request.getContextPath() + "/EstoqueServlet" %>" class="card-opcao"> 
+        <a href="<%= request.getContextPath() + "/ProductServlet" %>" class="card-opcao"> 
             <%-- Nota: Quando criarmos o EstoqueServlet, ele deve ir para o AppPaths também! --%>
             <div class="icon">📦</div>
             <h3>Estoque</h3>

@@ -1,6 +1,7 @@
 package model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +17,8 @@ import javax.persistence.Table;
 @NamedQueries({
 		@NamedQuery(name = "Product.findActiveWithStock", query = "SELECT p FROM Product p WHERE p.active = true AND p.currentStock > 0") })
 public class Product {
-
+	@Column(name = "data_validade")
+	private LocalDate expirationDate;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -52,6 +54,14 @@ public class Product {
 	private Boolean active = true;
 
 	// --- GETTERS & SETTERS ---
+	
+	public LocalDate getExpirationDate() {
+	    return expirationDate;
+	}
+
+	public void setExpirationDate(LocalDate expirationDate) {
+	    this.expirationDate = expirationDate;
+	}
 
 	public Integer getId() {
 		return id;
