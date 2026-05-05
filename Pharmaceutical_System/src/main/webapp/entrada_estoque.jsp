@@ -30,7 +30,6 @@
             <a href="${pageContext.request.contextPath}/home.jsp">Voltar ao Painel</a>
         </div>
     </header>
-
     <div class="container-wide">
         <h2>📦 Nova Entrada de Mercadoria</h2>
         <p class="subtitulo">Preencha os dados abaixo para registrar os produtos enviados pelo fornecedor.</p>
