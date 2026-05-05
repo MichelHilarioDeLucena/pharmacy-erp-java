@@ -23,7 +23,6 @@
     </style>
 </head>
 <body>
-
     <header>
         <div class="marca">💊 ERP Farmácia - Controle de Estoque</div>
         <div class="user-info">
