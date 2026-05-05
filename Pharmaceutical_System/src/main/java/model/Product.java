@@ -19,7 +19,8 @@ import java.time.LocalDate;
 		@NamedQuery(name = "Product.findActiveWithStock", query = "SELECT p FROM Product p WHERE p.active = true AND p.currentStock > 0"),
 		@NamedQuery(name = "Product.findLowStock", query = "SELECT p FROM Product p WHERE p.active = true AND p.currentStock <= p.minStock") })
 public class Product {
-
+	@Column(name = "data_validade")
+	private LocalDate expirationDate;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -56,10 +57,6 @@ public class Product {
 
 	@Column(name = "ativo")
 	private Boolean active = true;
-
-	// O requisito de validade que faltava!
-	@Column(name = "data_validade")
-	private LocalDate expirationDate;
 
 	// ==========================================
 	// GETTERS E SETTERS
