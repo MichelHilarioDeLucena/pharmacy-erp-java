@@ -83,7 +83,14 @@
                     <p>Histórico e pedidos automáticos.</p>
                 </a>
             <% } %>
-
+            
+			<% if (ehAdmin || ehGerente) { %>
+			    <a href="<%= request.getContextPath() + AppPaths.REPORT_SERVLET %>" class="card-opcao">
+			        <div class="icon">📊</div>
+			        <h3>Relatórios</h3>
+			        <p>Estoque, compras e fornecedores.</p>
+			    </a>
+			<% } %>
         </div>
     </div>
 </body>

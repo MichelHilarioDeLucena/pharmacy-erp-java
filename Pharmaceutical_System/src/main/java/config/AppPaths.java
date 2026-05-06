@@ -46,6 +46,10 @@ public class AppPaths {
 	public static final String CHECKOUT_JSP     = CASHIER_BASE + "/checkout.jsp";
 	public static final String CHECKOUT_SERVLET = "/CheckoutServlet";
 
+	// --- RELATÓRIOS ---
+	public static final String REPORT_LISTA   = VIEW_BASE + "/report/lista.jsp";
+	public static final String REPORT_SERVLET = "/ReportServlet";
+
 	// --- ATALHOS DE AÇÕES ---
 	public static final String USUARIO_LISTAR_ACAO = "/UsuarioServlet?acao=listar";
 	public static final String ENTRADA_ESTOQUE     = "/entrada_estoque.jsp";
