@@ -66,6 +66,31 @@
                 </a>
             <% } %>
 
+            <%-- FORNECEDORES: Apenas Admin e Gerente --%>
+            <% if (ehAdmin || ehGerente) { %>
+                <a href="<%= request.getContextPath() + AppPaths.SUPPLIER_SERVLET %>" class="card-opcao">
+                    <div class="icon">🏭</div>
+                    <h3>Fornecedores</h3>
+                    <p>Cadastro e gestão de fornecedores.</p>
+                </a>
+            <% } %>
+
+            <%-- COMPRAS: Apenas Admin e Gerente --%>
+            <% if (ehAdmin || ehGerente) { %>
+                <a href="<%= request.getContextPath() + AppPaths.PURCHASE_SERVLET %>" class="card-opcao">
+                    <div class="icon">🛒</div>
+                    <h3>Compras</h3>
+                    <p>Histórico e pedidos automáticos.</p>
+                </a>
+            <% } %>
+            
+			<% if (ehAdmin || ehGerente) { %>
+			    <a href="<%= request.getContextPath() + AppPaths.REPORT_SERVLET %>" class="card-opcao">
+			        <div class="icon">📊</div>
+			        <h3>Relatórios</h3>
+			        <p>Estoque, compras e fornecedores.</p>
+			    </a>
+			<% } %>
         </div>
     </div>
 </body>

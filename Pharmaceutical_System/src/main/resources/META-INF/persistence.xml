@@ -6,9 +6,16 @@
 
     <persistence-unit name="erp" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        
+
         <!-- ENTIDADES -->
         <class>model.Usuario</class>
+        <class>model.LogAcesso</class>
+        <class>model.Product</class>
+        <class>model.Sale</class>
+        <class>model.SaleItem</class>
+        <class>model.Supplier</class>
+        <class>model.Purchase</class>
+        <class>model.PurchaseItem</class>
 
         <properties>
 
