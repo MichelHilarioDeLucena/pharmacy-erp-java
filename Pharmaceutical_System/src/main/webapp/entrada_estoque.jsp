@@ -43,7 +43,6 @@
 
         <form action="${pageContext.request.contextPath}/ProductServlet" method="POST">
             <input type="hidden" name="acao" value="salvar">
-
             <div class="form-row">
 <div class="form-group">
     <label for="barcode">Código de Barras *</label>
