@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="model.Product"%>
 <%@ page import="model.Usuario, model.Perfil"%>
+<%@ page import="model.Supplier, java.util.List" %>
 <%
     Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
     if (logado == null) {
@@ -65,7 +66,26 @@
                 <label>Descrição</label>
                 <textarea name="descricao" rows="3"><%=ehEdicao && produto.getDescription() != null ? produto.getDescription() : ""%></textarea>
             </div>
-
+            
+			<div class="form-group">
+			    <label>Fornecedor</label>
+			    <select name="supplierId" class="form-control">
+			        <option value="">-- Selecione um fornecedor --</option>
+			        <%
+			            List<Supplier> fornecedores = (List<Supplier>) request.getAttribute("fornecedores");
+			            if (fornecedores != null) {
+			                Integer selectedSupplier = (produto != null) ? produto.getSupplierId() : null;
+			                for (Supplier f : fornecedores) {
+			                    String selected = (selectedSupplier != null && selectedSupplier.equals(f.getId())) ? "selected" : "";
+			        %>
+			        <option value="<%= f.getId() %>" <%= selected %>><%= f.getCompanyName() %></option>
+			        <%
+			                }
+			            }
+			        %>
+			    </select>
+			</div>
+			
             <div class="form-row">
                 <div class="form-group">
                     <label>Preço de Custo (R$) *</label>
