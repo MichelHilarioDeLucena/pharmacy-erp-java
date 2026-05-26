@@ -13,15 +13,32 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "vendas") // A mágica: Classe em inglês, tabela em português!
+@Table(name = "vendas")
 @NamedQueries({
-		@NamedQuery(name = "Sale.revenueByPayment", query = "SELECT s.paymentMethod, SUM(s.totalAmount) FROM Sale s GROUP BY s.paymentMethod") })
+		// Suas queries originais em JPQL continuam aqui perfeitas
+		@NamedQuery(name = "Sale.revenueByPayment", query = "SELECT s.paymentMethod, SUM(s.totalAmount) FROM Sale s GROUP BY s.paymentMethod"),
+		@NamedQuery(name = "Sale.totalRevenue", query = "SELECT COALESCE(SUM(s.totalAmount), 0) FROM Sale s"),
+		@NamedQuery(name = "Sale.totalSales", query = "SELECT COUNT(s) FROM Sale s") })
+@NamedNativeQueries({
+		// Novas queries em SQL Nativo para o MySQL 8 (Adeus erros de validação!)
+		@NamedNativeQuery(name = "Sale.revenueByDay", query = "SELECT YEAR(data_venda), MONTH(data_venda), DAY(data_venda), SUM(valor_total) "
+				+ "FROM vendas " + "GROUP BY YEAR(data_venda), MONTH(data_venda), DAY(data_venda) "
+				+ "ORDER BY YEAR(data_venda) DESC, MONTH(data_venda) DESC, DAY(data_venda) DESC"),
+
+		@NamedNativeQuery(name = "Sale.revenueByMonth", query = "SELECT YEAR(data_venda), MONTH(data_venda), SUM(valor_total) "
+				+ "FROM vendas " + "GROUP BY YEAR(data_venda), MONTH(data_venda) "
+				+ "ORDER BY YEAR(data_venda) DESC, MONTH(data_venda) DESC"),
+
+		@NamedNativeQuery(name = "Sale.revenueByYear", query = "SELECT YEAR(data_venda), SUM(valor_total) "
+				+ "FROM vendas " + "GROUP BY YEAR(data_venda) " + "ORDER BY YEAR(data_venda) DESC") })
 
 public class Sale {
 	@Id
