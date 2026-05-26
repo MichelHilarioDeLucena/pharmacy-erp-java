@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet {
 
 			// 3. TRATAMENTO DE LOGIN INEXISTENTE
 			if (u == null) {
-				LogService.registrar(null, "LOGIN", ip, "FALHA - USUARIO INEXISTENTE", em);
+				LogService.registrar(null, "LOGIN", ip, "FALHA - USUARIO INEXISTENTE", "", em);
 				em.getTransaction().commit();
 
 				request.setAttribute("mensagem", "Login ou senha incorretos.");
@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
 			}
 			// 4. VERIFICAÇÃO DE STATUS (CONTA BLOQUEADA)
 			if (!u.isAtivo()) {
-				LogService.registrar(u, "LOGIN", ip, "FALHA - CONTA BLOQUEADA", em);
+				LogService.registrar(u, "LOGIN", ip, "FALHA - CONTA BLOQUEADA", "", em);
 				em.getTransaction().commit();
 
 				request.setAttribute("mensagem", "Sua conta está bloqueada. Procure o administrador.");
@@ -65,11 +65,11 @@ public class LoginServlet extends HttpServlet {
 
 			// 5. VALIDAÇÃO DE SENHA
 			boolean senhaBate = HashBCrypt.check(senhaPura, u.getSenhaHash());
-			
+
 			if (senhaBate) {
 				// SUCESSO
 				u.setTentativasFalhas(0);
-				LogService.registrar(u, "LOGIN", ip, "SUCESSO", em);
+				LogService.registrar(u, "LOGIN", ip, "SUCESSO", "", em);
 				em.getTransaction().commit();
 
 				HttpSession session = request.getSession(true);
@@ -78,7 +78,7 @@ public class LoginServlet extends HttpServlet {
 
 			} else {
 				// FALHA DE SENHA
-				
+
 				int falhas = u.getTentativasFalhas() + 1;
 				u.setTentativasFalhas(falhas);
 				String resultado = "FALHA - TENTATIVA " + falhas;
@@ -87,7 +87,7 @@ public class LoginServlet extends HttpServlet {
 					resultado = "FALHA - USUARIO BLOQUEADO";
 				}
 
-				LogService.registrar(u, "LOGIN", ip, resultado, em);
+				LogService.registrar(u, "LOGIN", ip, resultado, "", em);
 				em.getTransaction().commit();
 
 				request.setAttribute("mensagem", "Login ou senha incorretos. Tentativa " + falhas + " de 3.");
