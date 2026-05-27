@@ -48,16 +48,13 @@ public class EsqueciSenhaServlet extends HttpServlet {
 				// URL Dinâmica
 				String urlBase = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 						+ request.getContextPath();
-				String linkRecuperacao = urlBase + "/redefinirSenha.jsp?token=" + token;
+				String linkRecuperacao = urlBase + "/views/auth/novaSenha.jsp?token=" + token;
 
-				String corpoEmail = "<html><body>" + "<h2>Recuperação de Senha - ERP Farmácia</h2>" + "<p>Olá, <b>"
-						+ u.getNome() + "</b>.</p>"
-						+ "<p>Você solicitou a redefinição de sua senha. Clique no botão abaixo para prosseguir:</p>"
-						+ "<div style='margin: 20px 0;'>" + "<a href='" + linkRecuperacao
-						+ "' style='background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Redefinir Minha Senha</a>"
-						+ "</div>" + "<p>Este link é válido por <b>30 minutos</b>.</p>"
-						+ "<p>Se você não solicitou esta alteração, por favor ignore este e-mail.</p>"
-						+ "<hr><small>Este é um e-mail automático, não responda.</small>" + "</body></html>";
+				String corpoEmail = "Recuperação de Senha - ERP Farmácia.\n" + "Olá, " + u.getNome()
+						+ "Você solicitou a redefinição de sua senha. Clique no botão abaixo para prosseguir: "
+						+ linkRecuperacao + " Este link é válido por 30 minutos"
+						+ "Se você não solicitou esta alteração, por favor ignore este e-mail."
+						+ " Este é um e-mail automático, não responda.";
 
 				// Envio de E-mail
 				emailService.enviarEmail(u.getEmail(), "Recuperação de Senha - ERP", corpoEmail);
