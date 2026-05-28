@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import config.AppPaths;
 import config.JPAUtil;
+import dao.CategoryDAO;
 import model.Product;
 import model.Supplier;
 import service.ProductService;
@@ -37,8 +38,8 @@ public class ProductServlet extends HttpServlet {
             if ("editar".equals(action)) {
                 Long id = Long.parseLong(request.getParameter("id"));
                 Product product = service.buscarPorId(id);
-                List<Supplier> fornecedores = new SupplierService(em).listarAtivos();
-            	request.setAttribute("fornecedores", fornecedores);
+                
+                request.setAttribute("categorias", new CategoryDAO(em).listarTodos());
                 request.setAttribute("produto", product);
                 request.getRequestDispatcher(AppPaths.PRODUTO_FORM)
                        .forward(request, response);
@@ -58,8 +59,8 @@ public class ProductServlet extends HttpServlet {
                        .forward(request, response);
 
             } else if ("novo".equals(action)) {
-            	List<Supplier> fornecedores = new SupplierService(em).listarAtivos();
-            	request.setAttribute("fornecedores", fornecedores);
+            	
+            	request.setAttribute("categorias", new CategoryDAO(em).listarTodos());
                 request.getRequestDispatcher(AppPaths.PRODUTO_FORM)
                        .forward(request, response);
 
@@ -117,10 +118,8 @@ public class ProductServlet extends HttpServlet {
             product.setSalePrice(new BigDecimal(request.getParameter("precoVenda")));
             product.setCurrentStock(Integer.parseInt(request.getParameter("qtdAtual")));
             product.setMinStock(Integer.parseInt(request.getParameter("qtdMinima")));
-            String supplierIdParam = request.getParameter("supplierId");
-            if (supplierIdParam != null && !supplierIdParam.isEmpty()) {
-                product.setSupplierId(Integer.parseInt(supplierIdParam));
-            }
+            
+            
             String dataValidade = request.getParameter("dataValidade");
             if (dataValidade != null && !dataValidade.isEmpty()) {
                 product.setExpirationDate(LocalDate.parse(dataValidade));
