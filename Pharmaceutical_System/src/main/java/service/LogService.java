@@ -9,9 +9,10 @@ import model.Usuario;
 public class LogService {
 
 	// Registra qualquer ação (sucesso ou erro)
-	public static void registrar(Usuario u, String acao, String ip, String resultado, EntityManager em) {
+	public static void registrar(Usuario u, String acao, String ip, String resultado, String detalhes,
+			EntityManager em) {
 		LogDAO dao = new LogDAO(em);
-		LogAcesso log = new LogAcesso(u, acao, ip, resultado);
+		LogAcesso log = new LogAcesso(u, acao, ip, resultado, detalhes);
 		dao.salvar(log);
 	}
 

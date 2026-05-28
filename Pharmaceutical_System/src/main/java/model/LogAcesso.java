@@ -31,18 +31,22 @@ public class LogAcesso {
 	@Column(name = "data_hora")
 	private LocalDateTime dataHora;
 
+	@Column(columnDefinition = "TEXT")
+	private String detalhes;
+
 	public LogAcesso() {
 		// [CORREÇÃO] Timestamp definido no construtor, não na declaração do campo.
 		// Garante que o valor reflete o momento exato da criação do registro.
 		this.dataHora = LocalDateTime.now();
 	}
 
-	public LogAcesso(Usuario usuario, String acao, String ip, String resultado) {
+	public LogAcesso(Usuario usuario, String acao, String ip, String resultado, String detalhes) {
 		this(); // chama o construtor vazio para inicializar dataHora
 		this.usuario = usuario;
 		this.acao = acao;
 		this.ip = ip;
 		this.resultado = resultado;
+		this.detalhes = detalhes;
 	}
 
 	// Getters e Setters
