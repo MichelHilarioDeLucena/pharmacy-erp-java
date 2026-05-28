@@ -9,7 +9,9 @@
         
         <!-- ENTIDADES -->
         <class>model.Usuario</class>
-
+		<class>model.SupplierProduct</class>
+		<class>model.SupplierProductId</class>
+		
         <properties>
 
             <!-- ========================= -->
