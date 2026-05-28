@@ -54,6 +54,7 @@
                 <a href="ProductServlet?action=novo" class="btn btn-novo">➕ Novo Produto</a>
             <% } %>
             <a href="home.jsp" class="btn">← Voltar</a>
+            
         </div>
 
         <table>
@@ -69,6 +70,7 @@
                     <th>Validade</th>
                     <th>Status</th>
                     <th>Ações</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -112,6 +114,7 @@
                                    Desativar
                                 </a>
                             <% } %>
+                            <a href="ProdutoFornecedorServlet?produtoId=<%= p.getId() %>">Fornecedores</a>
                         </div>
                     </td>
                 </tr>

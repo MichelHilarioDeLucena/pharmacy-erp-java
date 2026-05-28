@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="model.Product"%>
 <%@ page import="model.Usuario, model.Perfil"%>
-<%@ page import="model.Supplier, java.util.List" %>
+<%@ page import="model.Supplier, model.Category , java.util.List" %>
 <%
     Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
     if (logado == null) {
@@ -67,24 +67,7 @@
                 <textarea name="descricao" rows="3"><%=ehEdicao && produto.getDescription() != null ? produto.getDescription() : ""%></textarea>
             </div>
             
-			<div class="form-group">
-			    <label>Fornecedor</label>
-			    <select name="supplierId" class="form-control">
-			        <option value="">-- Selecione um fornecedor --</option>
-			        <%
-			            List<Supplier> fornecedores = (List<Supplier>) request.getAttribute("fornecedores");
-			            if (fornecedores != null) {
-			                Integer selectedSupplier = (produto != null) ? produto.getSupplierId() : null;
-			                for (Supplier f : fornecedores) {
-			                    String selected = (selectedSupplier != null && selectedSupplier.equals(f.getId())) ? "selected" : "";
-			        %>
-			        <option value="<%= f.getId() %>" <%= selected %>><%= f.getCompanyName() %></option>
-			        <%
-			                }
-			            }
-			        %>
-			    </select>
-			</div>
+		
 			
             <div class="form-row">
                 <div class="form-group">
@@ -118,11 +101,24 @@
                     <input type="date" name="dataValidade"
                            value="<%=ehEdicao && produto.getExpirationDate() != null ? produto.getExpirationDate().toString() : ""%>">
                 </div>
-                <div class="form-group">
-                    <label>Categoria ID</label>
-                    <input type="number" name="categoriaId" min="1"
-                           value="<%=ehEdicao && produto.getCategoryId() != null ? produto.getCategoryId() : ""%>">
+                 <div class="form-group">
+                    <label>Categoria</label>
+                    <select name="categoriaId">
+                        <option value="">-- Sem categoria --</option>
+                        <%
+                        List<Category> categorias = (List<Category>) request.getAttribute("categorias");
+                        if (categorias != null) {
+                            for (Category c : categorias) {
+                                boolean selecionado = ehEdicao && produto.getCategoryId() != null && produto.getCategoryId().equals(c.getId());
+                        %>
+                        <option value="<%=c.getId()%>" <%=selecionado ? "selected" : ""%>><%=c.getName()%></option>
+                        <%
+                            }
+                        }
+                        %>
+                    </select>
                 </div>
+
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 20px;">
