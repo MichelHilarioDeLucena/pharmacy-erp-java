@@ -115,28 +115,6 @@ String totalRevenueFormatted = String.format(java.util.Locale.US, "%,.2f", total
 
 		<main class="dashboard-layout">
 			<section class="dashboard-main">
-				<div class="kpi-grid">
-					<article class="kpi-card">
-						<span class="kpi-label">Vendas</span> <strong class="kpi-value"><%=totalSales%></strong>
-						<small class="kpi-hint">Quantidade total registrada</small>
-					</article>
-					<article class="kpi-card">
-						<span class="kpi-label">Faturamento</span> <strong
-							class="kpi-value">R$ <%=totalRevenueFormatted%></strong> <small
-							class="kpi-hint">Total acumulado</small>
-					</article>
-					<article class="kpi-card">
-						<span class="kpi-label">Estoque baixo</span> <strong
-							class="kpi-value"><%=totalEstoqueBaixo != null ? totalEstoqueBaixo : 0%></strong>
-						<small class="kpi-hint">Produtos abaixo do mínimo</small>
-					</article>
-					<article class="kpi-card">
-						<span class="kpi-label">Fornecedores</span> <strong
-							class="kpi-value"><%=totalFornecedores != null ? totalFornecedores : 0%></strong>
-						<small class="kpi-hint">Cadastrados no sistema</small>
-					</article>
-				</div>
-
 				<div class="chart-grid">
 					<section class="chart-card">
 						<h2>Forma de pagamento</h2>
@@ -202,18 +180,6 @@ String totalRevenueFormatted = String.format(java.util.Locale.US, "%,.2f", total
 					</div>
 				</section>
 
-				<section class="panel-card compact-info">
-					<h2>Resumo rápido</h2>
-					<div class="info-row">
-						<span>Compras</span> <strong><%=totalCompras != null ? totalCompras : 0%></strong>
-					</div>
-					<div class="info-row">
-						<span>Estoque baixo</span> <strong><%=totalEstoqueBaixo != null ? totalEstoqueBaixo : 0%></strong>
-					</div>
-					<div class="info-row">
-						<span>Fornecedores</span> <strong><%=totalFornecedores != null ? totalFornecedores : 0%></strong>
-					</div>
-				</section>
 			</aside>
 		</main>
 	</div>
