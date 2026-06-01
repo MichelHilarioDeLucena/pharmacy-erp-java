@@ -24,15 +24,16 @@ public class DashboardServlet extends HttpServlet {
 		try {
 			List<Object[]> revenueByPayment = em.createNamedQuery("Sale.revenueByPayment", Object[].class)
 					.getResultList();
+
 			List<Object[]> topProducts = em.createNamedQuery("SaleItem.topSelling", Object[].class).setMaxResults(5)
 					.getResultList();
 
-			// --- BUSCANDO OS NOVOS DADOS ---
-			// --- CÓDIGO CORRIGIDO ---
-			// Fazemos o cast (List<Object[]>) e removemos o Object[].class de dentro do
-			// parênteses
 			@SuppressWarnings("unchecked")
 			List<Object[]> revenueByDay = (List<Object[]>) em.createNamedQuery("Sale.revenueByDay").setMaxResults(7)
+					.getResultList();
+
+			@SuppressWarnings("unchecked")
+			List<Object[]> revenueByWeek = (List<Object[]>) em.createNamedQuery("Sale.revenueByWeek").setMaxResults(8)
 					.getResultList();
 
 			@SuppressWarnings("unchecked")
@@ -41,16 +42,14 @@ public class DashboardServlet extends HttpServlet {
 			@SuppressWarnings("unchecked")
 			List<Object[]> revenueByYear = (List<Object[]>) em.createNamedQuery("Sale.revenueByYear").getResultList();
 
-			// Passa os dados antigos para a página JSP
 			request.setAttribute("revenueByPayment", revenueByPayment);
 			request.setAttribute("topProducts", topProducts);
 
-			// Passa os NOVOS dados para a página JSP
 			request.setAttribute("revenueByDay", revenueByDay);
+			request.setAttribute("revenueByWeek", revenueByWeek);
 			request.setAttribute("revenueByMonth", revenueByMonth);
 			request.setAttribute("revenueByYear", revenueByYear);
 
-			// Encaminha para o JSP
 			request.getRequestDispatcher(AppPaths.DASHBOARD_JSP).forward(request, response);
 		} catch (Exception e) {
 			throw new ServletException("Erro ao carregar dados do dashboard", e);

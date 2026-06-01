@@ -3,14 +3,19 @@ package service;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
+
+import config.JPAUtil;
 import dao.ProductDAO;
 import dao.PurchaseDAO;
 import dao.SupplierDAO;
+import dao.SupplierProductDAO;
 import model.Product;
 import model.Purchase;
 import model.PurchaseItem;
 import model.Supplier;
 import model.Usuario;
+import model.SupplierProduct;
+
 
 public class PurchaseService {
 
@@ -68,14 +73,20 @@ public class PurchaseService {
     public int gerarPedidosAutomaticos(Usuario operador) {
         List<Product> produtosBaixos = productDAO.listarEstoqueBaixo();
         int pedidosGerados = 0;
-
+        EntityManager em = JPAUtil.getEntityManager();
+        SupplierProductDAO spDAO = new SupplierProductDAO(em); // instancia aqui
         for (Product product : produtosBaixos) {
-            if (product.getSupplierId() == null) continue;
+            // 1. Buscar fornecedores vinculados ao produto (tabela associativa)
+            List<SupplierProduct> vinculos = spDAO.listarPorProduto(product.getId().intValue());
+            if (vinculos.isEmpty()) continue;
 
-            Supplier supplier = supplierDAO.buscarPorId(product.getSupplierId());
+            // 2. Ordenar por data da última compra (mais recente primeiro)
+            vinculos.sort((a, b) -> b.getPurchaseDate().compareTo(a.getPurchaseDate()));
+            SupplierProduct ultimoVinculo = vinculos.get(0);
+            Supplier supplier = supplierDAO.buscarPorId(ultimoVinculo.getSupplierId());
             if (supplier == null || !supplier.getActive()) continue;
 
-            // Quantidade a pedir: o suficiente para dobrar o estoque mínimo
+            // 3. Quantidade a pedir (dobrar o estoque mínimo)
             int quantidadeAPedir = (product.getMinStock() * 2) - product.getCurrentStock();
             if (quantidadeAPedir <= 0) continue;
 
@@ -94,7 +105,6 @@ public class PurchaseService {
             purchaseDAO.salvar(purchase);
             pedidosGerados++;
         }
-
         return pedidosGerados;
     }
 
