@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import config.AppPaths;
 import config.JPAUtil;
+import dao.CategoryDAO;
 import model.Perfil;
 import model.Supplier;
 import model.Usuario;
@@ -51,6 +52,7 @@ public class SupplierServlet extends HttpServlet {
                 Integer id = Integer.parseInt(request.getParameter("id"));
                 Supplier supplier = service.buscarPorId(id);
                 request.setAttribute("supplier", supplier);
+                request.setAttribute("categorias", new CategoryDAO(em).listarTodos());
                 request.getRequestDispatcher(AppPaths.SUPPLIER_FORM)
                        .forward(request, response);
 
@@ -69,6 +71,7 @@ public class SupplierServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/SupplierServlet");
 
             } else if ("novo".equals(action)) {
+            	request.setAttribute("categorias", new CategoryDAO(em).listarTodos());
                 request.getRequestDispatcher(AppPaths.SUPPLIER_FORM)
                        .forward(request, response);
 
@@ -118,7 +121,10 @@ public class SupplierServlet extends HttpServlet {
             supplier.setSupplyCategory(request.getParameter("supplyCategory"));
             supplier.setPhone(request.getParameter("phone"));
             supplier.setEmail(request.getParameter("email"));
-
+            String categoriaId = request.getParameter("categoriaId");
+            if (categoriaId != null && !categoriaId.isEmpty()) {
+            	supplier.setSupplyCategory(categoriaId);
+            }
             em.getTransaction().begin();
             if (supplier.getId() == null) {
                 service.cadastrar(supplier);

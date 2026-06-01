@@ -1,205 +1,240 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page import="java.util.List"%>
+<%@ page import="model.Usuario, model.Perfil"%>
+<%
+Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
+if (logado == null) {
+	response.sendRedirect(request.getContextPath() + "/login.jsp");
+	return;
+}
+
+List<Object[]> revenueByPayment = (List<Object[]>) request.getAttribute("revenueByPayment");
+List<Object[]> topProducts = (List<Object[]>) request.getAttribute("topProducts");
+List<Object[]> revenueByDay = (List<Object[]>) request.getAttribute("revenueByDay");
+List<Object[]> revenueByWeek = (List<Object[]>) request.getAttribute("revenueByWeek");
+List<Object[]> revenueByMonth = (List<Object[]>) request.getAttribute("revenueByMonth");
+List<Object[]> revenueByYear = (List<Object[]>) request.getAttribute("revenueByYear");
+
+Integer totalEstoqueBaixo = (Integer) request.getAttribute("totalEstoqueBaixo");
+Integer totalCompras = (Integer) request.getAttribute("totalCompras");
+Integer totalFornecedores = (Integer) request.getAttribute("totalFornecedores");
+
+Number totalRevenueObj = (Number) request.getAttribute("totalRevenue");
+Number totalSalesObj = (Number) request.getAttribute("totalSales");
+double totalRevenue = totalRevenueObj != null ? totalRevenueObj.doubleValue() : 0d;
+long totalSales = totalSalesObj != null ? totalSalesObj.longValue() : 0L;
+
+StringBuilder labelsPayment = new StringBuilder();
+StringBuilder dataPayment = new StringBuilder();
+if (revenueByPayment != null) {
+	for (Object[] row : revenueByPayment) {
+		labelsPayment.append("'").append(row[0]).append("',");
+		dataPayment.append(row[1]).append(",");
+	}
+}
+
+StringBuilder labelsProducts = new StringBuilder();
+StringBuilder dataProducts = new StringBuilder();
+if (topProducts != null) {
+	for (Object[] row : topProducts) {
+		labelsProducts.append("'").append(row[0]).append("',");
+		dataProducts.append(row[1]).append(",");
+	}
+}
+
+StringBuilder labelsDay = new StringBuilder();
+StringBuilder dataDay = new StringBuilder();
+if (revenueByDay != null) {
+	for (int i = revenueByDay.size() - 1; i >= 0; i--) {
+		Object[] row = revenueByDay.get(i);
+		labelsDay.append("'").append(row[2]).append("/").append(row[1]).append("',");
+		dataDay.append(row[3]).append(",");
+	}
+}
+
+StringBuilder labelsWeek = new StringBuilder();
+StringBuilder dataWeek = new StringBuilder();
+
+if (revenueByWeek != null) {
+	for (int i = revenueByWeek.size() - 1; i >= 0; i--) {
+		Object[] row = revenueByWeek.get(i);
+		labelsWeek.append("'").append(row[0]).append("',");
+		dataWeek.append(row[1]).append(",");
+	}
+}
+
+StringBuilder labelsMonth = new StringBuilder();
+StringBuilder dataMonth = new StringBuilder();
+if (revenueByMonth != null) {
+	for (int i = revenueByMonth.size() - 1; i >= 0; i--) {
+		Object[] row = revenueByMonth.get(i);
+		labelsMonth.append("'").append(row[1]).append("/").append(row[0]).append("',");
+		dataMonth.append(row[2]).append(",");
+	}
+}
+
+StringBuilder labelsYear = new StringBuilder();
+StringBuilder dataYear = new StringBuilder();
+if (revenueByYear != null) {
+	for (int i = revenueByYear.size() - 1; i >= 0; i--) {
+		Object[] row = revenueByYear.get(i);
+		labelsYear.append("'").append(row[0]).append("',");
+		dataYear.append(row[1]).append(",");
+	}
+}
+
+String totalRevenueFormatted = String.format(java.util.Locale.US, "%,.2f", totalRevenue).replace(",", "X")
+		.replace(".", ",").replace("X", ".");
+%>
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard de Vendas - ERP</title>
+<title>Painel Unificado - ERP Farmácia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/dashboard-unificado.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-    body { font-family: Arial, sans-serif; background: #f4f7f6; padding: 20px; }
-    .dashboard-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-    .chart-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 45%; min-width: 400px; margin-bottom: 20px;}
-    h2 { text-align: center; color: #333; margin-bottom: 30px; }
-</style>
+<script defer
+	src="${pageContext.request.contextPath}/js/dashboard-unificado.js"></script>
 </head>
 <body>
+	<div class="dashboard-page">
+		<header class="dashboard-topbar">
+			<div>
+				<h1>Painel Unificado</h1>
+				<p>Dashboard e relatórios em uma única tela</p>
+			</div>
+			<div class="dashboard-userbox">
+				<span>Logado como <strong><%=logado.getNome()%></strong></span> <span><%=logado.getPerfil()%></span>
+				<a href="${pageContext.request.contextPath}/LogoutServlet"
+					class="btn btn-danger">Sair</a>
+			</div>
+		</header>
 
-    <h2>📊 Painel de Vendas</h2>
+		<main class="dashboard-layout">
+			<section class="dashboard-main">
+				<div class="chart-grid">
+					<section class="chart-card">
+						<h2>Forma de pagamento</h2>
+						<div class="chart-wrap">
+							<canvas id="paymentChart"></canvas>
+						</div>
+					</section>
+					<section class="chart-card">
+						<h2>Top produtos</h2>
+						<div class="chart-wrap">
+							<canvas id="productsChart"></canvas>
+						</div>
+					</section>
+					<section class="chart-card">
+						<h2>Venda por dia</h2>
+						<div class="chart-wrap">
+							<canvas id="dayChart"></canvas>
+						</div>
+					</section>
+					<section class="chart-card">
+						<h2>Venda por semana</h2>
+						<div class="chart-wrap">
+							<canvas id="weekChart"></canvas>
+						</div>
+					</section>
+					<section class="chart-card">
+						<h2>Venda por mês</h2>
+						<div class="chart-wrap">
+							<canvas id="monthChart"></canvas>
+						</div>
+					</section>
+					<section class="chart-card chart-wide">
+						<h2>Venda por ano</h2>
+						<div class="chart-wrap">
+							<canvas id="yearChart"></canvas>
+						</div>
+					</section>
+				</div>
+			</section>
 
-    <div class="dashboard-container">
-        <div class="chart-box">
-            <canvas id="paymentChart"></canvas>
-        </div>
+			<aside class="dashboard-aside">
+				<section class="panel-card">
+					<h2>Relatórios</h2>
+					<div class="action-grid">
+						<a href="${pageContext.request.contextPath}/home.jsp"
+							class="btn btn-ghost">Home</a> <a
+							href="${pageContext.request.contextPath}/ReportServlet?action=estoque-completo-pdf"
+							class="btn btn-primary">Estoque PDF</a> <a
+							href="${pageContext.request.contextPath}/ReportServlet?action=estoque-completo-csv"
+							class="btn btn-success">Estoque CSV</a> <a
+							href="${pageContext.request.contextPath}/ReportServlet?action=estoque-baixo-pdf"
+							class="btn btn-primary">Estoque baixo PDF</a> <a
+							href="${pageContext.request.contextPath}/ReportServlet?action=estoque-baixo-csv"
+							class="btn btn-success">Estoque baixo CSV</a> <a
+							href="${pageContext.request.contextPath}/ReportServlet?action=compras-pdf"
+							class="btn btn-primary">Compras PDF</a> <a
+							href="${pageContext.request.contextPath}/ReportServlet?action=compras-csv"
+							class="btn btn-success">Compras CSV</a> <a
+							href="${pageContext.request.contextPath}/ReportServlet?action=fornecedores-pdf"
+							class="btn btn-primary">Fornecedores PDF</a> <a
+							href="${pageContext.request.contextPath}/ReportServlet?action=fornecedores-csv"
+							class="btn btn-success">Fornecedores CSV</a>
+					</div>
+				</section>
 
-        <div class="chart-box">
-            <canvas id="productsChart"></canvas>
-        </div>
+			</aside>
+		</main>
+	</div>
 
-        <div class="chart-box">
-            <canvas id="dayChart"></canvas>
-        </div>
-
-        <div class="chart-box">
-            <canvas id="monthChart"></canvas>
-        </div>
-
-        <div class="chart-box" style="width: 92%;"> <canvas id="yearChart"></canvas>
-        </div>
-    </div>
-
-    <%
-        // Recuperando os dados originais do Servlet
-        List<Object[]> revenueByPayment = (List<Object[]>) request.getAttribute("revenueByPayment");
-        List<Object[]> topProducts = (List<Object[]>) request.getAttribute("topProducts");
-
-        // Recuperando os novos dados do Servlet
-        List<Object[]> revenueByDay = (List<Object[]>) request.getAttribute("revenueByDay");
-        List<Object[]> revenueByMonth = (List<Object[]>) request.getAttribute("revenueByMonth");
-        List<Object[]> revenueByYear = (List<Object[]>) request.getAttribute("revenueByYear");
-
-        // --- BUILDERS ORIGINAIS ---
-        StringBuilder labelsPayment = new StringBuilder();
-        StringBuilder dataPayment = new StringBuilder();
-        if (revenueByPayment != null) {
-            for (Object[] row : revenueByPayment) {
-                labelsPayment.append("'").append(row[0]).append("',");
-                dataPayment.append(row[1]).append(",");
-            }
-        }
-
-        StringBuilder labelsProducts = new StringBuilder();
-        StringBuilder dataProducts = new StringBuilder();
-        if (topProducts != null) {
-            for (Object[] row : topProducts) {
-                labelsProducts.append("'").append(row[0]).append("',");
-                dataProducts.append(row[1]).append(",");
-            }
-        }
-
-        // --- NOVOS BUILDERS (Lendo de trás pra frente para a linha do tempo ficar da Esquerda pra Direita) ---
-        
-        // Faturamento por Dia (Índices: 0=Ano, 1=Mês, 2=Dia, 3=Valor)
-        StringBuilder labelsDay = new StringBuilder();
-        StringBuilder dataDay = new StringBuilder();
-        if (revenueByDay != null) {
-            for (int i = revenueByDay.size() - 1; i >= 0; i--) {
-                Object[] row = revenueByDay.get(i);
-                labelsDay.append("'").append(row[2]).append("/").append(row[1]).append("',"); // Formato Dia/Mês
-                dataDay.append(row[3]).append(",");
-            }
-        }
-
-        // Faturamento por Mês (Índices: 0=Ano, 1=Mês, 2=Valor)
-        StringBuilder labelsMonth = new StringBuilder();
-        StringBuilder dataMonth = new StringBuilder();
-        if (revenueByMonth != null) {
-            for (int i = revenueByMonth.size() - 1; i >= 0; i--) {
-                Object[] row = revenueByMonth.get(i);
-                labelsMonth.append("'").append(row[1]).append("/").append(row[0]).append("',"); // Formato Mês/Ano
-                dataMonth.append(row[2]).append(",");
-            }
-        }
-
-        // Faturamento por Ano (Índices: 0=Ano, 1=Valor)
-        StringBuilder labelsYear = new StringBuilder();
-        StringBuilder dataYear = new StringBuilder();
-        if (revenueByYear != null) {
-            for (int i = revenueByYear.size() - 1; i >= 0; i--) {
-                Object[] row = revenueByYear.get(i);
-                labelsYear.append("'").append(row[0]).append("',"); // Formato Ano
-                dataYear.append(row[1]).append(",");
-            }
-        }
-    %>
-
-    <script>
-        // === GRÁFICO 1: Faturamento por Pagamento (Pizza/Pie) ===
-        const ctxPayment = document.getElementById('paymentChart').getContext('2d');
-        new Chart(ctxPayment, {
-            type: 'pie',
-            data: {
-                labels: [<%= labelsPayment.toString() %>],
-                datasets: [{
-                    label: 'Faturamento (R$)',
-                    data: [<%= dataPayment.toString() %>],
-                    backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6c757d']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { title: { display: true, text: 'Faturamento por Método de Pagamento', font: {size: 18} } }
-            }
-        });
-
-        // === GRÁFICO 2: Produtos Mais Vendidos (Barras/Bar) ===
-        const ctxProducts = document.getElementById('productsChart').getContext('2d');
-        new Chart(ctxProducts, {
-            type: 'bar',
-            data: {
-                labels: [<%= labelsProducts.toString() %>],
-                datasets: [{
-                    label: 'Quantidade Vendida',
-                    data: [<%= dataProducts.toString() %>],
-                    backgroundColor: '#17a2b8'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { title: { display: true, text: 'Top 5 Produtos Mais Vendidos', font: {size: 18} } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-
-        // === GRÁFICO 3: Faturamento por Dia (Linha/Line) ===
-        const ctxDay = document.getElementById('dayChart').getContext('2d');
-        new Chart(ctxDay, {
-            type: 'line',
-            data: {
-                labels: [<%= labelsDay.toString() %>],
-                datasets: [{
-                    label: 'Faturamento Diário (R$)',
-                    data: [<%= dataDay.toString() %>],
-                    borderColor: '#dc3545',
-                    backgroundColor: 'rgba(220, 53, 69, 0.2)',
-                    fill: true,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { title: { display: true, text: 'Faturamento Recente (Por Dia)', font: {size: 18} } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-
-        // === GRÁFICO 4: Faturamento por Mês (Barra/Bar) ===
-        const ctxMonth = document.getElementById('monthChart').getContext('2d');
-        new Chart(ctxMonth, {
-            type: 'bar',
-            data: {
-                labels: [<%= labelsMonth.toString() %>],
-                datasets: [{
-                    label: 'Faturamento Mensal (R$)',
-                    data: [<%= dataMonth.toString() %>],
-                    backgroundColor: '#6f42c1'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { title: { display: true, text: 'Faturamento Histórico (Por Mês)', font: {size: 18} } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-
-        // === GRÁFICO 5: Faturamento por Ano (Barra/Bar) ===
-        const ctxYear = document.getElementById('yearChart').getContext('2d');
-        new Chart(ctxYear, {
-            type: 'bar',
-            data: {
-                labels: [<%= labelsYear.toString() %>],
-                datasets: [{
-                    label: 'Faturamento Anual (R$)',
-                    data: [<%= dataYear.toString() %>],
-                    backgroundColor: '#28a745'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { title: { display: true, text: 'Faturamento Geral (Por Ano)', font: {size: 18} } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-    </script>
+	<script>
+		window.dashboardData = {
+			payment : {
+				labels : [
+	<%=labelsPayment.toString()%>
+		],
+				values : [
+	<%=dataPayment.toString()%>
+		]
+			},
+			products : {
+				labels : [
+	<%=labelsProducts.toString()%>
+		],
+				values : [
+	<%=dataProducts.toString()%>
+		]
+			},
+			day : {
+				labels : [
+	<%=labelsDay.toString()%>
+		],
+				values : [
+	<%=dataDay.toString()%>
+		]
+			},
+			week : {
+				labels : [
+	<%=labelsWeek.toString()%>
+		],
+				values : [
+	<%=dataWeek.toString()%>
+		]
+			},
+			month : {
+				labels : [
+	<%=labelsMonth.toString()%>
+		],
+				values : [
+	<%=dataMonth.toString()%>
+		]
+			},
+			year : {
+				labels : [
+	<%=labelsYear.toString()%>
+		],
+				values : [
+	<%=dataYear.toString()%>
+		]
+			}
+		};
+	</script>
 </body>
 </html>
