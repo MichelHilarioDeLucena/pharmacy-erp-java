@@ -44,6 +44,13 @@ document.addEventListener("DOMContentLoaded", function () {
     createChart("paymentChart", "pie", getLabels("payment"), getValues("payment"), "Pagamento");
     createChart("productsChart", "bar", getLabels("products"), getValues("products"), "Produtos");
     createChart("dayChart", "line", getLabels("day"), getValues("day"), "Venda por Dia");
+    createChart(
+    "weekChart",
+    "bar",
+    data.week ? data.week.labels : [],
+    data.week ? data.week.values : [],
+    "Venda por Semana"
+);
     createChart("monthChart", "bar", getLabels("month"), getValues("month"), "Venda por Mês");
     createChart("yearChart", "line", getLabels("year"), getValues("year"), "Venda por Ano");
 });

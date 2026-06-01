@@ -38,7 +38,9 @@ import javax.persistence.Table;
 				+ "ORDER BY YEAR(data_venda) DESC, MONTH(data_venda) DESC"),
 
 		@NamedNativeQuery(name = "Sale.revenueByYear", query = "SELECT YEAR(data_venda), SUM(valor_total) "
-				+ "FROM vendas " + "GROUP BY YEAR(data_venda) " + "ORDER BY YEAR(data_venda) DESC") })
+				+ "FROM vendas " + "GROUP BY YEAR(data_venda) " + "ORDER BY YEAR(data_venda) DESC"),
+		@NamedNativeQuery(name = "Sale.revenueByWeek", query = "SELECT YEARWEEK(data_venda, 1), SUM(valor_total) "
+				+ "FROM vendas " + "GROUP BY YEARWEEK(data_venda, 1) " + "ORDER BY YEARWEEK(data_venda, 1) DESC") })
 
 public class Sale {
 	@Id
