@@ -5,4 +5,4 @@ target/
 .classpath
 .metadata/
 .env
-/script_banco_farmacia.sql
+bin/
