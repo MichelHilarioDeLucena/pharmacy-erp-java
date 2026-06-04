@@ -59,7 +59,13 @@ StringBuilder dataWeek = new StringBuilder();
 if (revenueByWeek != null) {
 	for (int i = revenueByWeek.size() - 1; i >= 0; i--) {
 		Object[] row = revenueByWeek.get(i);
-		labelsWeek.append("'").append(row[0]).append("',");
+
+		String yearWeek = row[0].toString();
+		String year = yearWeek.substring(0, 4);
+		String week = yearWeek.substring(4);
+
+		labelsWeek.append("'").append(year).append("/").append(week).append("',");
+
 		dataWeek.append(row[1]).append(",");
 	}
 }
