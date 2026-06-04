@@ -50,18 +50,18 @@ Desenvolvido em Java com foco em **segurança, organização modular e gestão c
 
 - [X] Cadastro de produtos
 - [X] Edição de produtos
-- [ ] Exclusão lógica
+- [X] Exclusão lógica
 - [X] Listagem
-- [URGENTE] Associação com categorias
-- [URGENTE] Associação com fornecedores
+- [X] Associação com categorias
+- [X] Associação com fornecedores
 - [X] Controle de estoque (quantidade atual/mínima)
 - [PARCIAL] Alertas automáticos de estoque baixo
 
 ## IV. Gestão de Fornecedores e Compras
 
-- [ ] Cadastro de fornecedores (CNPJ, contato, produtos)
-- [ ] Histórico de compras
-- [ ] Simulação de pedidos automáticos (baseado na demanda)
+- [X] Cadastro de fornecedores (CNPJ, contato, produtos)
+- [X] Histórico de compras
+- [X] Simulação de pedidos automáticos (baseado na demanda)
 
 ## V. Gestão de Vendas e Pagamentos
 
@@ -70,14 +70,14 @@ Desenvolvido em Java com foco em **segurança, organização modular e gestão c
 - [ ] Pagamento via cartão (simulado)
 - [ ] Pagamento via Pix (simulado)
 - [ ] Emissão de recibo (PDF)
-- [ ] Atualização automática de estoque
-- [ ] Dashboard com gráficos (vendas, produtos mais vendidos, faturamento)
+- [X] Atualização automática de estoque
+- [X] Dashboard com gráficos (vendas, produtos mais vendidos, faturamento)
 
 ## VI. Relatórios
 
 - [ ] Relatório de vendas (PDF/CSV)
-- [ ] Relatório de estoque baixo
-- [ ] Relatório de fornecedores/compras
+- [X] Relatório de estoque baixo
+- [X] Relatório de fornecedores/compras
 
 ---
 
