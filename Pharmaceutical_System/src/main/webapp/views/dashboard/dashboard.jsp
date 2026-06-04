@@ -71,6 +71,7 @@ if (revenueByMonth != null) {
 		Object[] row = revenueByMonth.get(i);
 		labelsMonth.append("'").append(row[1]).append("/").append(row[0]).append("',");
 		dataMonth.append(row[2]).append(",");
+		
 	}
 }
 
