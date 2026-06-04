@@ -1,8 +1,0 @@
-target/
-*.war
-.settings/
-.project
-.classpath
-.metadata/
-.env
-/script_banco_farmacia.sql
