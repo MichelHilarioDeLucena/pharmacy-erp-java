@@ -35,16 +35,6 @@ public class ReceiptServlet extends HttpServlet {
 			Sale sale = em.find(Sale.class, id);
 
 			if (sale != null) {
-<<<<<<< HEAD
-=======
-				 for (SaleItem item : sale.getItems()) {
-			        Product p = em.find(Product.class, Long.valueOf(item.getProductId()));
-			        if (p != null) {
-			            item.setProductName(p.getName());
-			        }
-				 }
-				// 1. Configura o cabeçalho para o navegador entender que é um PDF
->>>>>>> main
 				response.setContentType("application/pdf");
 
 				response.setHeader("Content-Disposition", "attachment; filename=recibo_venda_" + id + ".pdf");

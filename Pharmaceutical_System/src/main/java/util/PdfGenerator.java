@@ -23,15 +23,9 @@ public class PdfGenerator {
         PdfWriter.getInstance(document, os);
         document.open();
 
-<<<<<<< HEAD
-			com.lowagie.text.Font font = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 12,
-					com.lowagie.text.Font.BOLD);
-=======
-        // Fontes
-        Font titleFont = new Font(Font.HELVETICA, 14, Font.BOLD);
-        Font normalFont = new Font(Font.HELVETICA, 10, Font.NORMAL);
+        Font titleFont = new Font(Font.HELVETICA, 16, Font.BOLD);
         Font boldFont = new Font(Font.HELVETICA, 10, Font.BOLD);
->>>>>>> main
+        Font normalFont = new Font(Font.HELVETICA, 10, Font.NORMAL);
 
         // Cabeçalho
         document.add(new Paragraph("RECIBO DE VENDA", titleFont));
