@@ -36,7 +36,7 @@ public class SecurityFilter implements Filter {
 		}
 
 		// B. Se o usuário estiver enviando dados (usando POST, que é o padrão de formulários)
-		if ("POST".equalsIgnoreCase(httpRequest.getMethod())) {
+		if ("POST".equalsIgnoreCase(httpRequest.getMethod()) && !httpRequest.getRequestURI().contains("LoginServlet")) {
 			String tokenDaSessao = (String) httpRequest.getSession().getAttribute("csrfToken");
 			String tokenDoFormulario = httpRequest.getParameter("csrfToken");
 
