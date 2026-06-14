@@ -26,17 +26,8 @@ function confirmarAcao(acao, nomeUsuario) {
 let pixInterval;
 
 function iniciarPagamento(event) {
-<<<<<<< HEAD
     event.preventDefault(); 
     
-=======
-    event.preventDefault();
-
-    // Remove qualquer campo hidden que tenha sido criado anteriormente
-    const oldHidden = document.getElementById('cardPasswordHidden');
-    if (oldHidden) oldHidden.remove();
-
->>>>>>> main
     const metodoSelect = document.querySelector('select[name="paymentMethod"]');
     if (!metodoSelect) return;
 
@@ -51,22 +42,9 @@ function iniciarPagamento(event) {
         document.getElementById('senhaCartao').value = '';
         document.getElementById('modalCartao').style.display = 'flex';
         document.getElementById('senhaCartao').focus();
-<<<<<<< HEAD
     } else if (metodo === 'BOLETO') {
         document.getElementById('modalBoleto').style.display = 'flex';
     } else {
-=======
-    } else if (metodo === 'CASH') {
-	    // Atualiza o valor total no modal
-	    const totalSpan = document.querySelector('.total-value');
-	    if (totalSpan) {
-	        document.getElementById('totalCompra').innerText = totalSpan.innerText;
-	    }
-	    document.getElementById('modalDinheiro').style.display = 'flex';
-	} else if (metodo === 'BOLETO') {
-    	document.getElementById('modalBoleto').style.display = 'flex';
-	}else{
->>>>>>> main
         confirmarPagamento();
     }
 }
@@ -136,13 +114,6 @@ function confirmarPagamento() {
     avisoProcessando.innerHTML = '<h2 style="color: white; font-family: sans-serif;">Processando Venda... 🚀</h2>';
     document.body.appendChild(avisoProcessando);
     
-<<<<<<< HEAD
-=======
-    const hidden = document.getElementById('cardPasswordHidden');
-    console.log('Valor do hidden antes de enviar:', hidden ? hidden.value : 'hidden não encontrado');
-    
-    // Envia o formulário definitivamente para o CheckoutServlet
->>>>>>> main
     const form = document.getElementById('checkoutForm');
     if (form) {
         form.submit();

@@ -25,14 +25,6 @@ public class ReportService {
         this.saleDAO     = new SaleDAO(em);
     }
 
-<<<<<<< HEAD
-=======
-    public List<Sale> relatorioVendas() {
-        return saleDAO.listarTodos();
-    }
-    
-    // Relatório de estoque baixo
->>>>>>> main
     public List<Product> relatorioEstoqueBaixo() {
         return productDAO.listarEstoqueBaixo();
     }
