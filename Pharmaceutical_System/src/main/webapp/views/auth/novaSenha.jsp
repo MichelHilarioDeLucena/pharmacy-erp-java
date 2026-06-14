@@ -10,7 +10,7 @@
 <body>
 
     <div class="card-senha">
-        <h2>🔒 Nova Senha</h2>
+        <h2>Nova Senha</h2>
         <p>Crie uma senha forte para sua segurança.</p>
         <hr>
         

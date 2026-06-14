@@ -7,16 +7,11 @@
     <persistence-unit name="erp" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         
-        <!-- ENTIDADES -->
         <class>model.Usuario</class>
 		<class>model.SupplierProduct</class>
 		<class>model.SupplierProductId</class>
 		
         <properties>
-
-            <!-- ========================= -->
-            <!-- 🔴 BANCO MYSQL -->
-            <!-- ========================= -->
 
             <property name="javax.persistence.jdbc.driver"
                 value="com.mysql.cj.jdbc.Driver" />
@@ -30,15 +25,9 @@
             <property name="hibernate.dialect"
                 value="org.hibernate.dialect.MySQL8Dialect" />
 
-            <!-- ========================= -->
-            <!-- ⚙️ CONFIGURAÇÕES -->
-            <!-- ========================= -->
-
-            <!-- em produção normalmente desligado -->
             <property name="hibernate.show_sql" value="false" />
             <property name="hibernate.format_sql" value="false" />
 
-            <!-- mantém estrutura sem apagar dados -->
             <property name="hibernate.hbm2ddl.auto" value="update" />
 
         </properties>

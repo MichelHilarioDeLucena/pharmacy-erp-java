@@ -32,7 +32,6 @@
         <h1>Menu Principal</h1>
         <div class="grid-opcoes">
 
-            <%-- DASHBOARD: Apenas Admin e Gerente --%>
             <% if (ehAdmin || ehGerente) { %>
                 <a href="<%= request.getContextPath() + AppPaths.DASHBOARD_SERVLET %>" class="card-opcao">
                     <div class="icon">📊</div>
@@ -41,7 +40,6 @@
                 </a>
             <% } %>
 
-            <%-- GESTÃO DE PESSOAS: Apenas Admin e Gerente --%>
             <% if (ehAdmin || ehGerente) { %>
                 <a href="<%= request.getContextPath() + AppPaths.USUARIO_LISTAR_ACAO %>" class="card-opcao">
                     <div class="icon">👥</div>
@@ -50,14 +48,12 @@
                 </a>
             <% } %>
 
-            <%-- FRENTE DE CAIXA: Acesso Geral --%>
             <a href="<%= request.getContextPath() + AppPaths.CHECKOUT_SERVLET %>" class="card-opcao">
                 <div class="icon">💰</div>
                 <h3>Frente de Caixa</h3>
                 <p>Realizar vendas e consultas.</p>
             </a>
 
-            <%-- ESTOQUE: Apenas se NÃO for Caixa --%>
             <% if (!ehCaixa) { %>
                 <a href="<%= request.getContextPath() + AppPaths.PRODUTO_SERVLET %>" class="card-opcao">
                     <div class="icon">📦</div>
@@ -66,7 +62,6 @@
                 </a>
             <% } %>
 
-            <%-- FORNECEDORES: Apenas Admin e Gerente --%>
             <% if (ehAdmin || ehGerente) { %>
                 <a href="<%= request.getContextPath() + AppPaths.SUPPLIER_SERVLET %>" class="card-opcao">
                     <div class="icon">🏭</div>
@@ -75,7 +70,6 @@
                 </a>
             <% } %>
 
-            <%-- COMPRAS: Apenas Admin e Gerente --%>
             <% if (ehAdmin || ehGerente) { %>
                 <a href="<%= request.getContextPath() + AppPaths.PURCHASE_SERVLET %>" class="card-opcao">
                     <div class="icon">🛒</div>

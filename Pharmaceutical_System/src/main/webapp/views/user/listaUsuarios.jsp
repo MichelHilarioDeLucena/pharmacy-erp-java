@@ -3,16 +3,13 @@
 <%@ page import="java.util.List"%>
 <%@ page import="model.Usuario"%>
 <%
-// Recupera o usuário logado para verificar permissões
 Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
 
-// Proteção básica: se não estiver logado, volta para o login
 if (logado == null) {
 	response.sendRedirect("${pageContext.request.contextPath}/login.jsp");
 	return;
 }
 
-// Verifica se o usuário tem nível de acesso para ver esta lista
 boolean temAcessoMaster = logado.getPerfil() == model.Perfil.ADMIN || logado.getPerfil() == model.Perfil.GERENTE;
 %>
 <!DOCTYPE html>
@@ -67,7 +64,7 @@ boolean temAcessoMaster = logado.getPerfil() == model.Perfil.ADMIN || logado.get
 						%>
 						<div style="display: flex; gap: 5px;">
 							<a href="UsuarioServlet?acao=carregar&id=<%=u.getId()%>"
-								class="btn btn-editar" title="Editar dados do usuário"> ✎
+								class="btn btn-editar" title="Editar dados do usuário">
 								Editar </a> <a href="UsuarioServlet?acao=alternar&id=<%=u.getId()%>"
 								class="<%=classeBotaoStatus%>"
 								onclick="return confirmarAcao('<%=textoBotaoStatus%>', '<%=u.getNome()%>');">

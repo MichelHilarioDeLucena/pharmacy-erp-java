@@ -25,36 +25,34 @@ public class ReportService {
         this.saleDAO     = new SaleDAO(em);
     }
 
+<<<<<<< HEAD
+=======
     public List<Sale> relatorioVendas() {
         return saleDAO.listarTodos();
     }
     
     // Relatório de estoque baixo
+>>>>>>> main
     public List<Product> relatorioEstoqueBaixo() {
         return productDAO.listarEstoqueBaixo();
     }
 
-    // Relatório de todos os produtos
     public List<Product> relatorioEstoqueCompleto() {
         return productDAO.listarAtivos();
     }
 
-    // Relatório de compras
     public List<Purchase> relatorioCompras() {
         return purchaseDAO.listarTodos();
     }
 
-    // Relatório de compras por status
     public List<Purchase> relatorioComprasPorStatus(String status) {
         return purchaseDAO.listarPorStatus(status);
     }
 
-    // Relatório de fornecedores
     public List<Supplier> relatorioFornecedores() {
         return supplierDAO.listarTodos();
     }
 
-    // Relatório de compras por fornecedor
     public List<Purchase> relatorioComprasPorFornecedor(Integer supplierId) {
         Supplier supplier = supplierDAO.buscarPorId(supplierId);
         if (supplier == null)

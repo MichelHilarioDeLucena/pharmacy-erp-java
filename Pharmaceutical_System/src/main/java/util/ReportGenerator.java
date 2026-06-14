@@ -21,9 +21,6 @@ import model.Supplier;
 
 public class ReportGenerator {
 
-    // =============================================
-    // ESTOQUE BAIXO — PDF
-    // =============================================
     public static void estoqueBaixoPdf(List<Product> produtos, OutputStream os) throws Exception {
         Document doc = new Document(PageSize.A4);
         try {
@@ -68,9 +65,6 @@ public class ReportGenerator {
         }
     }
 
-    // =============================================
-    // ESTOQUE BAIXO — CSV
-    // =============================================
     public static void estoqueBaixoCsv(List<Product> produtos, PrintWriter writer) {
         writer.println("ID,Nome,Codigo Barras,Preco Venda,Qtd Atual,Qtd Minima,Validade");
         for (Product p : produtos) {
@@ -86,9 +80,6 @@ public class ReportGenerator {
         }
     }
 
-    // =============================================
-    // COMPRAS — PDF
-    // =============================================
     public static void comprasPdf(List<Purchase> compras, OutputStream os) throws Exception {
         Document doc = new Document(PageSize.A4.rotate());
         try {
@@ -134,9 +125,6 @@ public class ReportGenerator {
         }
     }
 
-    // =============================================
-    // COMPRAS — CSV
-    // =============================================
     public static void comprasCsv(List<Purchase> compras, PrintWriter writer) {
         writer.println("ID,Fornecedor,CNPJ,Operador,Data,Status,Qtd Itens,Total");
         for (Purchase c : compras) {
@@ -153,9 +141,6 @@ public class ReportGenerator {
         }
     }
 
-    // =============================================
-    // FORNECEDORES — PDF
-    // =============================================
     public static void fornecedoresPdf(List<Supplier> fornecedores, OutputStream os) throws Exception {
         Document doc = new Document(PageSize.A4);
         try {
@@ -199,9 +184,6 @@ public class ReportGenerator {
         }
     }
 
-    // =============================================
-    // FORNECEDORES — CSV
-    // =============================================
     public static void fornecedoresCsv(List<Supplier> fornecedores, PrintWriter writer) {
         writer.println("Razao Social,CNPJ,Categoria,Telefone,Email,Status");
         for (Supplier s : fornecedores) {

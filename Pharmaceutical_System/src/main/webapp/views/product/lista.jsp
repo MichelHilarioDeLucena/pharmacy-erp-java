@@ -30,6 +30,17 @@
     </style>
 </head>
 <body>
+<<<<<<< HEAD
+	<header
+		style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #eee; border-bottom: 2px solid #ccc;">
+		<h2>Gestão de Estoque</h2>
+		<div>
+			<span>Logado como: <strong><%=logado.getNome()%></strong> (<%=logado.getPerfil()%>)
+			</span> <a href="LogoutServlet"
+				style="margin-left: 15px; color: red; text-decoration: none;">Sair</a>
+		</div>
+	</header>
+=======
     <header>
         <div class="marca">📦 Gestão de Estoque</div>
         <div class="user-info">
@@ -37,6 +48,7 @@
             <a href="${pageContext.request.contextPath}/LogoutServlet">Sair</a>
         </div>
     </header>
+>>>>>>> main
 
     <div class="container-wide">
         <h2>Produtos</h2>
@@ -47,9 +59,20 @@
             </div>
         <% } %>
 
+<<<<<<< HEAD
+		<%
+		if (exibirAlerta) {
+		%>
+		<div class="alerta-box">Exibindo apenas produtos com estoque
+			abaixo do mínimo.</div>
+		<%
+		}
+		%>
+=======
         <% if (exibirAlerta) { %>
             <div class="erro">⚠️ Exibindo apenas produtos com estoque abaixo do mínimo.</div>
         <% } %>
+>>>>>>> main
 
         <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
             <a href="ProductServlet" class="btn">Todos os Produtos</a>
@@ -60,6 +83,107 @@
             <a href="home.jsp" class="btn">← Voltar</a>
         </div>
 
+<<<<<<< HEAD
+		</div>
+
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Nome</th>
+					<th>Cód. Barras</th>
+					<th>Preço Custo</th>
+					<th>Preço Venda</th>
+					<th>Qtd. Atual</th>
+					<th>Qtd. Mínima</th>
+					<th>Validade</th>
+					<th>Status</th>
+					<th>Ações</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<%
+				List<Product> produtos = (List<Product>) request.getAttribute("produtos");
+				if (produtos != null && !produtos.isEmpty()) {
+					for (Product p : produtos) {
+						boolean estoqueBaixo = p.getCurrentStock() <= p.getMinStock();
+						String badgeClass = estoqueBaixo ? "badge-baixo" : "badge-ok";
+						String badgeTexto = estoqueBaixo ? "⚠️ Baixo" : "OK";
+						String statusTexto = p.getActive() ? "Ativo" : "Inativo";
+						String classStatus = p.getActive() ? "status-ativo" : "status-inativo";
+				%>
+				<tr>
+					<td><%=p.getId()%></td>
+					<td><%=p.getName()%></td>
+					<td><%=p.getBarcode() != null ? p.getBarcode() : "-"%></td>
+					<td>R$ <%=p.getCostPrice()%></td>
+					<td>R$ <%=p.getSalePrice()%></td>
+					<td><%=p.getCurrentStock()%> <span class="<%=badgeClass%>"><%=badgeTexto%></span>
+					</td>
+					<td><%=p.getMinStock()%></td>
+					<td><%=p.getExpirationDate() != null ? p.getExpirationDate().toString() : "-"%></td>
+					<td class="<%=classStatus%>"><%=statusTexto%></td>
+					<td>
+						<div style="display: flex; gap: 5px; flex-wrap: wrap;">
+							<!-- Entrada de estoque via formulário inline -->
+							<form method="post" action="ProductServlet"
+								style="display: inline-flex; gap: 4px;">
+								<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
+								<input type="hidden" name="action" value="entrada"> <input
+									type="hidden" name="id" value="<%=p.getId()%>"> <input
+									type="number" name="quantidade" min="1" value="1"
+									style="width: 55px;">
+								<button type="submit" class="btn btn-ativar">+ Entrada</button>
+							</form>
+							<%
+							if (temAcesso) {
+							%>
+							<a
+								href="${pageContext.request.contextPath}/ProductServlet?action=editar&id=<%=p.getId()%>"
+								class="btn btn-editar">Editar</a>
+
+							<%
+							if (p.getActive()) {
+							%>
+							<a
+								href="${pageContext.request.contextPath}/ProductServlet?action=desativar&id=<%=p.getId()%>"
+								class="btn btn-desativar"
+								onclick="return confirm('Desativar o produto <%=p.getName()%>?');">
+								Desativar </a>
+							<%
+							} else {
+							%>
+							<a
+								href="${pageContext.request.contextPath}/ProductServlet?action=reativar&id=<%=p.getId()%>"
+								class="btn btn-ativar"> Reativar </a>
+							<%
+							}
+							%>
+							<%
+							}
+							%>
+							<a href="ProdutoFornecedorServlet?produtoId=<%=p.getId()%>">Fornecedores</a>
+						</div>
+					</td>
+				</tr>
+				<%
+				}
+				} else {
+				%>
+				<tr>
+					<td colspan="10" style="text-align: center;">Nenhum produto
+						encontrado.</td>
+				</tr>
+				<%
+				}
+				%>
+			</tbody>
+		</table>
+	</main>
+
+	<script src="${pageContext.request.contextPath}/js/script.js"></script>
+=======
         <div style="overflow-x: auto;">
             <table>
                 <thead>
@@ -130,5 +254,6 @@
             </table>
         </div>
     </div>
+>>>>>>> main
 </body>
 </html>

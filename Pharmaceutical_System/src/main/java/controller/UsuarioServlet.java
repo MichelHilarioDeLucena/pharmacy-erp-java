@@ -36,8 +36,6 @@ public class UsuarioServlet extends HttpServlet {
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// [CORREÇÃO 1] Verificação de sessão ANTES de qualquer operação.
-		// Antes, um visitante sem sessão chegava até a listagem de usuários.
 		HttpSession session = request.getSession(false);
 		Usuario logado = (session != null) ? (Usuario) session.getAttribute("usuarioLogado") : null;
 
@@ -46,8 +44,6 @@ public class UsuarioServlet extends HttpServlet {
 			return;
 		}
 
-		// [CORREÇÃO 2] Verificação de perfil protegida contra NullPointerException.
-		// getPerfil() poderia ser null e .toString() derrubava o servidor com 500.
 		Perfil perfil = logado.getPerfil();
 		boolean ehMaster = (perfil == Perfil.ADMIN || perfil == Perfil.GERENTE);
 
@@ -92,16 +88,14 @@ public class UsuarioServlet extends HttpServlet {
 
 				case "salvar":
 					String loginNovo = request.getParameter("login");
-					String emailNovo = request.getParameter("email"); // Pegando o parâmetro e-mail
+					String emailNovo = request.getParameter("email"); 
 
-					// 1. Verifica login duplicado
 					if (usuarioDAO.buscarPorLogin(loginNovo) != null) {
 						request.setAttribute("mensagem", "Erro: Este login já está em uso.");
 						request.getRequestDispatcher(AppPaths.USUARIO_FORM).forward(request, response);
 						return;
 					}
 
-					// 2. Verifica e-mail duplicado (O elo perdido!)
 					if (usuarioDAO.buscarPorEmail(emailNovo) != null) {
 						request.setAttribute("mensagem", "Erro: Este e-mail já está cadastrado em outra conta.");
 						request.getRequestDispatcher(AppPaths.USUARIO_FORM).forward(request, response);
@@ -127,8 +121,6 @@ public class UsuarioServlet extends HttpServlet {
 				}
 			}
 
-			// Listagem padrão — só chega aqui quem já passou pela verificação de sessão
-			// acima
 			List<Usuario> lista = usuarioDAO.listarTodos();
 			request.setAttribute("listaUsuarios", lista);
 			request.getRequestDispatcher(AppPaths.USUARIO_LISTA).forward(request, response);

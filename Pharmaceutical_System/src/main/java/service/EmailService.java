@@ -14,7 +14,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class EmailService {
 
-	// Carregado em memória apenas uma vez
 	private static final String USUARIO;
 	private static final String SENHA;
 	private static final Properties PROPS;

@@ -17,12 +17,19 @@ public class SupplierProductId implements Serializable {
         this.supplierId = supplierId;
     }
 
-    // Getters, setters, equals e hashCode
-    public Integer getProductId() { return productId; }
-    public void setProductId(Integer productId) { this.productId = productId; }
+    public Integer getProductId() { 
+    	return productId; 
+    }
+    public void setProductId(Integer productId) { 
+    	this.productId = productId; 
+    }
 
-    public Integer getSupplierId() { return supplierId; }
-    public void setSupplierId(Integer supplierId) { this.supplierId = supplierId; }
+    public Integer getSupplierId() { 
+    	return supplierId; 
+    }
+    public void setSupplierId(Integer supplierId) { 
+    	this.supplierId = supplierId; 
+    }
 
     @Override
     public boolean equals(Object o) {

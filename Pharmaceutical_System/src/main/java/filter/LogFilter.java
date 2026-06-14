@@ -17,8 +17,6 @@ import config.JPAUtil;
 import model.LogAcesso;
 import model.Usuario;
 
-// A anotação abaixo faz o filtro interceptar o sistema inteiro. 
-// Você pode mudar para "/area-restrita/*" se quiser logar apenas páginas específicas.
 @WebFilter("/*")
 public class LogFilter implements Filter {
 
@@ -29,33 +27,26 @@ public class LogFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		// 1. Monta a "Ação" (Ex: "GET /Pharmaceutical_System/dashboard.jsp")
 		String acao = req.getMethod() + " " + req.getRequestURI();
 
-		// Evita logar carregamento de CSS, JS e Imagens (polui o banco)
 		if (acao.contains(".css") || acao.contains(".js") || acao.contains(".png")) {
 			chain.doFilter(request, response);
 			return;
 		}
 
-		// 2. Captura o IP
-		String ip = req.getHeader("X-Forwarded-For"); // Caso use proxy/load balancer
+		String ip = req.getHeader("X-Forwarded-For"); 
 		if (ip == null || ip.isEmpty()) {
 			ip = request.getRemoteAddr();
 		}
 
-		// 3. Captura o usuário logado (Ajuste "usuarioLogado" para o nome que você usa
-		// no seu login)
 		Usuario usuario = (Usuario) req.getSession().getAttribute("usuarioLogado");
 
 		String resultado = "";
 		String detalhes = null;
 
 		try {
-			// Continua a execução normal do Servlet/JSP
 			chain.doFilter(request, response);
 
-			// Pós-execução: Pega o status HTTP para saber se deu certo
 			int status = res.getStatus();
 			if (status >= 200 && status < 300) {
 				resultado = "SUCESSO";
@@ -67,10 +58,9 @@ public class LogFilter implements Filter {
 
 		} catch (Exception e) {
 			resultado = "ERRO SISTEMA";
-			detalhes = e.getMessage(); // Salva a mensagem do erro para depuração
-			throw e; // Repassa o erro para não quebrar a aplicação
+			detalhes = e.getMessage(); 
+			throw e; 
 		} finally {
-			// 4. Salva o Log no Banco de Dados
 			salvarLogNoBanco(usuario, acao, ip, resultado, detalhes);
 		}
 	}
@@ -89,7 +79,7 @@ public class LogFilter implements Filter {
 			if (em != null && em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
 			}
-			e.printStackTrace(); // Apenas printa no console para o log não quebrar o sistema
+			e.printStackTrace(); 
 		} finally {
 			if (em != null) {
 				em.close();
