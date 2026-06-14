@@ -84,8 +84,8 @@
             </button>
 
             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button type="submit" class="btn btn-ativar">💾 Registrar Compra</button>
-                <a href="PurchaseServlet" class="btn">← Cancelar</a>
+                <button type="submit" class="btn btn-ativar">Registrar Compra</button>
+                <a href="PurchaseServlet" class="btn">Cancelar</a>
             </div>
         </form>
     </main>

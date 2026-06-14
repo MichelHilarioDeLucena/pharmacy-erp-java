@@ -18,7 +18,6 @@ public class PdfGenerator {
 			PdfWriter.getInstance(document, os);
 			document.open();
 
-			// Use o caminho completo da classe se o erro de fonte persistir
 			com.lowagie.text.Font font = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 12,
 					com.lowagie.text.Font.BOLD);
 

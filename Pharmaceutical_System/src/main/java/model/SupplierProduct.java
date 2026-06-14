@@ -19,9 +19,6 @@ public class SupplierProduct {
     @Column(name = "data_compra")
     private LocalDate purchaseDate;
 
-    // Opcional: se quiser ter os objetos carregados, use @ManyToOne com @JoinColumn
-    // mas cuidado com performance
-
     public SupplierProduct() {}
 
     public SupplierProduct(Integer productId, Integer supplierId, LocalDate purchaseDate) {
@@ -30,7 +27,6 @@ public class SupplierProduct {
         this.purchaseDate = purchaseDate;
     }
 
-    // Getters e Setters
     public Integer getProductId() { return productId; }
     public void setProductId(Integer productId) { this.productId = productId; }
 

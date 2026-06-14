@@ -9,7 +9,6 @@
     <title>Entrada de Mercadorias - ERP</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <style>
-        /* Pequeno ajuste para deixar os campos lado a lado em telas grandes */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -24,14 +23,14 @@
 </head>
 <body>
     <header>
-        <div class="marca">💊 ERP Farmácia - Controle de Estoque</div>
+        <div class="marca">ERP Farmácia - Controle de Estoque</div>
         <div class="user-info">
             <span>Olá, <strong>Operador</strong></span>
             <a href="${pageContext.request.contextPath}/home.jsp">Voltar ao Painel</a>
         </div>
     </header>
     <div class="container-wide">
-        <h2>📦 Nova Entrada de Mercadoria</h2>
+        <h2>Nova Entrada de Mercadoria</h2>
         <p class="subtitulo">Preencha os dados abaixo para registrar os produtos enviados pelo fornecedor.</p>
 
         <% if (request.getAttribute("mensagem") != null) { %>
@@ -111,7 +110,7 @@
             </div>
 
             <div style="text-align: right; margin-top: 20px;">
-                <button type="submit" class="btn btn-salvar">📦 Registrar Entrada</button>
+                <button type="submit" class="btn btn-salvar">Registrar Entrada</button>
             </div>
         </form>
     </div>

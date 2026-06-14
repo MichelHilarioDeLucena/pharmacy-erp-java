@@ -30,7 +30,7 @@
 </head>
 <body>
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #eee; border-bottom: 2px solid #ccc;">
-        <h2>📦 Gestão de Estoque</h2>
+        <h2>Gestão de Estoque</h2>
         <div>
             <span>Logado como: <strong><%=logado.getNome()%></strong> (<%=logado.getPerfil()%>)</span>
             <a href="LogoutServlet" style="margin-left: 15px; color: red; text-decoration: none;">Sair</a>
@@ -40,11 +40,11 @@
     <main style="padding: 20px;">
 
         <% if (request.getAttribute("mensagem") != null) { %>
-            <div class="alerta-box">⚠️ <%=request.getAttribute("mensagem")%></div>
+            <div class="alerta-box"> <%=request.getAttribute("mensagem")%></div>
         <% } %>
 
         <% if (exibirAlerta) { %>
-            <div class="alerta-box">⚠️ Exibindo apenas produtos com estoque abaixo do mínimo.</div>
+            <div class="alerta-box"> Exibindo apenas produtos com estoque abaixo do mínimo.</div>
         <% } %>
 
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -97,7 +97,6 @@
                     <td class="<%=classStatus%>"><%=statusTexto%></td>
                     <td>
                         <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                            <!-- Entrada de estoque via formulário inline -->
                             <form method="post" action="ProductServlet" style="display: inline-flex; gap: 4px;">
                                 <input type="hidden" name="action" value="entrada">
                                 <input type="hidden" name="id" value="<%=p.getId()%>">

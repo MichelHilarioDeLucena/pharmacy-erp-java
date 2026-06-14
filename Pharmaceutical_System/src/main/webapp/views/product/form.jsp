@@ -124,7 +124,7 @@
 
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button type="submit" class="btn btn-ativar">
-                    <%=ehEdicao ? "💾 Salvar Alterações" : "➕ Cadastrar Produto"%>
+                    <%=ehEdicao ? "Salvar Alterações" : "➕ Cadastrar Produto"%>
                 </button>
                 <a href="ProductServlet" class="btn">← Cancelar</a>
             </div>

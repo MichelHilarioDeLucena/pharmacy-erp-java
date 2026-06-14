@@ -25,7 +25,6 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// Colunas novas mapeadas exatamente com o nome do BD
 	@Column(name = "codigo_barras", unique = true, length = 50)
 	private String barcode;
 
@@ -47,8 +46,6 @@ public class Product {
 	@Column(name = "qtd_minima", nullable = false)
 	private Integer minStock = 5;
 
-	// Trocamos de String para Integer para bater com o banco (categoria_id e
-	// fornecedor_id)
 	@Column(name = "categoria_id")
 	private Integer categoryId;
 
@@ -57,10 +54,6 @@ public class Product {
 
 	@Column(name = "ativo")
 	private Boolean active = true;
-
-	// ==========================================
-	// GETTERS E SETTERS
-	// ==========================================
 
 	public Long getId() {
 		return id;

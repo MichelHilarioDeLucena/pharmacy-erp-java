@@ -18,7 +18,7 @@ public class TestConnection {
 
 			Connection conn = DriverManager.getConnection(url, user, password);
 
-			System.out.println("✅ Conectado com sucesso!");
+			System.out.println("Conectado com sucesso!");
 			conn.close();
 
 		} catch (Exception e) {

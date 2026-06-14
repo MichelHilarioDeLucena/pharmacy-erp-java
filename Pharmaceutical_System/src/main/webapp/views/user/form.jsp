@@ -2,22 +2,18 @@
 <%@ page isELIgnored="false" %>
 <%@ page import="model.Usuario, model.Perfil"%>
 <%
-    // 1. PROTEÇÃO DE SESSÃO
     Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
     Perfil perfilLogado = (logado != null) ? logado.getPerfil() : null;
     boolean ehMaster = (perfilLogado == Perfil.ADMIN || perfilLogado == Perfil.GERENTE);
 
     if (!ehMaster) {
-        // No Java (Scriptlet), usamos request.getContextPath() em vez de ${...}
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
 
-    // 2. DESCOBRIR SE É CADASTRO OU EDIÇÃO
     Usuario u = (Usuario) request.getAttribute("usuario");
     boolean isEdit = (u != null && u.getId() != null && u.getId() > 0);
 
-    // 3. PREPARAR AS VARIÁVEIS (Evita NullPointerException no HTML)
     String nome = isEdit ? u.getNome() : "";
     String email = isEdit ? u.getEmail() : "";
     String login = isEdit ? u.getLogin() : "";
@@ -61,7 +57,6 @@
                 <input type="text" name="login" value="<%= login %>" placeholder="joao.silva" required>
             <% } %>
 
-            <%-- A senha só aparece na hora de cadastrar. --%>
             <% if (!isEdit) { %>
                 <label>Senha Inicial:</label>
                 <input type="password" name="senha" required>

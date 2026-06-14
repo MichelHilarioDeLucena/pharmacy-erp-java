@@ -10,7 +10,7 @@
 <body style="background-color: #f4f7f6;">
 
     <div class="login-container">
-        <h2>💊 ERP Farmácia</h2>
+        <h2>ERP Farmácia</h2>
         <p>Acesse sua conta</p>
         <hr>
         <br>

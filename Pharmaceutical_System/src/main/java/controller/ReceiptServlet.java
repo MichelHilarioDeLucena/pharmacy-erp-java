@@ -33,13 +33,10 @@ public class ReceiptServlet extends HttpServlet {
 			Sale sale = em.find(Sale.class, id);
 
 			if (sale != null) {
-				// 1. Configura o cabeçalho para o navegador entender que é um PDF
 				response.setContentType("application/pdf");
 
-				// 2. Define o nome do arquivo no download
 				response.setHeader("Content-Disposition", "attachment; filename=recibo_venda_" + id + ".pdf");
 
-				// 3. Chama a sua classe utilitária para escrever o PDF no stream de saída
 				PdfGenerator.generateReceipt(sale, response.getOutputStream());
 			} else {
 				response.getWriter().print("Erro: Venda não encontrada no banco.");

@@ -5,21 +5,20 @@
 <head>
     <meta charset="UTF-8">
     <title>POS Checkout - ERP</title>
-    <%-- CORREÇÃO 1: ContextPath no CSS para não perder a referência --%>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style2.css">
 </head>
 <body>
 
     <div class="checkout-container">
-        <h2>Point of Sale 🛒</h2>
+        <h2>Point of Sale</h2>
 
         <% if ("true".equals(request.getParameter("success"))) { 
             String saleId = request.getParameter("saleId"); 
         %>
         <div class="alert-success">
-            <b>✅ Venda finalizada com sucesso e estoque atualizado!</b><br>
+            <b>Venda finalizada com sucesso e estoque atualizado!</b><br>
             <a href="${pageContext.request.contextPath}/ReceiptServlet?saleId=<%=saleId%>" class="btn-receipt">
-               📄 Baixar Cupom Fiscal (PDF)
+               Baixar Cupom Fiscal (PDF)
             </a>
         </div>
         <% } %>
@@ -143,7 +142,6 @@
         </div>
     </div>
 
-    <%-- CORREÇÃO 2: ContextPath no JS também! --%>
     <script src="${pageContext.request.contextPath}/js/script.js"></script>
 </body>
 </html>

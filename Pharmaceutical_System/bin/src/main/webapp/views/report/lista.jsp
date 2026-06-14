@@ -40,7 +40,7 @@
 </head>
 <body>
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #eee; border-bottom: 2px solid #ccc;">
-        <h2>📊 Relatórios</h2>
+        <h2>Relatórios</h2>
         <div>
             <span>Logado como: <strong><%=logado.getNome()%></strong> (<%=logado.getPerfil()%>)</span>
             <a href="LogoutServlet" style="margin-left: 15px; color: red; text-decoration: none;">Sair</a>
@@ -51,15 +51,15 @@
 
         <% if (request.getAttribute("mensagem") != null) { %>
             <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 10px 16px; border-radius: 6px; margin-bottom: 16px; color: #856404;">
-                ⚠️ <%=request.getAttribute("mensagem")%>
+                <%=request.getAttribute("mensagem")%>
             </div>
         <% } %>
 
-        <a href="home.jsp" class="btn" style="margin-bottom: 20px; display: inline-block;">🏠 Home</a>
+        <a href="home.jsp" class="btn" style="margin-bottom: 20px; display: inline-block;">Home</a>
 
         <!-- ESTOQUE BAIXO -->
         <div class="report-card">
-            <h3>📦 Estoque Baixo</h3>
+            <h3>Estoque Baixo</h3>
             <p class="resumo">Produtos com quantidade atual abaixo do mínimo: <strong><%=totalEstoqueBaixo != null ? totalEstoqueBaixo : 0%></strong></p>
             <div class="btn-group">
                 <a href="ReportServlet?action=estoque-baixo-pdf" class="btn btn-desativar">⬇ PDF</a>
@@ -69,7 +69,7 @@
 
         <!-- ESTOQUE COMPLETO -->
         <div class="report-card">
-            <h3>📦 Estoque Completo</h3>
+            <h3>Estoque Completo</h3>
             <p class="resumo">Todos os produtos ativos com seus níveis de estoque.</p>
             <div class="btn-group">
                 <a href="ReportServlet?action=estoque-completo-pdf" class="btn btn-desativar">⬇ PDF</a>
@@ -79,7 +79,7 @@
 
         <!-- COMPRAS -->
         <div class="report-card">
-            <h3>🛒 Compras</h3>
+            <h3>Compras</h3>
             <p class="resumo">Total de compras registradas: <strong><%=totalCompras != null ? totalCompras : 0%></strong></p>
             <div class="btn-group">
                 <a href="ReportServlet?action=compras-pdf" class="btn btn-desativar">⬇ PDF</a>
@@ -89,7 +89,7 @@
 
         <!-- FORNECEDORES -->
         <div class="report-card">
-            <h3>🏭 Fornecedores</h3>
+            <h3>Fornecedores</h3>
             <p class="resumo">Total de fornecedores cadastrados: <strong><%=totalFornecedores != null ? totalFornecedores : 0%></strong></p>
             <div class="btn-group">
                 <a href="ReportServlet?action=fornecedores-pdf" class="btn btn-desativar">⬇ PDF</a>

@@ -34,16 +34,13 @@ public class Usuario {
 	private Perfil perfil;
 
 	@Column(nullable = false)
-	private boolean ativo = true; // Usuário começa ativo por padrão
+	private boolean ativo = true;
 
-	// Campo para o código único de recuperação (UUID)
 	@Column(name = "token_recuperacao")
 	private String tokenRecuperacao;
 
-	// Usando LocalDateTime (mais moderno e não precisa da anotação @Temporal)
 	@Column(name = "token_expiracao")
 	private java.time.LocalDateTime tokenExpiracao;
-	// Dentro da classe Usuario.java
 	private int tentativasFalhas;
 
 	public int getTentativasFalhas() {
@@ -54,7 +51,6 @@ public class Usuario {
 		this.tentativasFalhas = tentativasFalhas;
 	}
 
-	// Getters e Setters (Importante para o Hibernate funcionar)
 	public Integer getId() {
 		return id;
 	}

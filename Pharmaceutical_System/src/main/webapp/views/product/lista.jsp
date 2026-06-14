@@ -54,7 +54,7 @@ boolean exibirAlerta = (alertaEstoque != null && alertaEstoque);
 <body>
 	<header
 		style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #eee; border-bottom: 2px solid #ccc;">
-		<h2>📦 Gestão de Estoque</h2>
+		<h2>Gestão de Estoque</h2>
 		<div>
 			<span>Logado como: <strong><%=logado.getNome()%></strong> (<%=logado.getPerfil()%>)
 			</span> <a href="LogoutServlet"
@@ -77,7 +77,7 @@ boolean exibirAlerta = (alertaEstoque != null && alertaEstoque);
 		<%
 		if (exibirAlerta) {
 		%>
-		<div class="alerta-box">⚠️ Exibindo apenas produtos com estoque
+		<div class="alerta-box">Exibindo apenas produtos com estoque
 			abaixo do mínimo.</div>
 		<%
 		}
@@ -154,7 +154,7 @@ boolean exibirAlerta = (alertaEstoque != null && alertaEstoque);
 							%>
 							<a
 								href="${pageContext.request.contextPath}/ProductServlet?action=editar&id=<%=p.getId()%>"
-								class="btn btn-editar">✎ Editar</a>
+								class="btn btn-editar">Editar</a>
 
 							<%
 							if (p.getActive()) {

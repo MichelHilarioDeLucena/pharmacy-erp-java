@@ -15,7 +15,7 @@
 </head>
 <body>
 
-    <h2>📊 Painel de Vendas</h2>
+    <h2>Painel de Vendas</h2>
 
     <div class="dashboard-container">
         <div class="chart-box">
@@ -53,7 +53,6 @@
     %>
 
     <script>
-        // === GRÁFICO 1: Faturamento por Pagamento (Pizza/Pie) ===
         const ctxPayment = document.getElementById('paymentChart').getContext('2d');
         new Chart(ctxPayment, {
             type: 'pie',
@@ -71,7 +70,6 @@
             }
         });
 
-        // === GRÁFICO 2: Produtos Mais Vendidos (Barras/Bar) ===
         const ctxProducts = document.getElementById('productsChart').getContext('2d');
         new Chart(ctxProducts, {
             type: 'bar',

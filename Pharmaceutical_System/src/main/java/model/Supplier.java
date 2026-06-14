@@ -33,10 +33,6 @@ public class Supplier {
     @Column(name = "ativo")
     private Boolean active = true;
 
-    // ==========================================
-    // GETTERS E SETTERS
-    // ==========================================
-
     public Integer getId() {
         return id;
     }

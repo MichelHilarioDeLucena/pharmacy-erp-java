@@ -29,7 +29,6 @@ public class PurchaseService {
         this.supplierDAO = new SupplierDAO(em);
     }
 
-    // Cadastra uma compra manualmente
     public void registrar(Purchase purchase) {
         if (purchase.getSupplier() == null)
             throw new IllegalArgumentException("Fornecedor é obrigatório.");
@@ -38,7 +37,6 @@ public class PurchaseService {
         purchaseDAO.salvar(purchase);
     }
 
-    // Confirma uma compra pendente — dá entrada no estoque
     public void confirmar(Integer purchaseId) {
         Purchase purchase = purchaseDAO.buscarPorId(purchaseId);
         if (purchase == null)
@@ -56,7 +54,6 @@ public class PurchaseService {
         purchaseDAO.salvar(purchase);
     }
 
-    // Cancela uma compra pendente
     public void cancelar(Integer purchaseId) {
         Purchase purchase = purchaseDAO.buscarPorId(purchaseId);
         if (purchase == null)
@@ -67,26 +64,20 @@ public class PurchaseService {
         purchaseDAO.salvar(purchase);
     }
 
-    // Simulação de pedidos automáticos baseado em estoque baixo
-    // Para cada produto abaixo do mínimo que tenha fornecedor vinculado,
-    // gera um pedido de compra com quantidade suficiente para dobrar o estoque mínimo
     public int gerarPedidosAutomaticos(Usuario operador) {
         List<Product> produtosBaixos = productDAO.listarEstoqueBaixo();
         int pedidosGerados = 0;
         EntityManager em = JPAUtil.getEntityManager();
-        SupplierProductDAO spDAO = new SupplierProductDAO(em); // instancia aqui
+        SupplierProductDAO spDAO = new SupplierProductDAO(em); 
         for (Product product : produtosBaixos) {
-            // 1. Buscar fornecedores vinculados ao produto (tabela associativa)
             List<SupplierProduct> vinculos = spDAO.listarPorProduto(product.getId().intValue());
             if (vinculos.isEmpty()) continue;
 
-            // 2. Ordenar por data da última compra (mais recente primeiro)
             vinculos.sort((a, b) -> b.getPurchaseDate().compareTo(a.getPurchaseDate()));
             SupplierProduct ultimoVinculo = vinculos.get(0);
             Supplier supplier = supplierDAO.buscarPorId(ultimoVinculo.getSupplierId());
             if (supplier == null || !supplier.getActive()) continue;
 
-            // 3. Quantidade a pedir (dobrar o estoque mínimo)
             int quantidadeAPedir = (product.getMinStock() * 2) - product.getCurrentStock();
             if (quantidadeAPedir <= 0) continue;
 

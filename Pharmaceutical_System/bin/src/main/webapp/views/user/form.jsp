@@ -2,22 +2,18 @@
 <%@ page isELIgnored="false" %>
 <%@ page import="model.Usuario, model.Perfil"%>
 <%
-    // 1. PROTEÇÃO DE SESSÃO
     Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
     Perfil perfilLogado = (logado != null) ? logado.getPerfil() : null;
     boolean ehMaster = (perfilLogado == Perfil.ADMIN || perfilLogado == Perfil.GERENTE);
 
     if (!ehMaster) {
-        // No Java (Scriptlet), usamos request.getContextPath() em vez de ${...}
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
 
-    // 2. DESCOBRIR SE É CADASTRO OU EDIÇÃO
     Usuario u = (Usuario) request.getAttribute("usuario");
     boolean isEdit = (u != null && u.getId() != null && u.getId() > 0);
 
-    // 3. PREPARAR AS VARIÁVEIS (Evita NullPointerException no HTML)
     String nome = isEdit ? u.getNome() : "";
     String email = isEdit ? u.getEmail() : "";
     String login = isEdit ? u.getLogin() : "";
@@ -42,7 +38,6 @@
 
         <form action="${pageContext.request.contextPath}/UsuarioServlet?acao=<%= acao %>" method="post">
             
-            <%-- Se for edição, precisamos enviar o ID escondido para o banco saber quem atualizar --%>
             <% if (isEdit) { %>
                 <input type="hidden" name="id" value="<%= u.getId() %>">
             <% } %>

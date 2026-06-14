@@ -1,4 +1,3 @@
-/* Estilos Base Gerais */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f6f9;
@@ -16,7 +15,6 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Grid de Produtos */
 .product-grid {
     display: flex;
     flex-wrap: wrap; /* CORREÇÃO: Impede que os cards fiquem espremidos */
@@ -69,7 +67,6 @@ body {
     background: #218838;
 }
 
-/* Tabela do Carrinho */
 .cart-table {
     width: 100%;
     border-collapse: collapse;
@@ -92,7 +89,6 @@ body {
 .cart-table .right { text-align: right; }
 .cart-table .empty-cart { color: #888; padding: 20px; font-style: italic; }
 
-/* Totais e Pagamento */
 .total-label {
     text-align: right;
     font-size: 24px;
@@ -158,7 +154,6 @@ body {
     background: #0056b3;
 }
 
-/* Mensagens de Sucesso */
 .alert-success {
     background: #d4edda;
     color: #155724;
@@ -179,7 +174,6 @@ body {
     font-weight: bold;
 }
 
-/* Estilos para os Modais de Pagamento */
 .modal-overlay {
     display: none; 
     position: fixed; 
