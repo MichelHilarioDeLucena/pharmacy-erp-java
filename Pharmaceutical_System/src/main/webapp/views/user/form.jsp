@@ -42,6 +42,7 @@
 
         <form action="${pageContext.request.contextPath}/UsuarioServlet?acao=<%= acao %>" method="post">
             
+            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
             <%-- Se for edição, precisamos enviar o ID escondido para o banco saber quem atualizar --%>
             <% if (isEdit) { %>
                 <input type="hidden" name="id" value="<%= u.getId() %>">

@@ -45,6 +45,7 @@
         <% } %>
 
         <form method="post" action="SupplierServlet">
+        	<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
             <% if (ehEdicao) { %>
                 <input type="hidden" name="id" value="<%=supplier.getId()%>">
             <% } %>

@@ -142,6 +142,7 @@ boolean exibirAlerta = (alertaEstoque != null && alertaEstoque);
 							<!-- Entrada de estoque via formulário inline -->
 							<form method="post" action="ProductServlet"
 								style="display: inline-flex; gap: 4px;">
+								<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
 								<input type="hidden" name="action" value="entrada"> <input
 									type="hidden" name="id" value="<%=p.getId()%>"> <input
 									type="number" name="quantidade" min="1" value="1"
