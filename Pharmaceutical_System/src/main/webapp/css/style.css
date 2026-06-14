@@ -695,3 +695,8 @@ body {
 }
 
 .btn-pular:hover { background: #5a6268; }
+
+.btn-pequeno {
+    padding: 4px 10px;
+    font-size: 12px;
+}
