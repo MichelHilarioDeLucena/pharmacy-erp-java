@@ -183,6 +183,8 @@ String totalRevenueFormatted = String.format(java.util.Locale.US, "%,.2f", total
 							class="btn btn-primary">Fornecedores PDF</a> <a
 							href="${pageContext.request.contextPath}/ReportServlet?action=fornecedores-csv"
 							class="btn btn-success">Fornecedores CSV</a>
+							<a href="${pageContext.request.contextPath}/ReportServlet?action=vendas-pdf" class="btn btn-primary">Vendas PDF</a>
+							<a href="${pageContext.request.contextPath}/ReportServlet?action=vendas-csv" class="btn btn-success">Vendas CSV</a>
 					</div>
 				</section>
 

@@ -64,8 +64,14 @@ public class Sale {
 	private String paymentMethod;
 
 	@Column(name = "status_pagamento")
+	
 	private String paymentStatus = "CONCLUIDO";
+	@Column(name = "valor_pago", precision = 10, scale = 2)
+	private BigDecimal amountPaid;
 
+	@Column(name = "troco", precision = 10, scale = 2)
+	private BigDecimal change;
+	
 	@OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
 	private List<SaleItem> items = new ArrayList<>();
 
@@ -74,7 +80,18 @@ public class Sale {
 		item.setSale(this); // Amarra o item a esta venda
 		this.totalAmount = this.totalAmount.add(item.getSubtotal());
 	}
-
+	public BigDecimal getAmountPaid() {
+	    return amountPaid;
+	}
+	public void setAmountPaid(BigDecimal amountPaid) {
+	    this.amountPaid = amountPaid;
+	}
+	public BigDecimal getChange() {
+	    return change;
+	}
+	public void setChange(BigDecimal change) {
+	    this.change = change;
+	}
 	public Integer getId() {
 		return id;
 	}

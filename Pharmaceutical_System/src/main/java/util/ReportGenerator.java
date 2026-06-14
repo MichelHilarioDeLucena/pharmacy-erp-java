@@ -16,6 +16,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import model.Product;
 import model.Purchase;
 import model.PurchaseItem;
+import model.Sale;
 import model.Supplier;
 
 public class ReportGenerator {
@@ -214,4 +215,59 @@ public class ReportGenerator {
             );
         }
     }
+    
+ // =============================================
+ // VENDAS — PDF
+ // =============================================
+	 public static void vendasPdf(List<Sale> vendas, OutputStream os) throws Exception {
+	     Document doc = new Document(PageSize.A4.rotate());
+	     PdfWriter.getInstance(doc, os);
+	     doc.open();
+	     Font titulo = new Font(Font.HELVETICA, 16, Font.BOLD);
+	     Font cabecalho = new Font(Font.HELVETICA, 10, Font.BOLD);
+	     Font corpo = new Font(Font.HELVETICA, 9, Font.NORMAL);
+	     doc.add(new Paragraph("Relatório de Vendas", titulo));
+	     doc.add(new Paragraph("Gerado em: " + java.time.LocalDate.now()));
+	     doc.add(new Paragraph(" "));
+	     PdfPTable tabela = new PdfPTable(7);
+	     tabela.setWidthPercentage(100);
+	     tabela.setWidths(new float[]{1f, 2.5f, 1.5f, 2f, 2f, 2f, 2f});
+	     String[] colunas = {"ID", "Operador", "Cliente ID", "Data", "Total", "Pagamento", "Status"};
+	     for (String col : colunas) {
+	         PdfPCell cell = new PdfPCell(new Phrase(col, cabecalho));
+	         cell.setBackgroundColor(new java.awt.Color(200, 200, 200));
+	         cell.setPadding(5);
+	         tabela.addCell(cell);
+	     }
+	     for (Sale s : vendas) {
+	         tabela.addCell(new Phrase(String.valueOf(s.getId()), corpo));
+	         tabela.addCell(new Phrase(s.getOperator().getNome(), corpo));
+	         tabela.addCell(new Phrase(s.getClientId() != null ? String.valueOf(s.getClientId()) : "-", corpo));
+	         tabela.addCell(new Phrase(s.getSaleDate().toLocalDate().toString(), corpo));
+	         tabela.addCell(new Phrase("R$ " + s.getTotalAmount(), corpo));
+	         tabela.addCell(new Phrase(s.getPaymentMethod(), corpo));
+	         tabela.addCell(new Phrase(s.getPaymentStatus(), corpo));
+	     }
+	     doc.add(tabela);
+	     doc.add(new Paragraph("Total de vendas: " + vendas.size()));
+	     doc.close();
+	 }
+	
+	 // =============================================
+	 // VENDAS — CSV
+	 // =============================================
+	 public static void vendasCsv(List<Sale> vendas, PrintWriter writer) {
+	     writer.println("ID,Operador,Cliente_ID,Data,Total,Pagamento,Status");
+	     for (Sale s : vendas) {
+	         writer.printf("%d,\"%s\",%s,%s,%s,%s,%s%n",
+	             s.getId(),
+	             s.getOperator().getNome().replace("\"", "\"\""),
+	             s.getClientId() != null ? s.getClientId() : "",
+	             s.getSaleDate().toLocalDate().toString(),
+	             s.getTotalAmount(),
+	             s.getPaymentMethod(),
+	             s.getPaymentStatus()
+	         );
+	     }
+	 }
 }

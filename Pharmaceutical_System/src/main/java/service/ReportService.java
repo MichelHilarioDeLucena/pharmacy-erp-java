@@ -4,9 +4,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import dao.ProductDAO;
 import dao.PurchaseDAO;
+import dao.SaleDAO;
 import dao.SupplierDAO;
 import model.Product;
 import model.Purchase;
+import model.Sale;
 import model.Supplier;
 
 public class ReportService {
@@ -14,13 +16,19 @@ public class ReportService {
     private ProductDAO  productDAO;
     private PurchaseDAO purchaseDAO;
     private SupplierDAO supplierDAO;
-
+    private SaleDAO saleDAO;
+    
     public ReportService(EntityManager em) {
         this.productDAO  = new ProductDAO(em);
         this.purchaseDAO = new PurchaseDAO(em);
         this.supplierDAO = new SupplierDAO(em);
+        this.saleDAO     = new SaleDAO(em);
     }
 
+    public List<Sale> relatorioVendas() {
+        return saleDAO.listarTodos();
+    }
+    
     // Relatório de estoque baixo
     public List<Product> relatorioEstoqueBaixo() {
         return productDAO.listarEstoqueBaixo();
