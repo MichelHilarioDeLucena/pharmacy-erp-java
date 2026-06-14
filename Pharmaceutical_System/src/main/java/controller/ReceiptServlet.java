@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import config.JPAUtil;
+import model.Product;
 import model.Sale;
+import model.SaleItem;
 import util.PdfGenerator;
 
 @WebServlet("/ReceiptServlet")
@@ -33,6 +35,12 @@ public class ReceiptServlet extends HttpServlet {
 			Sale sale = em.find(Sale.class, id);
 
 			if (sale != null) {
+				 for (SaleItem item : sale.getItems()) {
+			        Product p = em.find(Product.class, Long.valueOf(item.getProductId()));
+			        if (p != null) {
+			            item.setProductName(p.getName());
+			        }
+				 }
 				// 1. Configura o cabeçalho para o navegador entender que é um PDF
 				response.setContentType("application/pdf");
 
