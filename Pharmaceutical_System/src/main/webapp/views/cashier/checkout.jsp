@@ -144,7 +144,8 @@
             <form id="checkoutForm" action="${pageContext.request.contextPath}/CheckoutServlet" method="POST" onsubmit="iniciarPagamento(event)">
                 <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
                 <input type="hidden" name="action" value="finish">
-
+				<input type="hidden" name="cardPassword" id="cardPasswordHidden" value="">
+				
                 <div class="form-group">
                     <label>Cliente (Opcional):</label>
                     <select name="clientId">
@@ -168,6 +169,7 @@
                         <option value="PIX">Pix</option>
                         <option value="CREDIT_CARD">Cartão de Crédito</option>
                         <option value="DEBIT_CARD">Cartão de Débito</option>
+                        <option value="BOLETO">Boleto Bancário</option>
                         <option value="CASH">Dinheiro</option>
                     </select>
                 </div>
@@ -198,7 +200,33 @@
             <button type="button" class="btn-pagar btn-pular" onclick="fecharModais()">Cancelar</button>
         </div>
     </div>
-
+    
+	<div id="modalDinheiro" class="modal-overlay">
+	    <div class="modal-content">
+	        <h3>Pagamento em Dinheiro</h3>
+	        <p>Valor total da compra: <strong id="totalCompra">R$ 0,00</strong></p>
+	        <p>Digite o valor recebido:</p>
+	        <input type="text" id="valorPago" class="input-senha" placeholder="Ex: 100,00" autocomplete="off">
+	        <p id="trocoMsg" style="margin-top: 10px;"></p>
+	        <button type="button" class="btn-pagar" onclick="confirmarDinheiro()">Confirmar Pagamento</button>
+	        <button type="button" class="btn-pagar btn-pular" onclick="fecharModais()">Cancelar</button>
+	    </div>
+	</div>
+	<div id="modalBoleto" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Pagamento via Boleto</h3>
+        <p>Simulação de Boleto Bancário</p>
+        <div style="text-align: center; margin: 20px 0;">
+            <div style="border: 1px dashed #ccc; padding: 15px; background: #f9f9f9; font-family: monospace;">
+                <strong>Linha Digitável:</strong><br>
+                12345.67890 12345.678901 23456.789012 3 12345678901234
+            </div>
+        </div>
+        <p>Clique em "Simular Pagamento" para considerar o boleto como pago.</p>
+        <button type="button" class="btn-pagar" onclick="confirmarBoleto()">Simular Pagamento</button>
+        <button type="button" class="btn-pagar btn-pular" onclick="fecharModais()">Cancelar</button>
+    </div>
+</div>
     <script src="${pageContext.request.contextPath}/js/script.js"></script>
 </body>
 </html>

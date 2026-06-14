@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -38,6 +39,11 @@ public class CheckoutServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	System.out.println("=== CheckoutServlet POST recebido ===");
+    	for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements();) {
+    	    String name = e.nextElement();
+    	    System.out.println(name + ": " + request.getParameter(name));
+    	}
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
 
@@ -165,12 +171,34 @@ public class CheckoutServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/CheckoutServlet?error=empty");
                     return;
                 }
+                String paymentMethod = request.getParameter("paymentMethod");
 
+                // Validação para cartão de crédito/débito
+                if ("CREDIT_CARD".equals(paymentMethod) || "DEBIT_CARD".equals(paymentMethod)) {
+                    String senha = request.getParameter("cardPassword");
+                    System.out.println("DEBUG: Senha recebida = " + senha); // <--- LOG
+                    if (!"1234".equals(senha)) {
+                        // Volta para o checkout com erro
+                        List<Object[]> clients = em.createNativeQuery("SELECT id, nome_completo, cpf FROM clientes").getResultList();
+                        request.setAttribute("clientsList", clients);
+                        request.setAttribute("erro", "Senha do cartão inválida! (Simulação: 1234)");
+                        session.setAttribute("cart", cart);
+                        request.getRequestDispatcher("/views/cashier/checkout.jsp").forward(request, response);
+                        return;
+                    }
+                }
                 em.getTransaction().begin();
                 Sale newSale = new Sale();
                 newSale.setOperator((Usuario) session.getAttribute("usuarioLogado"));
                 newSale.setPaymentMethod(request.getParameter("paymentMethod"));
-
+                if ("CASH".equals(paymentMethod)) {
+                    String valorPago = request.getParameter("valorPago");
+                    String troco = request.getParameter("troco");
+                    if (valorPago != null && !valorPago.isEmpty()) {
+                        newSale.setAmountPaid(new BigDecimal(valorPago));
+                        newSale.setChange(new BigDecimal(troco));
+                    }
+                }
                 String clientIdStr = request.getParameter("clientId");
                 if (clientIdStr != null && !clientIdStr.isEmpty()) {
                     newSale.setClientId(Integer.parseInt(clientIdStr));
