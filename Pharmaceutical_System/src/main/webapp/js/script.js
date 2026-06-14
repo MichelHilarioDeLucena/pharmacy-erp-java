@@ -40,13 +40,15 @@ function confirmarAcao(acao, nomeUsuario) {
 let pixInterval;
 
 function iniciarPagamento(event) {
-    // Impede o formulário de ser enviado imediatamente
-    event.preventDefault(); 
-    
-    // Pega o valor selecionado no select 'paymentMethod'
+    event.preventDefault();
+
+    // Remove qualquer campo hidden que tenha sido criado anteriormente
+    const oldHidden = document.getElementById('cardPasswordHidden');
+    if (oldHidden) oldHidden.remove();
+
     const metodoSelect = document.querySelector('select[name="paymentMethod"]');
     if (!metodoSelect) return;
-    
+
     const metodo = metodoSelect.value;
     fecharModais();
 
@@ -58,10 +60,16 @@ function iniciarPagamento(event) {
         document.getElementById('senhaCartao').value = '';
         document.getElementById('modalCartao').style.display = 'flex';
         document.getElementById('senhaCartao').focus();
-    } else if (metodo === 'BOLETO') {
-        document.getElementById('modalBoleto').style.display = 'flex';
-    } else {
-        // Se for CASH (Dinheiro), pula direto para a confirmação
+    } else if (metodo === 'CASH') {
+	    // Atualiza o valor total no modal
+	    const totalSpan = document.querySelector('.total-value');
+	    if (totalSpan) {
+	        document.getElementById('totalCompra').innerText = totalSpan.innerText;
+	    }
+	    document.getElementById('modalDinheiro').style.display = 'flex';
+	} else if (metodo === 'BOLETO') {
+    	document.getElementById('modalBoleto').style.display = 'flex';
+	}else{
         confirmarPagamento();
     }
 }
@@ -85,8 +93,30 @@ function iniciarTimerPix() {
 }
 
 function validarSenha() {
+	console.log('Formulário encontrado?', document.getElementById('checkoutForm'));
     const senhaInput = document.getElementById('senhaCartao');
     if (senhaInput && senhaInput.value.length >= 4) {
+        // Garante que o campo hidden exista (cria se não existir)
+        let hiddenPassword = document.getElementById('cardPasswordHidden');
+        if (!hiddenPassword) {
+            hiddenPassword = document.createElement('input');
+            hiddenPassword.type = 'hidden';
+            hiddenPassword.name = 'cardPassword';
+            hiddenPassword.id = 'cardPasswordHidden';
+            const form = document.getElementById('checkoutForm');
+            if (form) {
+                form.appendChild(hiddenPassword);
+                console.log('Campo hidden criado dinamicamente');
+            } else {
+                console.error('Formulário checkoutForm não encontrado');
+                alert('Erro interno: formulário não encontrado.');
+                return;
+            }
+        }
+        hiddenPassword.value = senhaInput.value;
+        console.log('Senha copiada para hidden:', hiddenPassword.value);
+        
+        // Agora pode fechar o modal e submeter
         confirmarPagamento();
     } else {
         alert('Digite uma senha de 4 dígitos para simular o pagamento.');
@@ -110,9 +140,67 @@ function confirmarPagamento() {
     avisoProcessando.innerHTML = '<h2 style="color: white; font-family: sans-serif;">Processando Venda... 🚀</h2>';
     document.body.appendChild(avisoProcessando);
     
+    const hidden = document.getElementById('cardPasswordHidden');
+    console.log('Valor do hidden antes de enviar:', hidden ? hidden.value : 'hidden não encontrado');
+    
     // Envia o formulário definitivamente para o CheckoutServlet
     const form = document.getElementById('checkoutForm');
     if (form) {
         form.submit();
     }
+}
+function confirmarDinheiro() {
+    const valorPagoStr = document.getElementById('valorPago').value;
+    if (!valorPagoStr) {
+        alert('Digite o valor recebido.');
+        return;
+    }
+    // Converte vírgula para ponto e valida
+    let valorPago = parseFloat(valorPagoStr.replace(',', '.'));
+    if (isNaN(valorPago)) {
+        alert('Valor inválido.');
+        return;
+    }
+    // Pega o total do carrinho (valor exibido)
+    const totalSpan = document.querySelector('.total-value');
+    let total = 0;
+    if (totalSpan) {
+        total = parseFloat(totalSpan.innerText.replace('R$', '').replace(',', '.').trim());
+    }
+    if (valorPago < total) {
+        document.getElementById('trocoMsg').innerHTML = `<span style="color:red;">Valor insuficiente. Faltam R$ ${(total - valorPago).toFixed(2)}</span>`;
+        return;
+    }
+    const troco = valorPago - total;
+    if (troco > 0) {
+        alert(`Pagamento confirmado. Troco: R$ ${troco.toFixed(2)}`);
+    }
+    // Armazena o valor pago e troco em campos hidden do formulário (opcional)
+    let hiddenPago = document.getElementById('valorPagoHidden');
+    if (!hiddenPago) {
+        hiddenPago = document.createElement('input');
+        hiddenPago.type = 'hidden';
+        hiddenPago.name = 'valorPago';
+        hiddenPago.id = 'valorPagoHidden';
+        document.getElementById('checkoutForm').appendChild(hiddenPago);
+    }
+    hiddenPago.value = valorPago.toFixed(2);
+    
+    let hiddenTroco = document.getElementById('trocoHidden');
+    if (!hiddenTroco) {
+        hiddenTroco = document.createElement('input');
+        hiddenTroco.type = 'hidden';
+        hiddenTroco.name = 'troco';
+        hiddenTroco.id = 'trocoHidden';
+        document.getElementById('checkoutForm').appendChild(hiddenTroco);
+    }
+    hiddenTroco.value = troco.toFixed(2);
+    
+    fecharModais();
+    confirmarPagamento(); // finaliza a venda
+}
+
+function confirmarBoleto() {
+    fecharModais();
+    confirmarPagamento(); // finaliza a venda
 }
