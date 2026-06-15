@@ -31,7 +31,6 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 
 	private String stripXSS(String value) {
 		if (value != null) {
-			// Remove o que estiver entre tags <script> e caracteres suspeitos
 			value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 			value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
 			value = value.replaceAll("'", "&#39;");

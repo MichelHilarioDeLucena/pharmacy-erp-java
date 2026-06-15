@@ -36,10 +36,6 @@ public class PurchaseItem {
     @Column(name = "subtotal", nullable = false)
     private BigDecimal subtotal;
 
-    // ==========================================
-    // GETTERS E SETTERS
-    // ==========================================
-
     public Integer getId() {
         return id;
     }

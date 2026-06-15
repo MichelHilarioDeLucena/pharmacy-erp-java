@@ -24,7 +24,7 @@
 </head>
 <body>
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #eee; border-bottom: 2px solid #ccc;">
-        <h2>📋 Histórico de Compras</h2>
+        <h2>Histórico de Compras</h2>
         <div>
             <span>Logado como: <strong><%=logado.getNome()%></strong> (<%=logado.getPerfil()%>)</span>
             <a href="LogoutServlet" style="margin-left: 15px; color: red; text-decoration: none;">Sair</a>
@@ -44,13 +44,13 @@
                 <a href="PurchaseServlet?action=novo" class="btn btn-novo">➕ Nova Compra</a>
                 <a href="PurchaseServlet?action=automatico" class="btn btn-ativar"
                    onclick="return confirm('Gerar pedidos automáticos para produtos com estoque baixo?');">
-                   🤖 Pedidos Automáticos
+                   Pedidos Automáticos
                 </a>
-                <a href="PurchaseServlet?action=pendentes" class="btn">⏳ Só Pendentes</a>
+                <a href="PurchaseServlet?action=pendentes" class="btn">Só Pendentes</a>
             <% } %>
             <a href="PurchaseServlet" class="btn">Todos</a>
             <a href="SupplierServlet" class="btn">← Fornecedores</a>
-            <a href="<%= request.getContextPath() %>/home.jsp" class="btn">🏠 Home</a>
+            <a href="<%= request.getContextPath() %>/home.jsp" class="btn">Home</a>
         </div>
 
         <table>

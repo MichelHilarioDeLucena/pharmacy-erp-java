@@ -32,8 +32,6 @@ public class LoginServlet extends HttpServlet {
 		UsuarioDAO usuarioDAO = new UsuarioDAO(em);
 
 		try {
-			// 1. ESCUDO DE IP (Conectividade Segura)
-			// Se o IP já errou muito, barramos aqui antes de qualquer consulta de usuário
 			if (LogService.ipBloqueado(ip, em)) {
 				request.setAttribute("mensagem", "IP bloqueado temporariamente por excesso de tentativas.");
 				request.getRequestDispatcher(AppPaths.LOGIN_PAGE).forward(request, response);
@@ -41,10 +39,8 @@ public class LoginServlet extends HttpServlet {
 			}
 
 			em.getTransaction().begin();
-			// 2. BUSCA DO USUÁRIO
 			Usuario u = usuarioDAO.buscarPorLogin(login);
 
-			// 3. TRATAMENTO DE LOGIN INEXISTENTE
 			if (u == null) {
 				LogService.registrar(null, "LOGIN", ip, "FALHA - USUARIO INEXISTENTE", "", em);
 				em.getTransaction().commit();
@@ -53,7 +49,6 @@ public class LoginServlet extends HttpServlet {
 				request.getRequestDispatcher("/login.jsp").forward(request, response);
 				return;
 			}
-			// 4. VERIFICAÇÃO DE STATUS (CONTA BLOQUEADA)
 			if (!u.isAtivo()) {
 				LogService.registrar(u, "LOGIN", ip, "FALHA - CONTA BLOQUEADA", "", em);
 				em.getTransaction().commit();
@@ -63,11 +58,9 @@ public class LoginServlet extends HttpServlet {
 				return;
 			}
 
-			// 5. VALIDAÇÃO DE SENHA
 			boolean senhaBate = HashBCrypt.check(senhaPura, u.getSenhaHash());
 
 			if (senhaBate) {
-				// SUCESSO
 				u.setTentativasFalhas(0);
 				LogService.registrar(u, "LOGIN", ip, "SUCESSO", "", em);
 				em.getTransaction().commit();
@@ -77,13 +70,12 @@ public class LoginServlet extends HttpServlet {
 				response.sendRedirect(request.getContextPath() + "/home.jsp");
 
 			} else {
-				// FALHA DE SENHA
-
+			
 				int falhas = u.getTentativasFalhas() + 1;
 				u.setTentativasFalhas(falhas);
 				String resultado = "FALHA - TENTATIVA " + falhas;
 				if (falhas >= 3) {
-					u.setAtivo(false); // Bloqueio lógico do usuário
+					u.setAtivo(false); 
 					resultado = "FALHA - USUARIO BLOQUEADO";
 				}
 

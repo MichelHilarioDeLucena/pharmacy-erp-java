@@ -97,6 +97,4 @@ public class SaleItem {
 	public void setSubtotal(BigDecimal subtotal) {
 		this.subtotal = subtotal;
 	}
-
-	// GERE OS GETTERS E SETTERS
 }

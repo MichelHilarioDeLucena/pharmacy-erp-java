@@ -7,14 +7,9 @@
     <persistence-unit name="erp" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         
-        <!-- ENTIDADES -->
         <class>model.Usuario</class>
 
         <properties>
-
-            <!-- ========================= -->
-            <!-- 🟢 BANCO H2 -->
-            <!-- ========================= -->
 
             <property name="javax.persistence.jdbc.driver"
                 value="org.h2.Driver" />
@@ -28,14 +23,9 @@
             <property name="hibernate.dialect"
                 value="org.hibernate.dialect.H2Dialect" />
 
-            <!-- ========================= -->
-            <!-- ⚙️ CONFIGURAÇÕES -->
-            <!-- ========================= -->
-
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
 
-            <!-- recria o banco sempre (ótimo pra testes) -->
             <property name="hibernate.hbm2ddl.auto" value="create-drop" />
 
         </properties>

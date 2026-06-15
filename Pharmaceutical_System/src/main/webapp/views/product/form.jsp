@@ -46,6 +46,7 @@
         <% } %>
 
         <form method="post" action="ProductServlet">
+        <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
             <% if (ehEdicao) { %>
                 <input type="hidden" name="id" value="<%=produto.getId()%>">
             <% } %>
@@ -123,7 +124,7 @@
 
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button type="submit" class="btn btn-ativar">
-                    <%=ehEdicao ? "💾 Salvar Alterações" : "➕ Cadastrar Produto"%>
+                    <%=ehEdicao ? "Salvar Alterações" : "➕ Cadastrar Produto"%>
                 </button>
                 <a href="ProductServlet" class="btn">← Cancelar</a>
             </div>

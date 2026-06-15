@@ -52,9 +52,7 @@ public class ReportServlet extends HttpServlet {
 
         try {
             String action = request.getParameter("action");
-            String format = request.getParameter("format"); // "pdf" ou "csv"
-
-            // --- EXPORTAÇÕES ---
+            String format = request.getParameter("format");
 
             if ("estoque-baixo-pdf".equals(action)) {
                 List<Product> produtos = service.relatorioEstoqueBaixo();
@@ -119,21 +117,6 @@ public class ReportServlet extends HttpServlet {
                 ReportGenerator.fornecedoresCsv(fornecedores, response.getWriter());
                 return;
             }
-            if ("vendas-pdf".equals(action)) {
-                List<Sale> vendas = service.relatorioVendas();
-                response.setContentType("application/pdf");
-                response.setHeader("Content-Disposition", "attachment; filename=vendas.pdf");
-                ReportGenerator.vendasPdf(vendas, response.getOutputStream());
-                return;
-            }
-            if ("vendas-csv".equals(action)) {
-                List<Sale> vendas = service.relatorioVendas();
-                response.setContentType("text/csv; charset=UTF-8");
-                response.setHeader("Content-Disposition", "attachment; filename=vendas.csv");
-                ReportGenerator.vendasCsv(vendas, response.getWriter());
-                return;
-            }
-            // --- TELA PRINCIPAL ---
             request.setAttribute("totalEstoqueBaixo", service.relatorioEstoqueBaixo().size());
             request.setAttribute("totalCompras", service.relatorioCompras().size());
             request.setAttribute("totalFornecedores", service.relatorioFornecedores().size());

@@ -50,10 +50,6 @@ public class Purchase {
         this.totalAmount = this.totalAmount.add(item.getSubtotal());
     }
 
-    // ==========================================
-    // GETTERS E SETTERS
-    // ==========================================
-
     public Integer getId() {
         return id;
     }

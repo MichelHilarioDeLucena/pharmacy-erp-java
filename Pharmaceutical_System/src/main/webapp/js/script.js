@@ -1,51 +1,33 @@
-// src/main/webapp/js/script.js
-
 function confirmarAcao(acao, nomeUsuario) {
-    // Exibe um pop-up de confirmação no navegador
     var mensagem = "Tem certeza que deseja " + acao.toLowerCase() + " o usuário '" + nomeUsuario + "'?";
     return confirm(mensagem);
 }
 
 function exibirAlerta(msg) {
-    // Por enquanto usamos o alert nativo, que é um pop-up que trava a tela até o OK
-    // Mas agora ele só aparece se o Servlet enviar uma mensagem
-    alert("⚠️ Ops! " + msg);
+    alert("Ops! " + msg);
 }
 
-// --- Funções do Dashboard ---
-
-// Seleciona todos os botões com a classe 'em-breve'
 document.addEventListener('DOMContentLoaded', function() {
     const botoesBloqueados = document.querySelectorAll('.em-breve');
     
     botoesBloqueados.forEach(botao => {
         botao.addEventListener('click', function(event) {
-            event.preventDefault(); // Impede o link de tentar navegar
+            event.preventDefault();
             alert("Este módulo está em desenvolvimento e estará disponível em breve!");
         });
     });
 });
 
-// Mantém a função que já tínhamos antes
 function confirmarAcao(acao, nomeUsuario) {
     var mensagem = "Tem certeza que deseja " + acao.toLowerCase() + " o usuário '" + nomeUsuario + "'?";
     return confirm(mensagem);
 }
 
-//Checkout.jsp
-// ==========================================
-// MÓDULO: Frente de Caixa (POS / Checkout)
-// ==========================================
-
 let pixInterval;
 
 function iniciarPagamento(event) {
-    event.preventDefault();
-
-    // Remove qualquer campo hidden que tenha sido criado anteriormente
-    const oldHidden = document.getElementById('cardPasswordHidden');
-    if (oldHidden) oldHidden.remove();
-
+    event.preventDefault(); 
+    
     const metodoSelect = document.querySelector('select[name="paymentMethod"]');
     if (!metodoSelect) return;
 
@@ -60,16 +42,9 @@ function iniciarPagamento(event) {
         document.getElementById('senhaCartao').value = '';
         document.getElementById('modalCartao').style.display = 'flex';
         document.getElementById('senhaCartao').focus();
-    } else if (metodo === 'CASH') {
-	    // Atualiza o valor total no modal
-	    const totalSpan = document.querySelector('.total-value');
-	    if (totalSpan) {
-	        document.getElementById('totalCompra').innerText = totalSpan.innerText;
-	    }
-	    document.getElementById('modalDinheiro').style.display = 'flex';
-	} else if (metodo === 'BOLETO') {
-    	document.getElementById('modalBoleto').style.display = 'flex';
-	}else{
+    } else if (metodo === 'BOLETO') {
+        document.getElementById('modalBoleto').style.display = 'flex';
+    } else {
         confirmarPagamento();
     }
 }
@@ -87,7 +62,7 @@ function iniciarTimerPix() {
         
         if (timer <= 0) {
             clearInterval(pixInterval);
-            confirmarPagamento(); // Auto-completa após 5 segundos
+            confirmarPagamento();
         }
     }, 1000);
 }
@@ -133,17 +108,12 @@ function fecharModais() {
 function confirmarPagamento() {
     fecharModais();
     
-    // Adiciona um aviso visual de "Processando"
     const avisoProcessando = document.createElement('div');
     avisoProcessando.className = 'modal-overlay';
     avisoProcessando.style.display = 'flex';
     avisoProcessando.innerHTML = '<h2 style="color: white; font-family: sans-serif;">Processando Venda... 🚀</h2>';
     document.body.appendChild(avisoProcessando);
     
-    const hidden = document.getElementById('cardPasswordHidden');
-    console.log('Valor do hidden antes de enviar:', hidden ? hidden.value : 'hidden não encontrado');
-    
-    // Envia o formulário definitivamente para o CheckoutServlet
     const form = document.getElementById('checkoutForm');
     if (form) {
         form.submit();

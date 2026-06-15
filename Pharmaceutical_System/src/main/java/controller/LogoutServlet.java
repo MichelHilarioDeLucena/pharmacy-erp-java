@@ -17,15 +17,12 @@ public class LogoutServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// 1. Pega a sessão atual, se existir
 		HttpSession session = request.getSession(false);
 
 		if (session != null) {
-			// 2. Destrói a sessão e limpa os dados
 			session.invalidate();
 		}
 
-		// 3. Redireciona para a tela de login com uma mensagem opcional
 		response.sendRedirect(request.getContextPath() + AppPaths.LOGIN_PAGE);
 	}
 }

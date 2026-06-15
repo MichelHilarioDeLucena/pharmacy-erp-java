@@ -10,28 +10,28 @@
 <body>
 
     <div class="checkout-container">
-        <h2>Point of Sale 🛒</h2>
+        <h2>Point of Sale</h2>
 
         <% if ("true".equals(request.getParameter("success"))) {
             String saleId = request.getParameter("saleId");
         %>
         <div class="alert-success">
-            <b>✅ Venda finalizada com sucesso e estoque atualizado!</b><br>
+            <b>Venda finalizada com sucesso e estoque atualizado!</b><br>
             <a href="${pageContext.request.contextPath}/ReceiptServlet?saleId=<%=saleId%>" class="btn-receipt">
-               📄 Baixar Cupom Fiscal (PDF)
+               Baixar Cupom Fiscal (PDF)
             </a>
         </div>
         <% } %>
 
         <% if (request.getAttribute("erro") != null) { %>
         <div style="background:#f8d7da; border:1px solid #f5c6cb; padding:10px; border-radius:6px; margin-bottom:12px; color:#721c24;">
-            ⚠️ <%=request.getAttribute("erro")%>
+            <%=request.getAttribute("erro")%>
         </div>
         <% } %>
 
-        <!-- BUSCA DE PRODUTO -->
         <h3>Buscar Produto</h3>
         <form action="${pageContext.request.contextPath}/CheckoutServlet" method="POST" style="display:flex; gap:10px; align-items:flex-end; margin-bottom:16px;">
+            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
             <input type="hidden" name="action" value="buscar">
             <div>
                 <label style="display:block; font-weight:bold; margin-bottom:4px;">ID ou Nome do Produto</label>
@@ -39,10 +39,9 @@
                        value="<%=request.getAttribute("termoBusca") != null ? request.getAttribute("termoBusca") : ""%>"
                        style="padding:8px; border:1px solid #ccc; border-radius:4px; width:250px;">
             </div>
-            <button type="submit" class="btn-finalizar" style="height:36px; padding:0 16px;">🔍 Buscar</button>
+            <button type="submit" class="btn-finalizar" style="height:36px; padding:0 16px;">Buscar</button>
         </form>
 
-        <!-- RESULTADOS DA BUSCA -->
         <%
         List<Product> resultados = (List<Product>) request.getAttribute("resultados");
         if (resultados != null && !resultados.isEmpty()) {
@@ -67,11 +66,12 @@
                     <td class="center"><%=p.getCurrentStock()%></td>
                     <td>
                         <form action="${pageContext.request.contextPath}/CheckoutServlet" method="POST" style="display:flex; gap:6px;">
+                            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
                             <input type="hidden" name="action" value="add">
                             <input type="hidden" name="productId" value="<%=p.getId()%>">
                             <input type="number" name="quantidade" value="1" min="1" max="<%=p.getCurrentStock()%>"
                                    style="width:60px; padding:4px; border:1px solid #ccc; border-radius:4px;">
-                            <button type="submit" class="btn-finalizar" style="height:30px; padding:0 12px;">➕ Adicionar</button>
+                            <button type="submit" class="btn-finalizar" style="height:30px; padding:0 12px;">Adicionar</button>
                         </form>
                     </td>
                 </tr>
@@ -82,7 +82,6 @@
             <p style="color:#888;">Nenhum produto encontrado para "<strong><%=request.getAttribute("termoBusca")%></strong>".</p>
         <% } %>
 
-        <!-- CARRINHO -->
         <h3>Carrinho</h3>
         <table class="cart-table">
             <thead>
@@ -110,6 +109,7 @@
                     <td class="right"><strong>R$ <%=item.getSubtotal()%></strong></td>
                     <td class="center">
                         <form action="${pageContext.request.contextPath}/CheckoutServlet" method="POST">
+                            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
                             <input type="hidden" name="action" value="remover">
                             <input type="hidden" name="index" value="<%=i%>">
                             <button type="submit" style="background:none; border:none; color:red; cursor:pointer; font-size:1.1em;">✕</button>
@@ -130,8 +130,9 @@
         <% if (cart != null && !cart.isEmpty()) { %>
         <div style="text-align:right; margin-bottom:8px;">
             <form action="${pageContext.request.contextPath}/CheckoutServlet" method="POST" style="display:inline;">
+                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
                 <input type="hidden" name="action" value="limpar">
-                <button type="submit" style="background:none; border:none; color:#dc3545; cursor:pointer; text-decoration:underline;">🗑 Limpar carrinho</button>
+                <button type="submit" style="background:none; border:none; color:#dc3545; cursor:pointer; text-decoration:underline;">Limpar carrinho</button>
             </form>
         </div>
         <% } %>
@@ -141,6 +142,7 @@
         <fieldset class="payment-section">
             <legend>Pagamento</legend>
             <form id="checkoutForm" action="${pageContext.request.contextPath}/CheckoutServlet" method="POST" onsubmit="iniciarPagamento(event)">
+                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
                 <input type="hidden" name="action" value="finish">
 				<input type="hidden" name="cardPassword" id="cardPasswordHidden" value="">
 				

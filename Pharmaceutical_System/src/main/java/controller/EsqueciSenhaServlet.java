@@ -32,20 +32,16 @@ public class EsqueciSenhaServlet extends HttpServlet {
 		try {
 			Usuario u = usuarioDAO.buscarPorEmail(email);
 
-			// Criação de Token mediante existência de usuário ativo
 			if (u != null && u.isAtivo()) {
 				em.getTransaction().begin();
 
-				// 1. Geração do Token UUID
 				String token = UUID.randomUUID().toString();
 				u.setTokenRecuperacao(token);
 				u.setTokenExpiracao(LocalDateTime.now().plusMinutes(30));
 
-				// 2. Persistência do token no banco
 				usuarioDAO.salvar(u);
 				em.getTransaction().commit();
 
-				// URL Dinâmica
 				String urlBase = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 						+ request.getContextPath();
 				String linkRecuperacao = urlBase + "/views/auth/novaSenha.jsp?token=" + token;
@@ -56,15 +52,12 @@ public class EsqueciSenhaServlet extends HttpServlet {
 						+ "Se você não solicitou esta alteração, por favor ignore este e-mail."
 						+ " Este é um e-mail automático, não responda.";
 
-				// Envio de E-mail
 				emailService.enviarEmail(u.getEmail(), "Recuperação de Senha - ERP", corpoEmail);
 			}
 
-			// Mensagem genérica para evitar "Pesca de E-mails"
 			request.setAttribute("mensagem",
 					"Se o e-mail informado estiver cadastrado, você receberá um link de recuperação em instantes.");
 
-			// Pop-up
 			request.getRequestDispatcher(AppPaths.LOGIN_PAGE).forward(request, response);
 
 		} catch (Exception e) {

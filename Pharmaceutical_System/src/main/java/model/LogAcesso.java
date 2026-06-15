@@ -35,13 +35,11 @@ public class LogAcesso {
 	private String detalhes;
 
 	public LogAcesso() {
-		// [CORREÇÃO] Timestamp definido no construtor, não na declaração do campo.
-		// Garante que o valor reflete o momento exato da criação do registro.
 		this.dataHora = LocalDateTime.now();
 	}
 
 	public LogAcesso(Usuario usuario, String acao, String ip, String resultado, String detalhes) {
-		this(); // chama o construtor vazio para inicializar dataHora
+		this(); 
 		this.usuario = usuario;
 		this.acao = acao;
 		this.ip = ip;
@@ -49,7 +47,6 @@ public class LogAcesso {
 		this.detalhes = detalhes;
 	}
 
-	// Getters e Setters
 	public Integer getId() {
 		return id;
 	}

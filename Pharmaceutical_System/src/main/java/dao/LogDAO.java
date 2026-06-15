@@ -19,8 +19,6 @@ public class LogDAO {
 	}
 
 	public Long contarFalhasRecentes(String ip) {
-		// A transação já está aberta no Servlet quando este método é chamado.
-		// Não abrimos uma nova aqui — participamos da transação existente.
 		return em
 				.createQuery("SELECT COUNT(l) FROM LogAcesso l " + "WHERE l.ip = :ip "
 						+ "AND l.resultado LIKE 'FALHA%' " + "AND l.dataHora >= :limite", Long.class)

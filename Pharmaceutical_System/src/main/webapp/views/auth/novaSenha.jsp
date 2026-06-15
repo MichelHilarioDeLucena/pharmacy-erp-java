@@ -10,12 +10,13 @@
 <body>
 
     <div class="card-senha">
-        <h2>🔒 Nova Senha</h2>
+        <h2>Nova Senha</h2>
         <p>Crie uma senha forte para sua segurança.</p>
         <hr>
         
        <form action="${pageContext.request.contextPath}/RedefinirSenhaServlet" method="POST">
             <input type="hidden" name="token" value="${param.token}">
+            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
 
             <div class="form-group">
                 <label for="senha">Nova Senha:</label>

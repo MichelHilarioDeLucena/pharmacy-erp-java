@@ -9,7 +9,7 @@
     }
     Supplier supplier = (Supplier) request.getAttribute("supplier");
     boolean ehEdicao  = (supplier != null);
-    String tituloForm = ehEdicao ? "✎ Editar Fornecedor" : "➕ Novo Fornecedor";
+    String tituloForm = ehEdicao ? "Editar Fornecedor" : "➕ Novo Fornecedor";
 %>
 <!DOCTYPE html>
 <html>
@@ -45,6 +45,7 @@
         <% } %>
 
         <form method="post" action="SupplierServlet">
+        	<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
             <% if (ehEdicao) { %>
                 <input type="hidden" name="id" value="<%=supplier.getId()%>">
             <% } %>
@@ -99,7 +100,7 @@
 
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button type="submit" class="btn btn-ativar">
-                    <%=ehEdicao ? "💾 Salvar Alterações" : "➕ Cadastrar Fornecedor"%>
+                    <%=ehEdicao ? "Salvar Alterações" : "➕ Cadastrar Fornecedor"%>
                 </button>
                 <a href="SupplierServlet" class="btn">← Cancelar</a>
             </div>

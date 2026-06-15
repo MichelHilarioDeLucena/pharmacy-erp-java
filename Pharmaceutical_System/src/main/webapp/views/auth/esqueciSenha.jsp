@@ -11,6 +11,7 @@
 
 		<form action="${pageContext.request.contextPath}/EsqueciSenhaServlet"
 			method="POST">
+			<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
 			<label for="email">Digite o e-mail cadastrado:</label> <input
 				type="email" id="email" name="email" required>
 
