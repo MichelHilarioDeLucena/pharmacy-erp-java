@@ -24,7 +24,11 @@ public class ReportService {
         this.supplierDAO = new SupplierDAO(em);
         this.saleDAO     = new SaleDAO(em);
     }
-
+    
+    public List<Sale> relatorioVendas() {
+        return saleDAO.listarTodos();
+    }
+    
     public List<Product> relatorioEstoqueBaixo() {
         return productDAO.listarEstoqueBaixo();
     }
