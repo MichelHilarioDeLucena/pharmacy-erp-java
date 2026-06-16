@@ -129,6 +129,7 @@
         <div class="card">
             <h3>Adicionar Fornecedor</h3>
             <form action="ProdutoFornecedorServlet" method="post" class="form-vincular">
+            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
                 <input type="hidden" name="action" value="vincular">
                 <input type="hidden" name="produtoId" value="<%= produto.getId() %>">
                 <div class="form-group">
