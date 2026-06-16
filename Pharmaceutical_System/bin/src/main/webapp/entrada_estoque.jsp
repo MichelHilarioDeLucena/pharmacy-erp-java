@@ -9,6 +9,7 @@
     <title>Entrada de Mercadorias - ERP</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <style>
+        /* Pequeno ajuste para deixar os campos lado a lado em telas grandes */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;

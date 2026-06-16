@@ -38,6 +38,8 @@
 
         <form action="${pageContext.request.contextPath}/UsuarioServlet?acao=<%= acao %>" method="post">
             
+            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
+            <%-- Se for edição, precisamos enviar o ID escondido para o banco saber quem atualizar --%>
             <% if (isEdit) { %>
                 <input type="hidden" name="id" value="<%= u.getId() %>">
             <% } %>
@@ -55,7 +57,6 @@
                 <input type="text" name="login" value="<%= login %>" placeholder="joao.silva" required>
             <% } %>
 
-            <%-- A senha só aparece na hora de cadastrar. --%>
             <% if (!isEdit) { %>
                 <label>Senha Inicial:</label>
                 <input type="password" name="senha" required>

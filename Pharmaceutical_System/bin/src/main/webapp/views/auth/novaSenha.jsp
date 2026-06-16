@@ -14,8 +14,9 @@
         <p>Crie uma senha forte para sua segurança.</p>
         <hr>
         
-        <form action="RedefinirSenhaServlet" method="POST">
-            <input type="hidden" name="token" value="${token}">
+       <form action="${pageContext.request.contextPath}/RedefinirSenhaServlet" method="POST">
+            <input type="hidden" name="token" value="${param.token}">
+            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
 
             <div class="form-group">
                 <label for="senha">Nova Senha:</label>

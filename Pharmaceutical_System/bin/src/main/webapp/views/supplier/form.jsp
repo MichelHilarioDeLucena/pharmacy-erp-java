@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="model.Supplier, model.Usuario"%>
+<%@ page import="model.Category , java.util.List" %>
 <%
     Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
     if (logado == null) {
@@ -44,6 +45,7 @@
         <% } %>
 
         <form method="post" action="SupplierServlet">
+        	<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
             <% if (ehEdicao) { %>
                 <input type="hidden" name="id" value="<%=supplier.getId()%>">
             <% } %>
@@ -61,10 +63,25 @@
                            placeholder="00.000.000/0000-00"
                            value="<%=ehEdicao ? supplier.getCnpj() : ""%>">
                 </div>
+                
+                
+                
                 <div class="form-group">
                     <label>Categoria de Fornecimento</label>
-                    <input type="text" name="supplyCategory"
-                           value="<%=ehEdicao && supplier.getSupplyCategory() != null ? supplier.getSupplyCategory() : ""%>">
+                    <select name="categoriaId">
+                        <option value="">-- Sem categoria --</option>
+                        <%
+                        List<Category> categorias = (List<Category>) request.getAttribute("categorias");
+                        if (categorias != null) {
+                            for (Category c : categorias) {
+                                boolean selecionado = ehEdicao && supplier.getSupplyCategory() != null && supplier.getSupplyCategory().equals(c.getId());
+                        %>
+                        <option value="<%=c.getId()%>" <%=selecionado ? "selected" : ""%>><%=c.getName()%></option>
+                        <%
+                            }
+                        }
+                        %>
+                    </select>
                 </div>
             </div>
 

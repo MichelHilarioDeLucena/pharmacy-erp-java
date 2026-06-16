@@ -51,7 +51,7 @@
 
         <% if (request.getAttribute("mensagem") != null) { %>
             <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 10px 16px; border-radius: 6px; margin-bottom: 16px; color: #856404;">
-                <%=request.getAttribute("mensagem")%>
+                ⚠️ <%=request.getAttribute("mensagem")%>
             </div>
         <% } %>
 
@@ -92,8 +92,8 @@
             <h3>Fornecedores</h3>
             <p class="resumo">Total de fornecedores cadastrados: <strong><%=totalFornecedores != null ? totalFornecedores : 0%></strong></p>
             <div class="btn-group">
-                <a href="ReportServlet?action=fornecedores-pdf" class="btn btn-desativar">⬇ PDF</a>
-                <a href="ReportServlet?action=fornecedores-csv" class="btn btn-ativar">⬇ CSV</a>
+                <a href="ReportServlet?action=fornecedores-pdf" class="btn btn-desativar">PDF</a>
+                <a href="ReportServlet?action=fornecedores-csv" class="btn btn-ativar">CSV</a>
             </div>
         </div>
 

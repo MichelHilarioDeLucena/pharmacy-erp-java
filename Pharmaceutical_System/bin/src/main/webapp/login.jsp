@@ -27,9 +27,17 @@
             </div>
 
             <button type="submit" class="btn btn-ativar" style="width: 100%; padding: 10px;">Entrar</button>
+            
+            <div style="text-align: center; margin: 15px 0; color: #777; font-size: 14px;">ou</div>
+
+            <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&response_type=code&redirect_uri=http://localhost:8081/oauth2callback&client_id=782762727256-dlbj3gi0p6gm7a7ncb8alq4ek59uq4t1.apps.googleusercontent.com" 
+               class="btn" 
+               style="display: block; width: 100%; padding: 10px 0; background-color: #4285F4; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center; box-sizing: border-box;">
+               Entrar com o Google
+            </a>
         </form>
 
-        <div class="links-uteis">
+        <div class="links-uteis" style="margin-top: 20px;">
             <a href="${pageContext.request.contextPath}/views/auth/esqueciSenha.jsp">Esqueci minha senha</a>
         </div>
     </div>
@@ -37,7 +45,6 @@
     <script src="js/script.js"></script>
 
     <script>
-        // O JSP troca isso pelo valor que você colocou no request.setAttribute("mensagem", "...")
         var mensagemServidor = "${mensagem}"; 
         
         if (mensagemServidor && mensagemServidor.trim() !== "") {
