@@ -44,7 +44,7 @@
         <% } %>
 
         <form method="post" action="PurchaseServlet">
-
+		<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
             <div class="form-group">
                 <label>Fornecedor *</label>
                 <select name="supplierId" required>

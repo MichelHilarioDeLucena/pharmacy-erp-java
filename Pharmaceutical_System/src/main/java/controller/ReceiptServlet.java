@@ -33,7 +33,16 @@ public class ReceiptServlet extends HttpServlet {
 		try {
 			Integer id = Integer.parseInt(saleIdStr);
 			Sale sale = em.find(Sale.class, id);
-
+			if (sale != null) {
+			    // Preenche os nomes dos produtos
+			    for (SaleItem item : sale.getItems()) {
+			        Product p = em.find(Product.class, Long.valueOf(item.getProductId()));
+			        if (p != null) {
+			            item.setProductName(p.getName());
+			        }
+			    }
+			    // resto do código...
+			}
 			if (sale != null) {
 				response.setContentType("application/pdf");
 

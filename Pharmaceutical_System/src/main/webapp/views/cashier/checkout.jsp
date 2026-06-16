@@ -5,13 +5,18 @@
 <head>
     <meta charset="UTF-8">
     <title>POS Checkout - ERP</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style2.css">
 </head>
 <body>
 
     <div class="checkout-container">
         <h2>Point of Sale</h2>
-
+        
+		<div style="margin-bottom: 16px;">
+		    <a href="${pageContext.request.contextPath}/home.jsp" class="btn">← Voltar para Home</a>
+		</div>
+		
         <% if ("true".equals(request.getParameter("success"))) {
             String saleId = request.getParameter("saleId");
         %>

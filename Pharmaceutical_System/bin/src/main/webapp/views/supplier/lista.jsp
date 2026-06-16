@@ -29,20 +29,20 @@
 
         <% if (request.getAttribute("mensagem") != null) { %>
             <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 10px 16px; border-radius: 6px; margin-bottom: 16px; color: #856404;">
-                <%=request.getAttribute("mensagem")%>
+                ⚠️ <%=request.getAttribute("mensagem")%>
             </div>
         <% } %>
 
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
             <% if (temAcesso) { %>
-                <a href="SupplierServlet?action=novo" class="btn btn-novo">Novo Fornecedor</a>
+                <a href="SupplierServlet?action=novo" class="btn btn-novo">➕ Novo Fornecedor</a>
                 <a href="PurchaseServlet" class="btn">Histórico de Compras</a>
                 <a href="PurchaseServlet?action=automatico" class="btn btn-ativar"
                    onclick="return confirm('Gerar pedidos automáticos para produtos com estoque baixo?');">
                    Pedidos Automáticos
                 </a>
             <% } %>
-            <a href="home.jsp" class="btn">Voltar</a>
+            <a href="home.jsp" class="btn">← Voltar</a>
         </div>
 
         <table>

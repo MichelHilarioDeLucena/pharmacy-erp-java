@@ -35,7 +35,7 @@
 
         <% if (request.getAttribute("mensagem") != null) { %>
             <div style="background: #d4edda; border: 1px solid #28a745; padding: 10px 16px; border-radius: 6px; margin-bottom: 16px; color: #155724;">
-                <%=request.getAttribute("mensagem")%>
+                ✅ <%=request.getAttribute("mensagem")%>
             </div>
         <% } %>
 
@@ -49,7 +49,7 @@
                 <a href="PurchaseServlet?action=pendentes" class="btn">Só Pendentes</a>
             <% } %>
             <a href="PurchaseServlet" class="btn">Todos</a>
-            <a href="SupplierServlet" class="btn">Fornecedores</a>
+            <a href="SupplierServlet" class="btn">← Fornecedores</a>
             <a href="<%= request.getContextPath() %>/home.jsp" class="btn">Home</a>
         </div>
 
@@ -89,12 +89,12 @@
                                 <a href="PurchaseServlet?action=confirmar&id=<%=p.getId()%>"
                                    class="btn btn-ativar"
                                    onclick="return confirm('Confirmar compra e dar entrada no estoque?');">
-                                   Confirmar
+                                   ✅ Confirmar
                                 </a>
                                 <a href="PurchaseServlet?action=cancelar&id=<%=p.getId()%>"
                                    class="btn btn-desativar"
                                    onclick="return confirm('Cancelar esta compra?');">
-                                   Cancelar
+                                   ❌ Cancelar
                                 </a>
                             <% } %>
                         </div>
