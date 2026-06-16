@@ -7,6 +7,8 @@
         return;
     }
     List<Supplier> suppliers = (List<Supplier>) request.getAttribute("suppliers");
+    List<Product> resultados = (List<Product>) request.getAttribute("resultadosBusca");
+    String termoBusca = (String) request.getAttribute("termoBusca");
 %>
 <!DOCTYPE html>
 <html>
@@ -24,6 +26,8 @@
         .form-row .form-group { flex: 1; }
         .item-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 10px; padding: 10px; background: #f8f9fa; border-radius: 6px; }
         .item-row .form-group { margin-bottom: 0; }
+        .resultado-item { padding: 6px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .resultado-item:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
@@ -43,8 +47,44 @@
             </div>
         <% } %>
 
-        <form method="post" action="PurchaseServlet">
-		<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
+        <!-- BUSCA DE PRODUTO -->
+        <div style="margin-bottom: 20px;">
+            <h3>Buscar Produto</h3>
+            <form action="${pageContext.request.contextPath}/PurchaseServlet" method="GET" style="display: flex; gap: 10px; align-items: flex-end;">
+                <input type="hidden" name="action" value="buscarProduto">
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label>ID ou Nome</label>
+                    <input type="text" name="termo" placeholder="Ex: 1 ou Tylenol" value="<%= termoBusca != null ? termoBusca : "" %>">
+                </div>
+                <button type="submit" class="btn btn-salvar" style="height: 38px;">🔍 Buscar</button>
+            </form>
+        </div>
+
+        <!-- RESULTADOS DA BUSCA -->
+        <%
+        if (resultados != null && !resultados.isEmpty()) {
+        %>
+            <div style="margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px; padding: 12px; background: #f9f9f9;">
+                <h4 style="margin: 0 0 8px 0;">Resultados da busca</h4>
+                <div>
+                <% for (Product p : resultados) { %>
+                    <div class="resultado-item">
+                        <span><strong><%= p.getName() %></strong> (ID: <%= p.getId() %>) - Preço Custo: R$ <%= p.getCostPrice() %></span>
+                        <button type="button" class="btn btn-ativar" onclick="adicionarProdutoDaBusca(<%= p.getId() %>, '<%= p.getName() %>', <%= p.getCostPrice() %>)">
+                            ➕ Adicionar
+                        </button>
+                    </div>
+                <% } %>
+                </div>
+            </div>
+        <% } else if (resultados != null && termoBusca != null && !termoBusca.isEmpty()) { %>
+            <p style="color: #888;">Nenhum produto encontrado para "<strong><%= termoBusca %></strong>".</p>
+        <% } %>
+
+        <!-- FORMULÁRIO PRINCIPAL DA COMPRA -->
+        <form method="post" action="PurchaseServlet" id="compraForm">
+            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
+
             <div class="form-group">
                 <label>Fornecedor *</label>
                 <select name="supplierId" required>
@@ -76,6 +116,7 @@
                         <label>Preço Unit. (R$)</label>
                         <input type="number" name="unitPrice" step="0.01" min="0" required>
                     </div>
+                    <button type="button" class="btn btn-desativar" onclick="this.parentElement.remove()" style="height: 38px; align-self: flex-end;">✕</button>
                 </div>
             </div>
 
@@ -91,7 +132,9 @@
     </main>
 
     <script>
+        // Função existente para adicionar uma linha vazia
         function adicionarItem() {
+            const container = document.getElementById('itens');
             const div = document.createElement('div');
             div.className = 'item-row';
             div.innerHTML = `
@@ -107,9 +150,52 @@
                     <label>Preço Unit. (R$)</label>
                     <input type="number" name="unitPrice" step="0.01" min="0" required>
                 </div>
-                <button type="button" class="btn btn-desativar" onclick="this.parentElement.remove()">✕</button>
+                <button type="button" class="btn btn-desativar" onclick="this.parentElement.remove()" style="height: 38px; align-self: flex-end;">✕</button>
             `;
-            document.getElementById('itens').appendChild(div);
+            container.appendChild(div);
+        }
+
+        // Nova função: adicionar produto a partir do resultado da busca
+        function adicionarProdutoDaBusca(id, nome, precoCusto) {
+            const container = document.getElementById('itens');
+            const rows = container.getElementsByClassName('item-row');
+            let targetRow = null;
+
+            // 1. Verifica se existe uma linha com campos vazios (productId vazio) para reutilizar
+            for (let row of rows) {
+                const inputs = row.querySelectorAll('input');
+                let vazio = true;
+                for (let inp of inputs) {
+                    if (inp.name === 'productId' && inp.value.trim() !== '') {
+                        vazio = false;
+                        break;
+                    }
+                }
+                if (vazio) {
+                    targetRow = row;
+                    break;
+                }
+            }
+
+            // 2. Se não encontrou linha vazia, cria uma nova
+            if (!targetRow) {
+                adicionarItem();
+                // Recupera a última linha criada
+                const newRows = container.getElementsByClassName('item-row');
+                targetRow = newRows[newRows.length - 1];
+            }
+
+            // 3. Preenche os campos
+            const inputs = targetRow.querySelectorAll('input');
+            for (let inp of inputs) {
+                if (inp.name === 'productId') {
+                    inp.value = id;
+                } else if (inp.name === 'quantity') {
+                    inp.value = 1;
+                } else if (inp.name === 'unitPrice') {
+                    inp.value = precoCusto;
+                }
+            }
         }
     </script>
 </body>

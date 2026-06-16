@@ -1,5 +1,6 @@
 package controller;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import config.AppPaths;
 import config.JPAUtil;
 import model.Perfil;
+import model.Product;
 import model.Usuario;
 import service.PurchaseService;
 import service.SupplierService;
@@ -66,7 +68,42 @@ public class PurchaseServlet extends HttpServlet {
                 request.setAttribute("suppliers", supplierService.listarAtivos());
                 request.getRequestDispatcher(AppPaths.PURCHASE_FORM)
                        .forward(request, response);
-
+            } else if ("buscarProduto".equals(action)) {
+                String termo = request.getParameter("termo");
+                List<Product> resultados = new ArrayList<>();
+                EntityManager emBusca = JPAUtil.getEntityManager();
+                try {
+                    if (termo != null && !termo.trim().isEmpty()) {
+                        // Tenta buscar por ID
+                        try {
+                            Long id = Long.parseLong(termo.trim());
+                            Product p = emBusca.find(Product.class, id);
+                            if (p != null && p.getActive()) {
+                                resultados.add(p);
+                            }
+                        } catch (NumberFormatException e) {
+                            // Busca por nome (case insensitive)
+                            resultados = emBusca.createQuery(
+                                "SELECT p FROM Product p WHERE LOWER(p.name) LIKE :nome AND p.active = true",
+                                Product.class)
+                                .setParameter("nome", "%" + termo.toLowerCase() + "%")
+                                .getResultList();
+                        }
+                    }
+                    request.setAttribute("resultadosBusca", resultados);
+                    request.setAttribute("termoBusca", termo);
+                } finally {
+                    emBusca.close();
+                }
+                // Recarrega a lista de fornecedores (necessário para o formulário)
+                em = JPAUtil.getEntityManager();
+                try {
+                    request.setAttribute("suppliers", new SupplierService(em).listarAtivos());
+                } finally {
+                    em.close();
+                }
+                request.getRequestDispatcher(AppPaths.PURCHASE_FORM).forward(request, response);
+                return;
             } else if ("automatico".equals(action)) {
                 em.getTransaction().begin();
                 int pedidos = purchaseService.gerarPedidosAutomaticos(logado);
