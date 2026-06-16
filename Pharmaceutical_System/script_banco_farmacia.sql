@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `pharmaceutical_system` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `pharmaceutical_system`;
+CREATE DATABASE  IF NOT EXISTS `erp` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `erp`;
 -- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: erp
@@ -141,7 +141,7 @@ CREATE TABLE `fornecedores` (
   `razao_social` varchar(150) NOT NULL,
   `cnpj` varchar(18) NOT NULL,
   `categoria_fornecimento` varchar(50) DEFAULT NULL,
-  `telefone` varchar(20) DEFAULT NULL,
+  `telefone` varchar(30) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `ativo` tinyint DEFAULT '1',
   PRIMARY KEY (`id`),

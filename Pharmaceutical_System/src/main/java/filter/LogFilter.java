@@ -27,26 +27,26 @@ public class LogFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		String acao = req.getMethod() + " " + req.getRequestURI();
-
-		if (acao.contains(".css") || acao.contains(".js") || acao.contains(".png")) {
+		// Ignora arquivos estáticos
+		String uri = req.getRequestURI();
+		if (uri.contains(".css") || uri.contains(".js") || uri.contains(".png") || uri.contains(".jpg")) {
 			chain.doFilter(request, response);
 			return;
 		}
 
-		String ip = req.getHeader("X-Forwarded-For"); 
+		String acao = req.getMethod() + " " + uri;
+		String ip = req.getHeader("X-Forwarded-For");
 		if (ip == null || ip.isEmpty()) {
 			ip = request.getRemoteAddr();
 		}
 
 		Usuario usuario = (Usuario) req.getSession().getAttribute("usuarioLogado");
-
 		String resultado = "";
 		String detalhes = null;
+		boolean erro = false;
 
 		try {
 			chain.doFilter(request, response);
-
 			int status = res.getStatus();
 			if (status >= 200 && status < 300) {
 				resultado = "SUCESSO";
@@ -55,12 +55,13 @@ public class LogFilter implements Filter {
 			} else {
 				resultado = "STATUS " + status;
 			}
-
 		} catch (Exception e) {
+			erro = true;
 			resultado = "ERRO SISTEMA";
-			detalhes = e.getMessage(); 
-			throw e; 
+			detalhes = e.getMessage() != null ? e.getMessage().substring(0, Math.min(e.getMessage().length(), 255)) : null;
+			throw e; // repassa a exceção
 		} finally {
+			// Salva o log em uma transação separada, SEMPRE, mesmo em caso de erro
 			salvarLogNoBanco(usuario, acao, ip, resultado, detalhes);
 		}
 	}
@@ -70,28 +71,25 @@ public class LogFilter implements Filter {
 		try {
 			em = JPAUtil.getEntityManager();
 			em.getTransaction().begin();
-
 			LogAcesso log = new LogAcesso(usuario, acao, ip, resultado, detalhes);
 			em.persist(log);
-
 			em.getTransaction().commit();
 		} catch (Exception e) {
+			// Não podemos lançar exceção aqui, apenas logamos
+			System.err.println("Falha ao salvar log de acesso: " + e.getMessage());
 			if (em != null && em.getTransaction().isActive()) {
-				em.getTransaction().rollback();
+				try { em.getTransaction().rollback(); } catch (Exception ex) { }
 			}
-			e.printStackTrace(); 
 		} finally {
-			if (em != null) {
+			if (em != null && em.isOpen()) {
 				em.close();
 			}
 		}
 	}
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
+	public void init(FilterConfig filterConfig) throws ServletException {}
 
 	@Override
-	public void destroy() {
-	}
+	public void destroy() {}
 }
