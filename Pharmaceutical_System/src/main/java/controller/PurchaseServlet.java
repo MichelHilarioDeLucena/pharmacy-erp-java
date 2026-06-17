@@ -1,4 +1,5 @@
 package controller;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import config.AppPaths;
 import config.JPAUtil;
 import model.Perfil;
 import model.Product;
+import model.PurchaseItem;
 import model.Usuario;
 import service.PurchaseService;
 import service.SupplierService;
@@ -46,7 +48,13 @@ public class PurchaseServlet extends HttpServlet {
         EntityManager em = JPAUtil.getEntityManager();
         PurchaseService purchaseService = new PurchaseService(em);
         SupplierService supplierService = new SupplierService(em);
-
+     // Recupera itens da sessão (se existirem)
+        @SuppressWarnings("unchecked")
+        List<PurchaseItem> sessionItems = (List<PurchaseItem>) session.getAttribute("purchaseItems");
+        if (sessionItems == null) {
+            sessionItems = new ArrayList<>();
+        }
+        request.setAttribute("sessionItems", sessionItems);
         try {
             String action = request.getParameter("action");
 
@@ -68,6 +76,39 @@ public class PurchaseServlet extends HttpServlet {
                 request.setAttribute("suppliers", supplierService.listarAtivos());
                 request.getRequestDispatcher(AppPaths.PURCHASE_FORM)
                        .forward(request, response);
+            } else if ("adicionarItem".equals(action)) {
+                Long produtoId = Long.parseLong(request.getParameter("produtoId"));
+                try {
+                    Product p = em.find(Product.class, produtoId);
+                    if (p != null) {
+                        @SuppressWarnings("unchecked")
+                        List<PurchaseItem> items = (List<PurchaseItem>) session.getAttribute("purchaseItems");
+                        if (items == null) {
+                            items = new ArrayList<>();
+                        }
+                        PurchaseItem item = new PurchaseItem();
+                        item.setProduct(p);
+                        item.setQuantity(1);
+                        item.setUnitPrice(p.getCostPrice());
+                        item.setSubtotal(p.getCostPrice());
+                        items.add(item);
+                        session.setAttribute("purchaseItems", items);
+                    }
+                } finally {
+                    em.close();
+                }
+                response.sendRedirect(request.getContextPath() + "/PurchaseServlet?action=novo");
+                return;
+            } else if ("removerItem".equals(action)) {
+                Long produtoId = Long.parseLong(request.getParameter("produtoId"));
+                @SuppressWarnings("unchecked")
+                List<PurchaseItem> items = (List<PurchaseItem>) session.getAttribute("purchaseItems");
+                if (items != null) {
+                    items.removeIf(item -> item.getProduct().getId().equals(produtoId));
+                    session.setAttribute("purchaseItems", items);
+                }
+                response.sendRedirect(request.getContextPath() + "/PurchaseServlet?action=novo");
+                return;
             } else if ("buscarProduto".equals(action)) {
                 String termo = request.getParameter("termo");
                 List<Product> resultados = new ArrayList<>();
@@ -185,7 +226,7 @@ public class PurchaseServlet extends HttpServlet {
             em.getTransaction().begin();
             purchaseService.registrar(purchase);
             em.getTransaction().commit();
-
+            session.removeAttribute("purchaseItems");
             response.sendRedirect(request.getContextPath() + "/PurchaseServlet");
 
         } catch (Exception e) {

@@ -102,23 +102,51 @@
             </div>
 
             <h3 style="margin-top: 24px;">Itens da Compra</h3>
-            <div id="itens">
-                <div class="item-row">
-                    <div class="form-group" style="flex: 1;">
-                        <label>ID do Produto</label>
-                        <input type="number" name="productId" min="1" required placeholder="ID do produto">
-                    </div>
-                    <div class="form-group" style="width: 100px;">
-                        <label>Quantidade</label>
-                        <input type="number" name="quantity" min="1" value="1" required>
-                    </div>
-                    <div class="form-group" style="width: 130px;">
-                        <label>Preço Unit. (R$)</label>
-                        <input type="number" name="unitPrice" step="0.01" min="0" required>
-                    </div>
-                    <button type="button" class="btn btn-desativar" onclick="this.parentElement.remove()" style="height: 38px; align-self: flex-end;">✕</button>
-                </div>
-            </div>
+			<div id="itens">
+			    <%
+			    List<model.PurchaseItem> sessionItems = (List<model.PurchaseItem>) request.getAttribute("sessionItems");
+			    if (sessionItems != null && !sessionItems.isEmpty()) {
+			        for (model.PurchaseItem item : sessionItems) {
+			    %>
+			        <div class="item-row">
+			            <div class="form-group" style="flex: 1;">
+			                <label>ID do Produto</label>
+			                <input type="number" name="productId" min="1" required value="<%= item.getProduct().getId() %>">
+			            </div>
+			            <div class="form-group" style="width: 100px;">
+			                <label>Quantidade</label>
+			                <input type="number" name="quantity" min="1" value="<%= item.getQuantity() %>" required>
+			            </div>
+			            <div class="form-group" style="width: 130px;">
+			                <label>Preço Unit. (R$)</label>
+			                <input type="number" name="unitPrice" step="0.01" min="0" value="<%= item.getUnitPrice() %>" required>
+			            </div>
+			            <button type="button" class="btn btn-desativar" onclick="removerItem(this.parentElement, <%= item.getProduct().getId() %>)" style="height: 38px; align-self: flex-end;">✕</button>
+			        </div>
+			    <%
+			        }
+			    } else {
+			    %>
+			        <!-- Linha vazia padrão -->
+			        <div class="item-row">
+			            <div class="form-group" style="flex: 1;">
+			                <label>ID do Produto</label>
+			                <input type="number" name="productId" min="1" required placeholder="ID do produto">
+			            </div>
+			            <div class="form-group" style="width: 100px;">
+			                <label>Quantidade</label>
+			                <input type="number" name="quantity" min="1" value="1" required>
+			            </div>
+			            <div class="form-group" style="width: 130px;">
+			                <label>Preço Unit. (R$)</label>
+			                <input type="number" name="unitPrice" step="0.01" min="0" required>
+			            </div>
+			            <button type="button" class="btn btn-desativar" onclick="this.parentElement.remove()" style="height: 38px; align-self: flex-end;">✕</button>
+			        </div>
+			    <%
+			    }
+			    %>
+			</div>
 
             <button type="button" class="btn" onclick="adicionarItem()" style="margin-bottom: 20px;">
                 ➕ Adicionar Item
@@ -131,72 +159,41 @@
         </form>
     </main>
 
-    <script>
-        // Função existente para adicionar uma linha vazia
-        function adicionarItem() {
-            const container = document.getElementById('itens');
-            const div = document.createElement('div');
-            div.className = 'item-row';
-            div.innerHTML = `
-                <div class="form-group" style="flex: 1;">
-                    <label>ID do Produto</label>
-                    <input type="number" name="productId" min="1" required placeholder="ID do produto">
-                </div>
-                <div class="form-group" style="width: 100px;">
-                    <label>Quantidade</label>
-                    <input type="number" name="quantity" min="1" value="1" required>
-                </div>
-                <div class="form-group" style="width: 130px;">
-                    <label>Preço Unit. (R$)</label>
-                    <input type="number" name="unitPrice" step="0.01" min="0" required>
-                </div>
-                <button type="button" class="btn btn-desativar" onclick="this.parentElement.remove()" style="height: 38px; align-self: flex-end;">✕</button>
-            `;
-            container.appendChild(div);
-        }
-
-        // Nova função: adicionar produto a partir do resultado da busca
-        function adicionarProdutoDaBusca(id, nome, precoCusto) {
-            const container = document.getElementById('itens');
-            const rows = container.getElementsByClassName('item-row');
-            let targetRow = null;
-
-            // 1. Verifica se existe uma linha com campos vazios (productId vazio) para reutilizar
-            for (let row of rows) {
-                const inputs = row.querySelectorAll('input');
-                let vazio = true;
-                for (let inp of inputs) {
-                    if (inp.name === 'productId' && inp.value.trim() !== '') {
-                        vazio = false;
-                        break;
-                    }
-                }
-                if (vazio) {
-                    targetRow = row;
-                    break;
-                }
-            }
-
-            // 2. Se não encontrou linha vazia, cria uma nova
-            if (!targetRow) {
-                adicionarItem();
-                // Recupera a última linha criada
-                const newRows = container.getElementsByClassName('item-row');
-                targetRow = newRows[newRows.length - 1];
-            }
-
-            // 3. Preenche os campos
-            const inputs = targetRow.querySelectorAll('input');
-            for (let inp of inputs) {
-                if (inp.name === 'productId') {
-                    inp.value = id;
-                } else if (inp.name === 'quantity') {
-                    inp.value = 1;
-                } else if (inp.name === 'unitPrice') {
-                    inp.value = precoCusto;
-                }
-            }
-        }
-    </script>
+	<script>
+	    // Função para adicionar uma linha vazia (já existente)
+	    function adicionarItem() {
+	        const container = document.getElementById('itens');
+	        const div = document.createElement('div');
+	        div.className = 'item-row';
+	        div.innerHTML = `
+	            <div class="form-group" style="flex: 1;">
+	                <label>ID do Produto</label>
+	                <input type="number" name="productId" min="1" required placeholder="ID do produto">
+	            </div>
+	            <div class="form-group" style="width: 100px;">
+	                <label>Quantidade</label>
+	                <input type="number" name="quantity" min="1" value="1" required>
+	            </div>
+	            <div class="form-group" style="width: 130px;">
+	                <label>Preço Unit. (R$)</label>
+	                <input type="number" name="unitPrice" step="0.01" min="0" required>
+	            </div>
+	            <button type="button" class="btn btn-desativar" onclick="this.parentElement.remove()" style="height: 38px; align-self: flex-end;">✕</button>
+	        `;
+	        container.appendChild(div);
+	    }
+	
+	    // Função para remover um item via servlet (atualiza sessão)
+	    function removerItem(element, productId) {
+	        if (confirm('Remover este item da lista?')) {
+	            window.location.href = '${pageContext.request.contextPath}/PurchaseServlet?action=removerItem&produtoId=' + productId;
+	        }
+	    }
+	
+	    // Função para adicionar produto da busca (recarrega via GET)
+	    function adicionarProdutoDaBusca(id) {
+	        window.location.href = '${pageContext.request.contextPath}/PurchaseServlet?action=adicionarItem&produtoId=' + id;
+	    }
+	</script>
 </body>
 </html>
